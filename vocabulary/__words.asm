@@ -222,7 +222,7 @@ start_62_3e_61_2e_66:
 start_62_3e_72_2e_6d:
  ld a,end_62_3e_72_2e_6d-start_62_3e_72_2e_6d-5
  call COMUCopyCode
-    push  fr
+    push  de
 end_62_3e_72_2e_6d:
 
 ; =========== break macro ===========
@@ -476,12 +476,26 @@ start_74_61_72_67_65_74_2e_66:
     ld   bc,(Parameter)       ; get count
     ld   a,b         ; zero check
     or   c
-    jr   z,__moveExit
-    push  de          ; save DE,HL
+    jr   z,__copyExit
+    push  de          ; save A/B
     push  hl
-    ex   de,hl         ; target is A, source is B
-    ldir           ; do the move.
-__moveExit:
+    xor  a          ; find direction.
+    sbc  hl,de
+    ld   a,h
+    add  hl,de
+    bit  7,a         ; if +ve use LDDR
+    jr   z,__copy2
+    ex   de,hl         ; LDIR etc do (DE) <- (HL)
+    ldir
+    jr   __copyExit
+__copy2:
+    add  hl,bc         ; add length to HL,DE, swap as LDDR does (DE) <- (HL)
+    ex   de,hl
+    add  hl,bc
+    dec  de          ; -1 to point to last byte
+    dec  hl
+    lddr
+__copyExit:
     pop  hl
     pop  de
     ret
