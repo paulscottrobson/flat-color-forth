@@ -1,3 +1,6 @@
-::magenta :red green [yellow] {{cyan}}
+[forth]
+:test 3 42 +  ;
+::a a 
+
 
 

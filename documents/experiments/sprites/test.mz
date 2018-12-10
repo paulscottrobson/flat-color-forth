@@ -1,0 +1,40 @@
+variable x
+
+: main
+gfx.mode.layer2
+
+// 16384 for 16/ 3 and 8* 8* i c! next
+
+2 $303B p!
+
+256 for  c@ $5B p! next
+
+begin
+
+1 x +!
+
+9 $303b p!
+// OUT 0x303B, 9: REM Select sprite #9
+
+@@ x 16/ 4/ $57 p!
+// OUT 0x57, 32: REM X position in 32
+
+p!
+
+// OUT 0x57, 32: REM Y position in 32
+
+0 $57 p!
+// OUT 0x57, 0: REM no palette offset and no rotate and mirrors flags
+
+
+130 $57 p!
+
+again
+
+// OUT 0x57, 130: REM Sprite visible and show pattern #2
+
+// OUT 0x243B, 21: REM Select register #21
+
+// OUT 0x253B, 1: REM All sprites visible
+debug halt
+

@@ -16,9 +16,8 @@
 ; ***************************************************************************************
 
 BUFFScan:
-		ld 		hl,12345 							; setup A and B
+		ld 		hl,0	 							; setup A and B
 		ld 		(__ARegister),hl
-		ld 		hl,26789
 		ld 		(__BRegister),hl
 		ld 		e,FirstSourcePage 					; set the first source page.
 ;

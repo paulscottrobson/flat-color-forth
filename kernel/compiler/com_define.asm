@@ -16,16 +16,38 @@
 ; ***************************************************************************************
 
 COMDCompileMagentaWord:
+	ld 		a,$80 									; put in MACRO
+	call 	DICTAddWord
+	push 	hl
+	ld 		a,$CD 									; code is CALL VariableHandler
+	call 	FARCompileByte
+	ld 		hl,COMDVariableHandler
+	call 	FARCompileWord
+	ld		hl,$0000								; compile var space
+	call 	FARCompileWord
+	pop 	hl
+	ret
+;
+;	This code is executed when the word is 'compiled' (it's in Macro)
+;
+COMDVariableHandler:
+	ld 		a,$EB 									; ex de,hl
+	call 	FARCompileByte
+	ld 		a,$21 									; ld hl,xxxx
+	call 	FARCompileByte
+	ex 		(sp),hl 								; address on TOS (preserves HL)
+	call 	FARCompileWord
+	pop 	hl
 	ret
 
 ; ***************************************************************************************
 ;
-;	 Compiles a red word. If the previous word is open (e.g. CurrentDef is non-zero)
-;	 throw an error as previous not closed. Store current def and compile prefix, set
-;	 CurrentExit to zero so ;s can compile the postfix.
+;	 		Compiles a red word. Add to the currently selected dictionary
 ;
 ; ***************************************************************************************
 
 COMDCompileRedWord:
+	ld 		a,(__DICTSelector)						; put in relevant dictionary
+	call 	DICTAddWord
 	ret
 

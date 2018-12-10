@@ -1,0 +1,9 @@
+//
+// *** AUTOMATICALLY GENERATED **
+//
+: sgfx.sphere.red $0101 $00 ;
+: sgfx.sphere.yellow $0202 $01 ;
+: sgfx.sphere.purple $0102 $05 ;
+: sgfx.sphere.cyan $0101 $07 ;
+: sgfx.sprite.count $08 ;
+: sgfx.sprite.page $24 ;

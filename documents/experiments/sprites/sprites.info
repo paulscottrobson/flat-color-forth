@@ -1,0 +1,12 @@
+// *************************************************************************************
+//				
+//									Sprites.Info file
+//
+// *************************************************************************************
+
+//	sourcefile		nameoftarget	size		
+// 	==========		============	====
+	spred.png 		sphere.red		16x16
+	spyellow.png	sphere.yellow	32x32
+	spmagenta.png	sphere.purple	16x32
+	spcyan.png		sphere.cyan 	8x8

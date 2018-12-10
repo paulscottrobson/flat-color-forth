@@ -20,7 +20,6 @@ start_21_2e_66:
 
 start_2a_2e_66:
     call  MULTMultiply16
-    ex   de,hl
     ret
 
 ; =========== + both ===========
@@ -415,16 +414,7 @@ start_70_21_2e_66:
     out  (c),e
     ret
 
-; =========== p@ both ===========
-
-start_70_40_2e_6d:
- ld a,end_70_40_2e_6d-start_70_40_2e_6d-5
- call COMUCopyCode
-    ld   c,l
-    ld   b,h
-    in   l,(c)
-    ld   h,0
-end_70_40_2e_6d:
+; =========== p@ word ===========
 
 start_70_40_2e_66:
     ld   c,l

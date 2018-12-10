@@ -1,6 +1,3 @@
-- write new compile/execute code
-- test it all
-- get the CLI working.
 - test the words.
-- look for missing words.
+- look for missing words ++ +++ -- --- sign testing comparison
 - port libraries.

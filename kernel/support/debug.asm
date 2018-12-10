@@ -30,9 +30,22 @@ __DEBUGShowClear:
 
 		pop 	hl 									; HL now points to start of bottom line
 
+		ld 		de,$0500+'A'
+		call 	GFXWriteCharacter
+		inc 	hl
+		ld 		de,$0500+':'
+		call 	GFXWriteCharacter
+		inc 	hl
 		pop 	de 									; get pushed A
 		call 	__DEBUGPrintDecimalInteger 			; print DE at position HL, C Chars remaining.
 		inc 	hl 									; allow a space
+
+		ld 		de,$0500+'B'
+		call 	GFXWriteCharacter
+		inc 	hl
+		ld 		de,$0500+':'
+		call 	GFXWriteCharacter
+		inc 	hl
 		pop 	de 									; get pushed B
 		call 	__DEBUGPrintDecimalInteger 			; print DE at position HL, C Chars remaining.
 
