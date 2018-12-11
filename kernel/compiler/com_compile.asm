@@ -15,60 +15,51 @@
 ;
 ; ***************************************************************************************
 
-COMCCompileGreenWord:
-		push 	hl 									; save A & B
-		push 	de 
-		ld 		a,$80 								; search MACRO
-		call 	DICTFindWord
-		jp 		nc,__COMXFoundWord 					; if found, go execute it.
-		xor 	a 									; search FORTH
-		call 	DICTFindWord
-		jp 		nc,__COMCCompileWord 				; compile a word if found.
-		call 	CONSTConvert 						; convert to integer
-		jp 		c,COMError 							; failed.
-;
-;		Compile constant
-;
-		call 	COMUCompileConstant 				; compile constant code
-		pop 	de 									; restore A/B
-		pop 	hl
+COMCCompileGreenWord:	
+		push 	bc 									; save BC and IX
+		push 	ix
+
+		push 	de 									; save A+B
+		push 	hl
+
+		call 	DICTFindWord 						; if found in dictionary
+		jr 		nc,__COMCExecuteWord 				; execute to compile
+		call 	CONSTConvert 						; try as a constant.
+		jp 		c,COMError 							; no fail
+		call 	COMUCompileConstant 				; constant code
+		pop 	hl 									; restore A+B
+		pop 	de
+		pop 	ix 									; restore BC and IX.
+		pop 	bc
 		ret
 ;
-;		Compile call
+;		Execute word at E:HL
 ;
-__COMCCompileWord:
-		call 	COMCCompileCallEHL 					; compile the call.
-		pop 	de 									; restore A/B
-		pop 	hl
+__COMCExecuteWord:
+		call 	COMCExecuteWord 					; execute the word at E:HL
+		pop 	hl  								; restore possibly changed A+B
+ 		pop 	de
+		pop 	ix 									; restore BC and IX.
+		pop 	bc
 		ret
 
 ; ***************************************************************************************
 ;
-;							Compile code to do a call to E:HL
+;			Execute word at E:HL. Below return address on stack is A then B
 ;
 ; ***************************************************************************************
 
-COMCCompileCallEHL:
-	;
-	;		TODO: Cross page if target >= $C000 and not current page.
-	;
-	ld 		a,$CD 									; Z80 call
-	call 	FARCompileByte
-	call 	FARCompileWord
-	ret
-
-; ***************************************************************************************
-;
-;						Cyan word - compile if in MACRO
-;
-; ***************************************************************************************
-	
-COMCCompileCyanWord:
-		push 	hl 									; save A & B
-		push 	de 
-		ld 		a,$80 								; search MACRO
-		call 	DICTFindWord
-		jp 		nc,__COMCCompileWord 				; compile a word if found.
-		jp 		COMError
-		
-	
+COMCExecuteWord:
+		pop 	ix 									; IX contains the return address now.
+		ld 		a,e 								; go to the page with the routine on it.
+		call 	PAGESwitch
+		ld 		(__CALLIndirect+1),hl				; save Jump vector address
+		pop 	hl 									; restore A + B
+		pop 	de
+		push 	ix 									; save IX
+		call 	__CALLIndirect 						; go do the routine
+		pop 	ix 									; restore IX
+		push 	de 									; push DE/HL back on stack.
+		push 	hl
+		call 	PAGERestore 						; restore page.
+		jp 		(ix) 								; and return.

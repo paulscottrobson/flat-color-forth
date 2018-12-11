@@ -23,20 +23,19 @@ __COMWLoop:
 		ld 		a,(bc) 								; reached the end ?
 		cp 		$80
 		jr 		z,__COMWExit
-		ld 		a,(bc) 								; central dispatcher.
-		cp 		$82
+
+		ld 		a,(bc) 								; 1 00 lllll (Red)
+		and 	$60
+		call 	z,COMDCompileRedWord 				
+
+		ld 		a,(bc) 								; 1 01 lllll (Green)
+		and 	$60
+		cp 		$20
 		call 	z,COMCCompileGreenWord
-		ld 		a,(bc)
-		cp 		$83
-		call 	z,COMDCompileMagentaWord
-		ld 		a,(bc)
-		cp 		$84
-		call 	z,COMDCompileRedWord
-		ld 		a,(bc)
-		cp 		$85
-		call 	z,COMCCompileCyanWord
-		ld 		a,(bc)
-		cp 		$86
+
+		ld 		a,(bc) 								; 1 10 lllll (Yellow)
+		and 	$60
+		cp 		$40
 		call 	z,COMXExecuteYellowWord
 
 __COMWNext: 										; advance to next tag.

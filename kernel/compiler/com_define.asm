@@ -9,36 +9,6 @@
 ; ***************************************************************************************
 ; ***************************************************************************************
 
-; ***************************************************************************************
-;
-;					Compile the magenta word (variable definition)
-;
-; ***************************************************************************************
-
-COMDCompileMagentaWord:
-	ld 		a,$80 									; put in MACRO
-	call 	DICTAddWord
-	push 	hl
-	ld 		a,$CD 									; code is CALL VariableHandler
-	call 	FARCompileByte
-	ld 		hl,COMDVariableHandler
-	call 	FARCompileWord
-	ld		hl,$0000								; compile var space
-	call 	FARCompileWord
-	pop 	hl
-	ret
-;
-;	This code is executed when the word is 'compiled' (it's in Macro)
-;
-COMDVariableHandler:
-	ld 		a,$EB 									; ex de,hl
-	call 	FARCompileByte
-	ld 		a,$21 									; ld hl,xxxx
-	call 	FARCompileByte
-	ex 		(sp),hl 								; address on TOS (preserves HL)
-	call 	FARCompileWord
-	pop 	hl
-	ret
 
 ; ***************************************************************************************
 ;
@@ -47,7 +17,12 @@ COMDVariableHandler:
 ; ***************************************************************************************
 
 COMDCompileRedWord:
-	ld 		a,(__DICTSelector)						; put in relevant dictionary
-	call 	DICTAddWord
+	call 	DICTAddWord 							; add to dictionary
+	push 	hl
+	ld 		a,$CD 									; Compile CALL <SelfCompiler>
+	call 	FARCompileByte
+	ld 		hl,COMUCompileCallToSelf 		
+	call 	FARCompileWord
+	pop 	hl
 	ret
-
+	

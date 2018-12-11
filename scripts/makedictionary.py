@@ -27,7 +27,7 @@ words.sort()
 for w in words:
 	name = "".join([chr(int(x,16)) for x in w[6:].split("_")])
 	#print(name[:-2],name[-1],labels[w])
-	image.addDictionary(name[:-2],image.getCodePage(),labels[w],name[-1] == 'm')
+	image.addDictionary(name,image.getCodePage(),labels[w])
 	count += 1
 image.save()
 print("\tImported {0} words.".format(count))

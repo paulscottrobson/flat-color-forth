@@ -30,14 +30,30 @@ COMUCompileConstant:
 ; ***************************************************************************************
 
 COMUCopyCode:
-		pop 	bc 									; BC = code to copy
-		ld 		l,a 								; L = count
-		or 		a
-		ret 	z
+		ex 		(sp),hl 							; old HL on stack, new HL is return address
+		ld 		b,(hl) 								; count to copy
 __COMUCopyLoop:
-		ld 		a,(bc) 								; read a byte
+		inc 	hl
+		ld 		a,(hl) 								; read a byte
 		call 	FARCompileByte 						; compile it
-		inc 	bc 									; next byte
-		dec 	l 									; do E bytes
-		jr 		nz,__COMUCopyLoop
+		djnz	__COMUCopyLoop
+		pop 	hl 									; restore old HL.
 		ret
+
+; ***************************************************************************************
+;
+;		Compile code to do a call to the return address A':HL from HERE (addr+page)
+;
+; ***************************************************************************************
+
+COMUCompileCallToSelf:
+	ex 		(sp),hl 								; old HL on stack, return address in HL
+	;
+	;		TODO: Cross page if target >= $C000 and not current page.
+	;
+	ld 		a,$CD 									; Z80 call
+	call 	FARCompileByte
+	call 	FARCompileWord
+	pop 	hl 										; restore old HL.
+	ret
+

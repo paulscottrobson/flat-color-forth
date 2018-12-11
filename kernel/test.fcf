@@ -1,6 +1,6 @@
-[forth]
-:test 3 42 +  ;
-::a a 
+:test1 11 +!
+:test2 22 @ + test1 + test2
+
 
 
 

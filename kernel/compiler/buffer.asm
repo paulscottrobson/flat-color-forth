@@ -16,9 +16,10 @@
 ; ***************************************************************************************
 
 BUFFScan:
-		ld 		hl,0	 							; setup A and B
+		ld 		hl,$AA01	 						; setup A and B
+		ld 		de,$BB02
 		ld 		(__ARegister),hl
-		ld 		(__BRegister),hl
+		ld 		(__BRegister),de
 		ld 		e,FirstSourcePage 					; set the first source page.
 ;
 ;		Loop here to scan the next source page.
@@ -63,6 +64,7 @@ __BUFFNextPage:
 		ld 		a,e  								; check scanned all buffers.
 		cp 		FirstSourcePage+SourcePageCount 
 		jr 		nz,__BUFFScanSourcePage
+
 		jp 		CommandLineStart
 
 

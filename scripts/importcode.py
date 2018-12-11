@@ -48,18 +48,12 @@ for f in sys.argv[1:]:
 		#
 		#	For each word, look at it to see if it has a tag
 		#
-		tag = 0x82 										# Green (compile) 		$82
-		if word[:2] == "::":							# Magenta (variable) 	$83
-			tag = 0x83
-			word = word[2:]
-		elif word[0] == ":":							# Red (define) 			$84
-			tag = 0x84
+		tag = 0xA0 										# Green (compile) 		101 lllll
+		if word[0] == ":":							# Red (define) 			100 lllll
+			tag = 0x80
 			word = word[1:]
-		elif word[0] == "[" and word[-1] == "]": 		# Yellow (execute)		$86
-			tag = 0x86
-			word = word[1:-1]
-		elif word[0] == "{" and word[-1] == "}": 		# Cyan (compile macro)	$85
-			tag = 0x85
+		elif word[0] == "[" and word[-1] == "]": 		# Yellow (execute)		110 lllll
+			tag = 0xC9
 			word = word[1:-1]
 		#
 		#	Make the final word and check it fits.
@@ -79,7 +73,7 @@ for f in sys.argv[1:]:
 		#
 		#	Store the word
 		#
-		image.write(currentPageNumber,currentPageAddress,tag)
+		image.write(currentPageNumber,currentPageAddress,tag+len(word))
 		currentPageAddress += 1
 		for c in word:
 			image.write(currentPageNumber,currentPageAddress,ord(c))

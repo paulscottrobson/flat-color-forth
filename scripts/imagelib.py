@@ -82,7 +82,7 @@ class ColorForthImage(object):
 	#
 	#		Add a physical entry to the image dictionary
 	#
-	def addDictionary(self,name,page,address,isMacro):
+	def addDictionary(self,name,page,address):
 		p = self.findEndDictionary()
 		#print("{0:04x} {1:20} {2:02x}:{3:04x}".format(p,name,page,address))
 		assert len(name) < 32 and name != "","Bad name '"+name+"'"
@@ -92,7 +92,7 @@ class ColorForthImage(object):
 		self.write(dp,p+1,page)
 		self.write(dp,p+2,address & 0xFF)
 		self.write(dp,p+3,address >> 8)
-		self.write(dp,p+4,len(name)+0x80 if isMacro else len(name))
+		self.write(dp,p+4,len(name))
 		aname = [ord(x) for x in name]
 		for i in range(0,len(aname)):
 			self.write(dp,p+5+i,aname[i])
@@ -126,4 +126,3 @@ if __name__ == "__main__":
 	print(z.address(z.dictionaryPage(),0xC000))
 	print(z.dictionaryPage())
 	z.save()
-

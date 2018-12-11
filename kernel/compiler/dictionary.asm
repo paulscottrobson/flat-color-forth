@@ -12,7 +12,7 @@
 ; ***********************************************************************************************
 ;
 ;		Add Dictionary Word. Name is a tagged string at BC ends in $80-$FF, uses the current 
-;		page/pointer values. A indicates whether it goes in FORTH ($00) or MACRO ($80)
+;		page/pointer values. 
 ;
 ; ***********************************************************************************************
 
@@ -26,17 +26,9 @@ DICTAddWord:
 		push 	bc 									; put word address in HL
 		pop 	hl 
 
-		and 	$80 								; mask off forth/macro bit put in C
-		ld 		c,a
-
-		ld 		b,-1 								; work out length in B
-		push 	hl
-__DICTGetLength:
-		inc 	b
-		inc 	hl
-		bit 	7,(hl)
-		jr 		z,__DICTGetLength
-		pop 	hl 									; HL = Tag.
+		ld 		a,(hl) 								; get length from tag into B
+		and 	$1F
+		ld 		b,a
 		inc 	hl 									; HL = first character
 
 		ld 		a,DictionaryPage					; switch to dictionary page
@@ -65,9 +57,7 @@ __DICTCreateEntry:
 		ld 		(ix+2),e
 		ld 		(ix+3),d 
 
-		ld 		a,b 								; OR length with FORTH/MACRO bit.
-		or 		c
-		ld 		(ix+4),a 							; put length in.
+		ld 		(ix+4),b 							; put length in.
 
 		ex 		de,hl 								; put name in DE
 __DICTAddCopy:
@@ -90,7 +80,6 @@ __DICTAddCopy:
 ; ***********************************************************************************************
 ;
 ;			Find word in dictionary. BC points to tagged string which is the name.
-;	 		A is the search type ($00 = FORTH,$80 = MACRO)
 ; 
 ;			On exit, HL is the address and E the page number with CC if found, 
 ;			CS set and HL=DE=0 if not found.
@@ -103,7 +92,6 @@ DICTFindWord:
 
 		ld 		h,b 							; put address of name in HL. 
 		ld 		l,c
-		ld 		c,a 							; puth the FORTH/MACRO mask in C
 
 		ld 		a,DictionaryPage 				; switch to dictionary page
 		call 	PAGESwitch
@@ -114,10 +102,10 @@ __DICTFindMainLoop:
 		or 		a
 		jr 		z,__DICTFindFail
 
-		ld 		a,(ix+4) 						; get this entries forth/macro byte
-		xor 	c 								; compare against one passed in
-		and 	$80 							; only interested in bit 7.
-		jr 		nz,__DICTFindNext 				; if different go to next
+		ld 		a,(ix+4) 						; length
+		xor 	(hl) 							; xor with tag length
+		and 	$1F 							; check lower 5 bits
+		jr 		nz,__DICTFindNext 				; if different can't be this word.
 
 		push 	ix 								; save pointers on stack.
 		push 	hl 
@@ -133,9 +121,6 @@ __DICTCheckName:
 		inc 	hl 								; HL point to next character
 		inc 	ix
 		djnz 	__DICTCheckName
-
-		bit 	7,(hl) 							; is the next character in HL a tag/$80
-		jr 		z,__DICTFindNoMatch 			; otherwise you have failed to match.
 
 		pop 	hl 								; Found a match. restore HL and IX
 		pop 	ix

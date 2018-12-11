@@ -64,8 +64,10 @@ __PAGEStackPointer: 								; stack used for switching pages
 		dw 		0
 __PAGEStackBase:
 		ds 		16
-__DICTSelector: 									; updating FORTH ($00) MACRO ($80)
-		db 		0
+
+__CALLIndirect:										; used for a predetermined jump.
+		db 		$C3
+		dw 		0
 
 __CLICurrentKey: 									; current inkey state on CLI
 		db 		0
