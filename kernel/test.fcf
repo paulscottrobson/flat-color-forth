@@ -1,4 +1,49 @@
-:test 1- 16384 ! ;
+ 
+ // ****************************************************************************************************
+ //
+ //		Compiles overrides the normal behaviour of a word, so you can make a word do something 
+ //		else when its compiled. 
+ //
+ // ****************************************************************************************************
+
+:compiles 
+ 	ab>r here 3- + h ! r>ab 						// Which does compiles.
+;
+
+// ****************************************************************************************************
+//
+//		This creates a function (__compile.variable.handler) which creates a call to __variable.handler
+//		when it itself is compiled. So when the variable word below is run, this call causes 
+//		CALL <__variable.handler to be compiled inline. So we do not need to know what the address 
+//		of the variable handler is.
+//
+// ****************************************************************************************************
+
+:__compile.variable.handler
+:__variable.handler
+	235 1, 33 1, r>a 2,
+;
+
+// ****************************************************************************************************
+//
+//		Defines a word as a variable.
+//
+// ****************************************************************************************************
+
+:variable 
+ 	[compiles] 										// It's a compiles word, it executes this on compile.
+ 	compiles 										// Makes the word just defined compiles.
+ 	__compile.variable.handler  					// This creates code to call __variable.handler here.
+ 													// e.g. a CALL __variable.handler is compiled.
+ 													// So when the variable is compiled, it does __variable.handler
+ 													// and compiles EX DE,HL ; LD HL,xxxx
+ 	0 2, 											// Compiling $0000
+;
+
+
+:test variable break
+
+[0] [0] [test] [0] [hex!] [debug] [halt]
 
 
 

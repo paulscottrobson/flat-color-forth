@@ -50,13 +50,6 @@ start_2b_6f_72:
     ld   l,a
     ret
 
-; =========== , word ===========
-
-start_2c:
- call COMUCompileCallToSelf
-    call FARCompileWord
-    ret
-
 ; =========== - macro ===========
 
 start_2d:
@@ -85,6 +78,15 @@ start_2f:
 start_2f_6d_6f_64:
  call COMUCompileCallToSelf
     call  DIVDivideMod16
+    ex  de,hl
+    ret
+
+; =========== 1, word ===========
+
+start_31_2c:
+ call COMUCompileCallToSelf
+    ld   a,l
+    call  FARCompileByte
     ret
 
 ; =========== 2* macro ===========
@@ -94,6 +96,13 @@ start_32_2a:
  db end_32_2a-start_32_2a-4
     add  hl,hl
 end_32_2a:
+
+; =========== 2, word ===========
+
+start_32_2c:
+ call COMUCompileCallToSelf
+    call FARCompileWord
+    ret
 
 ; =========== 2/ macro ===========
 
@@ -182,8 +191,8 @@ end_62_21:
 start_62_3e_61:
  call COMUCopyCode
  db end_62_3e_61-start_62_3e_61-4
-    ld   l,d
-    ld   h,e
+    ld   l,e
+    ld   h,d
 end_62_3e_61:
 
 ; =========== b>r macro ===========
@@ -220,14 +229,6 @@ start_62_73_77_61_70:
     ld   h,l
     ld   l,a
 end_62_73_77_61_70:
-
-; =========== c, word ===========
-
-start_63_2c:
- call COMUCompileCallToSelf
-    ld   a,l
-    call  FARCompileByte
-    ret
 
 ; =========== copy word ===========
 
