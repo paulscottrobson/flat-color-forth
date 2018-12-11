@@ -1,4 +1,3 @@
-- command line must set length now, also different prefix :)
 - test the words.
 - add string constant
 - look for missing words ++ +++ -- --- sign testing comparison compiles

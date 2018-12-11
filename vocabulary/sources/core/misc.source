@@ -17,7 +17,6 @@
 // ==================================================================================================================
 
 @word fill 							
-		ex 		de,hl 								; B = value (DE) A = target (HL)
 		ld 		bc,(Parameter) 						; count to do.
 		ld 		a,b
 		or 		c 									
@@ -49,7 +48,8 @@ __fillExit:
 
 // ==================================================================================================================
 
-@word copy 											; B (DE) = source A (HL) = target
+@word copy 											
+													; B (DE) = source A (HL) = target
 		ld 		bc,(Parameter) 						; get count		
 		ld 		a,b 								; zero check
 		or 		c
@@ -104,4 +104,8 @@ __haltz80:
 
 @macro break
 		db 		$DD,$01
+
+// ==================================================================================================================
 		
+@word param! 
+		ld 		(Parameter),hl

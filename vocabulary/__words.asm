@@ -169,6 +169,14 @@ start_61_6e_64:
     ld   l,a
     ret
 
+; =========== b! macro ===========
+
+start_62_21:
+ call COMUCopyCode
+ db end_62_21-start_62_21-4
+    ld   (hl),e
+end_62_21:
+
 ; =========== b>a macro ===========
 
 start_62_3e_61:
@@ -185,6 +193,15 @@ start_62_3e_72:
  db end_62_3e_72-start_62_3e_72-4
     push  de
 end_62_3e_72:
+
+; =========== b@ macro ===========
+
+start_62_40:
+ call COMUCopyCode
+ db end_62_40-start_62_40-4
+    ld   l,(hl)
+    ld   h,$00
+end_62_40:
 
 ; =========== break macro ===========
 
@@ -204,14 +221,6 @@ start_62_73_77_61_70:
     ld   l,a
 end_62_73_77_61_70:
 
-; =========== c! macro ===========
-
-start_63_21:
- call COMUCopyCode
- db end_63_21-start_63_21-4
-    ld   (hl),e
-end_63_21:
-
 ; =========== c, word ===========
 
 start_63_2c:
@@ -220,14 +229,37 @@ start_63_2c:
     call  FARCompileByte
     ret
 
-; =========== c@ macro ===========
+; =========== copy word ===========
 
-start_63_40:
- call COMUCopyCode
- db end_63_40-start_63_40-4
-    ld   l,(hl)
-    ld   h,$00
-end_63_40:
+start_63_6f_70_79:
+ call COMUCompileCallToSelf
+    ; B (DE) = source A (HL) = target
+    ld   bc,(Parameter)       ; get count
+    ld   a,b         ; zero check
+    or   c
+    jr   z,__copyExit
+    push  de          ; save A/B
+    push  hl
+    xor  a          ; find direction.
+    sbc  hl,de
+    ld   a,h
+    add  hl,de
+    bit  7,a         ; if +ve use LDDR
+    jr   z,__copy2
+    ex   de,hl         ; LDIR etc do (DE) <- (HL)
+    ldir
+    jr   __copyExit
+__copy2:
+    add  hl,bc         ; add length to HL,DE, swap as LDDR does (DE) <- (HL)
+    ex   de,hl
+    add  hl,bc
+    dec  de          ; -1 to point to last byte
+    dec  hl
+    lddr
+__copyExit:
+    pop  hl
+    pop  de
+    ret
 
 ; =========== debug word ===========
 
@@ -240,7 +272,6 @@ start_64_65_62_75_67:
 
 start_66_69_6c_6c:
  call COMUCompileCallToSelf
-    ex   de,hl         ; B = value (DE) A = target (HL)
     ld   bc,(Parameter)       ; count to do.
     ld   a,b
     or   c
@@ -362,6 +393,13 @@ start_70_40:
     ld   h,0
     ret
 
+; =========== param! word ===========
+
+start_70_61_72_61_6d_21:
+ call COMUCompileCallToSelf
+    ld   (Parameter),hl
+    ret
+
 ; =========== r>a macro ===========
 
 start_72_3e_61:
@@ -394,35 +432,4 @@ start_73_77_61_70:
  db end_73_77_61_70-start_73_77_61_70-4
     ex   de,hl         ; 2nd now TOS
 end_73_77_61_70:
-
-; =========== target word ===========
-
-start_74_61_72_67_65_74:
- call COMUCompileCallToSelf
-    ld   bc,(Parameter)       ; get count
-    ld   a,b         ; zero check
-    or   c
-    jr   z,__copyExit
-    push  de          ; save A/B
-    push  hl
-    xor  a          ; find direction.
-    sbc  hl,de
-    ld   a,h
-    add  hl,de
-    bit  7,a         ; if +ve use LDDR
-    jr   z,__copy2
-    ex   de,hl         ; LDIR etc do (DE) <- (HL)
-    ldir
-    jr   __copyExit
-__copy2:
-    add  hl,bc         ; add length to HL,DE, swap as LDDR does (DE) <- (HL)
-    ex   de,hl
-    add  hl,bc
-    dec  de          ; -1 to point to last byte
-    dec  hl
-    lddr
-__copyExit:
-    pop  hl
-    pop  de
-    ret
 

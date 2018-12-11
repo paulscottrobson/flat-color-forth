@@ -18,6 +18,8 @@
 BUFFScan:
 		ld 		hl,$AA01	 						; setup A and B
 		ld 		de,$BB02
+		ld 		hl,$0000
+		ld 		de,$0000
 		ld 		(__ARegister),hl
 		ld 		(__BRegister),de
 		ld 		e,FirstSourcePage 					; set the first source page.

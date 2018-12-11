@@ -88,6 +88,13 @@ __CLIExecute:
 		ld 		(ix+0),$80 							; mark end
 
 		ld 		bc,__CLIBuffer-1 					; get address of buffer into BC
+		ld 		a,l 								; get length
+		and 	$0F 
+		or 		$C0 								; 1 10 lllll
+		ld 		(bc),a 								; make that the tag/
+
+		ld 		ix,ExecFrameSpace2 					; compile it here
+		call 	COMCompileCodeAtIX
 
 		ld 		hl,(__ARegister) 					; load A/B in
 		ld 		de,(__BRegister)

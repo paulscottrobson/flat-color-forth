@@ -18,56 +18,29 @@
 COMXExecuteYellowWord:
 		push 	bc 									; save BC and IX
 		push 	ix
-		push 	de 									; save A+B
-		push	hl 
-		call 	DICTFindWord 						; look up word
-		jr 		nc,__COMXExecute					; if found, we need to run it.
-		call 	CONSTConvert 						; try as integer
-		jp 		c,COMError 							; neither work.
-;
-;		Do a constant
-;
-		pop 	de 									; restore HL into DE
-		inc 	sp 									; throw away the other value.
-		inc 	sp
+		ld 		ix,ExecFrameSpace1 					; compile the code here.
+		call 	COMCompileCodeAtIX  			
+		call 	ExecFrameSpace1 					; execute the code.
 		pop 	ix 									; restore IX and BC
 		pop 	bc 
 		ret
 
-__COMXExecute:
-		ld 		ix,ExecFrameSpace1 					; compile it here
-		call 	COMCompileEHLAtIX					; compile E:HL
-		pop 	de 									; restore DE & HL
-		pop 	hl
-		call 	EXECFrameSpace1 					; execute the actual code.
-		pop 	ix 									; restore IX & BC
-		pop 	bc
-		ret
-
 ; ***************************************************************************************
 ;
-;				Compile code to execute the word at E:HL at address IX.
+;		Compile code to execute the word at BC at address IX, DEHL contain A&B
 ;
 ; ***************************************************************************************
 
-COMCompileEHLAtIX:
-		ld 		bc,(Here) 							; push Here on the stack
-		push 	bc
-		ld 		(Here),ix 							; set here to IX.
-
-		ld 		a,e 								; switch to page E
-		call 	PAGESwitch
-		ld 		(__CALLIndirect+1),hl 				; set the call address
-		ld 		hl,$0000 							; we provide A/B values of $0000
-		ld 		de,$0000 							; executing words that are immediately compiled have no context
-
-		call 	__CALLIndirect 						; this will compile the word, whatever it is.
-
-		ld 		a,$C9
-		call 	FARCompileByte 						; compile a byte.
-
-		pop 	bc 									; get the old value of HERE
-		ld 		(Here),bc 							; put HERE back.
+COMCompileCodeAtIX:
+		push 	ix 									; save new HERE on the stack
+		ld 		ix,(Here) 							; get old Here
+		ex 		(sp),ix 							; old here on stack, new HERE in IX
+		ld 		(Here),ix 							; set new Here.
+		call 	COMCCompileGreenWord 				; do the compilation using the Green code.
+		ld 		a,$C9 								; compile "RET"
+		call 	FARCompileByte
+		pop 	ix 									; restore old HERE
+		ld 		(Here),ix 							; and write it back.
 		ret 									
 
 
