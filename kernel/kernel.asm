@@ -22,6 +22,8 @@ FirstCodePage = $22+SourcePageCount*2 				; first code page.
 ;		Memory allocated from the Unused space in $4000-$7FFF
 ;
 EditBuffer = $7B08 									; $7B00-$7D1F 512 byte edit buffer
+ExecFrameSpace1 = $7D20 							; $7D20-$7D3F	  Execution frame space (compiling buffer)
+ExecFrameSpace2 = $7D40 							; $7D40-$7D5F 	  Execution frame space (CLI)
 StackTop = $7EFC 									;      -$7EFC Top of stack
 
 		opt 	zxnextreg

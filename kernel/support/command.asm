@@ -86,10 +86,12 @@ __CLILoop:
 
 __CLIExecute:
 		ld 		(ix+0),$80 							; mark end
+
 		ld 		bc,__CLIBuffer-1 					; get address of buffer into BC
+
 		ld 		hl,(__ARegister) 					; load A/B in
 		ld 		de,(__BRegister)
-		call 	COMCompileWordList 					; do that word (prefixed with $86)
+		call 	ExecFrameSpace2 					; execute the word.
 		ld 		(__BRegister),de 					; save A/B
 		ld 		(__ARegister),hl
 		jp 		WarmStart

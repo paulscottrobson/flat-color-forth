@@ -53,7 +53,7 @@ for f in sys.argv[1:]:
 			tag = 0x80
 			word = word[1:]
 		elif word[0] == "[" and word[-1] == "]": 		# Yellow (execute)		110 lllll
-			tag = 0xC9
+			tag = 0xC0
 			word = word[1:-1]
 		#
 		#	Make the final word and check it fits.
