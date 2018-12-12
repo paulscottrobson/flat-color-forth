@@ -66,10 +66,106 @@
 	here push 4- h +! 0 1, 34 1, pop h ! 			// Rewrites ex de,hl ; ld hl,x to nop ; ld (x),hl
 ;
 
+// ****************************************************************************************************
+//
+//									If .... Then / -If .... Then
+//
+// ****************************************************************************************************
 
-:testv variable 
+:__if.branch.address variable 
 
-:demo1 99 testv @@ 98 testv !! 97 testv 96
+:if 	[compiles]
+	ab>r
+	124 1, 181 1, 									// LD A,H ; OR L
+	202 1, 											// JP Z,
+	here __if.branch.address !! 					// save branch location
+	__if.unclosed @@ 2,
+	r>ab 											
+;
 
-// !! @@ if then begin until (while ?) min and max ? requires proper < =
+:-if 	[compiles]
+	ab>r
+	203 1, 124 1, 									// BIT 7,H
+	202 1, 											// JP Z,
+	here __if.branch.address !!  					// save branch location
+	0 2,
+	r>ab
+;
 
+:then 	[compiles]
+	ab>r
+	here push   									// Save HERE on stack
+	0 @@ h ! 					 					// Back to branch address
+	pop 2, h ! 										// Compile address and write back
+	r>ab
+;
+
+// ****************************************************************************************************
+//
+//										Begin .... Until/-Until
+//
+// ****************************************************************************************************
+
+:__begin.loop.address variable
+
+:begin 	[compiles]
+	ab>r here __begin.loop.address !! r>ab  		// Save where we are
+;
+
+:until 	[compiles]
+	ab>r
+	124 1, 181 1, 									// LD A,H ; OR L
+	202 1, 											// JP Z,
+	__begin.loop.address @@ 2, 						// address
+	r>ab
+;
+
+:-until [compiles]
+	ab>r
+	203 1, 124 1, 									// BIT 7,H
+	202 1, 											// JP Z,
+	__begin.loop.address @@ 2, 						// address
+	r>ab
+;
+
+// ****************************************************************************************************
+//
+//											For .... Next
+//
+// ****************************************************************************************************
+
+:__for.loop.address variable 
+
+:for 	[compiles]
+	ab>r
+	here __for.loop.address !!						// Remember where we are.
+	43 1, 229 1, 									// DEC HL ; PUSH HL
+	r>ab
+;
+
+:next 	[compiles]
+	ab>r
+	225 1, 											// POP HL
+	124 1, 181 1, 									// LD A,H ; OR L
+	194 1, __for.loop.address @@ 2, 				// JP NZ,<loop>
+	r>ab
+;
+
+:i 		[compiles]
+	ab>r
+	225 1, 229 1, 									// POP HL ; PUSH HL
+	r>ab
+;
+
+// ****************************************************************************************************
+//
+//												Min and Max
+//
+// ****************************************************************************************************
+
+:min ab>r < if r>ab b>a ; then r>ab ;
+:max ab>r < if r>ab ; then r>ab b>a ;
+
+:test break 0 if ;
+
+[test]
