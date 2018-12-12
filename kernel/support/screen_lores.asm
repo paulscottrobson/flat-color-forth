@@ -3,7 +3,7 @@
 ;
 ;		File:		screen_lores.asm
 ;		Purpose:	LowRes console interface, sprites enabled.
-;		Date : 		10th December 2018
+;		Date : 		12th December 2018
 ;		Author:		paul@robsons.org.uk
 ;
 ; *********************************************************************************

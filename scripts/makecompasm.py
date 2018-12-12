@@ -43,7 +43,7 @@ for w in source:
 	if w[0] == "@":
 		parts = w.split(" ")
 		assert parts[-1] not in words,"Duplicate "+w
-		assert parts[0] == "@word" or parts[0] == "@macro",w
+		assert parts[0] == "@word" or parts[0] == "@macro" or parts[0] == "@both",w
 		currentWord = parts[-1]
 		words[currentWord] = { "type":parts[0][1:],"code":[] }
 
@@ -58,24 +58,24 @@ count = 0
 hOut = open("__words.asm","w")
 for w in keys:
 	hOut.write("; =========== {0} {1} ===========\n\n".format(w,words[w]["type"]))
-	scrambled = "_".join(["{0:02x}".format(ord(x)) for x in w])
+	scrambled_m = "_".join(["{0:02x}".format(ord(x)) for x in w+":m"])
+	scrambled_f = "_".join(["{0:02x}".format(ord(x)) for x in w+":f"])
 
 	if len(words[w]["code"]) == 0:
 		print("\tWarning ! '{0}' has no code.".format(w))
 
-	if words[w]["type"] == "macro":
+	if words[w]["type"] == "macro" or words[w]["type"] == "both":
 		count += 1
-		hOut.write("start_"+scrambled+":\n")
+		hOut.write("start_"+scrambled_m+":\n")
 		hOut.write(" call COMUCopyCode\n")
-		hOut.write(" db end_{0}-start_{0}-4\n".format(scrambled))
+		hOut.write(" db end_{0}-start_{0}-4\n".format(scrambled_m))
 		hOut.write("\n".join(words[w]["code"])+"\n")
-		hOut.write("end_"+scrambled+":\n\n")
+		hOut.write("end_"+scrambled_m+":\n\n")
 
 		
-	if words[w]["type"] == "word":
+	if words[w]["type"] == "word" or words[w]["type"] == "both":
 		count += 1
-		hOut.write("start_"+scrambled+":\n")
-		hOut.write(" call COMUCompileCallToSelf\n")
+		hOut.write("start_"+scrambled_f+":\n")
 		hOut.write("\n".join(words[w]["code"])+"\n")
 		hOut.write(format(" ret")+"\n\n")
 

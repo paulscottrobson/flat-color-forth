@@ -3,7 +3,7 @@
 ;
 ;		File:		command.asm
 ;		Purpose:	Command line code
-;		Date : 		10th December 2018
+;		Date : 		12th December 2018
 ;		Author:		paul@robsons.org.uk
 ;
 ; *********************************************************************************
@@ -93,14 +93,8 @@ __CLIExecute:
 		or 		$C0 								; 1 10 lllll
 		ld 		(bc),a 								; make that the tag/
 
-		ld 		ix,ExecFrameSpace2 					; compile it here
-		call 	COMCompileCodeAtIX
-
-		ld 		hl,(__ARegister) 					; load A/B in
-		ld 		de,(__BRegister)
-		call 	ExecFrameSpace2 					; execute the word.
-		ld 		(__BRegister),de 					; save A/B
-		ld 		(__ARegister),hl
+		; execute code at BC, yellow tagged.
+		
 		jp 		WarmStart
 
 __CLIGetKey:

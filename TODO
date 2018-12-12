@@ -1,12 +1,8 @@
-- convert word/macro to word/macro/both
-- change code generator
-- build it, import into the kernel, get makedictionary/showdictionary working.
 - rewrite compiler
 
-		red			compile dictionary entry. ([compiles] word now sets immediate flag)
+		red			compile dictionary entry.
 		green 		execute immediate, compile normal, compile constant, compile string
 		yellow 		execute normal, execute string
-		- no inline compiling :)
 
 - add string constant
 - if/-if crashout ?

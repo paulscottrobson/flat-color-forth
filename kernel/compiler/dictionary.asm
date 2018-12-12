@@ -3,7 +3,7 @@
 ;
 ;		Name : 		dictionary.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		10th December 2018
+;		Date : 		12th December 2018
 ;		Purpose :	Dictionary handler.
 ;
 ; ***************************************************************************************
@@ -46,6 +46,8 @@ __DICTFindEndDictionary:
 		jr 		__DICTFindEndDictionary
 
 __DICTCreateEntry:
+		ld 		(__DICTLastWordDefined),ix 			; set last word defined address
+
 		ld 		a,b
 		add 	a,5
 		ld 		(ix+0),a 							; offset is length + 5
@@ -79,7 +81,25 @@ __DICTAddCopy:
 
 ; ***********************************************************************************************
 ;
+;									Make the last word "compiles"
+;
+; ***********************************************************************************************
+
+DICTMakeLastCompiles:
+		push 	af
+		push 	ix
+		ld 		a,DictionaryPage					; switch to dictionary page
+		call 	PAGESwitch
+		ld 		ix,(__DICTLastWordDefined) 			; address of last defined word
+		set 	7,(ix+4) 							; set bit 7 to make it 'commands'
+		pop 	ix
+		pop 	af
+		ret
+
+; ***********************************************************************************************
+;
 ;			Find word in dictionary. BC points to tagged string which is the name.
+;			A is the flag to check if we are looking for compiles ($80) or normal ($00)
 ; 
 ;			On exit, HL is the address and E the page number with CC if found, 
 ;			CS set and HL=DE=0 if not found.
@@ -92,7 +112,7 @@ DICTFindWord:
 
 		ld 		h,b 							; put address of name in HL. 
 		ld 		l,c
-
+		ld 		c,a 							; save compiles flag check in C
 		ld 		a,DictionaryPage 				; switch to dictionary page
 		call 	PAGESwitch
 
@@ -107,6 +127,10 @@ __DICTFindMainLoop:
 		and 	$1F 							; check lower 5 bits
 		jr 		nz,__DICTFindNext 				; if different can't be this word.
 
+		ld 		a,(ix+4) 						; are the sign bits of the length/type byte and 
+		xor 	c  								; the search parameter the same.
+		jp 		m,__DICTFindNext 				; if different, can't be this word.
+		
 		push 	ix 								; save pointers on stack.
 		push 	hl 
 

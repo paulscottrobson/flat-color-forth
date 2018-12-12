@@ -3,7 +3,7 @@
 ;
 ;		Name : 		utility.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		10th December 2018
+;		Date : 		12th December 2018
 ;		Purpose :	Compile Utilities
 ;
 ; ***************************************************************************************
@@ -40,20 +40,4 @@ __COMUCopyLoop:
 		pop 	hl 									; restore old HL.
 		ret
 
-; ***************************************************************************************
-;
-;		Compile code to do a call to the return address A':HL from HERE (addr+page)
-;
-; ***************************************************************************************
-
-COMUCompileCallToSelf:
-	ex 		(sp),hl 								; old HL on stack, return address in HL
-	;
-	;		TODO: Cross page if target >= $C000 and not current page.
-	;
-	ld 		a,$CD 									; Z80 call
-	call 	FARCompileByte
-	call 	FARCompileWord
-	pop 	hl 										; restore old HL.
-	ret
 

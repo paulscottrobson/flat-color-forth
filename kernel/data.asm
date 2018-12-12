@@ -3,7 +3,7 @@
 ;
 ;		Name : 		data.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		10th December 2018
+;		Date : 		12th December 2018
 ;		Purpose :	Data area
 ;
 ; ***************************************************************************************
@@ -60,14 +60,13 @@ __ARegister:										; register values when not running.
 __BRegister:
 		dw 		0
 
+__DICTLastWordDefined: 								; address of last word defined.
+		dw 		0
+
 __PAGEStackPointer: 								; stack used for switching pages
 		dw 		0
 __PAGEStackBase:
 		ds 		16
-
-__CALLIndirect:										; used for a predetermined jump.
-		db 		$C3
-		dw 		0
 
 __CLICurrentKey: 									; current inkey state on CLI
 		db 		0

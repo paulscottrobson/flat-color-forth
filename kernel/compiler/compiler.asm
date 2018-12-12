@@ -3,7 +3,7 @@
 ;
 ;		Name : 		compiler.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		10th December 2018
+;		Date : 		12th December 2018
 ;		Purpose :	Compiles a list of word split by tags.
 ;
 ; ***************************************************************************************

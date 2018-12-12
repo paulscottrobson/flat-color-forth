@@ -82,7 +82,7 @@ class ColorForthImage(object):
 	#
 	#		Add a physical entry to the image dictionary
 	#
-	def addDictionary(self,name,page,address):
+	def addDictionary(self,name,page,address,isCommands):
 		p = self.findEndDictionary()
 		#print("{0:04x} {1:20} {2:02x}:{3:04x}".format(p,name,page,address))
 		assert len(name) < 32 and name != "","Bad name '"+name+"'"
@@ -92,7 +92,7 @@ class ColorForthImage(object):
 		self.write(dp,p+1,page)
 		self.write(dp,p+2,address & 0xFF)
 		self.write(dp,p+3,address >> 8)
-		self.write(dp,p+4,len(name))
+		self.write(dp,p+4,len(name)+(0x80 if isCommands else 0x00))
 		aname = [ord(x) for x in name]
 		for i in range(0,len(aname)):
 			self.write(dp,p+5+i,aname[i])

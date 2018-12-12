@@ -1,0 +1,171 @@
+// ***************************************************************************************
+// ***************************************************************************************
+//
+//		Name : 		system.fcf
+//		Author :	Paul Robson (paul@robsons.org.uk)
+//		Date : 		12th December 2018
+//		Purpose :	Standard utility routines and structures
+//
+// ***************************************************************************************
+// ***************************************************************************************
+ 
+// ****************************************************************************************************
+//
+//		Compiles overrides the normal behaviour of a word, so you can make a word do something 
+//		else when its compiled. Every red word has CALL <CompileCallToNextInstruction> compiled
+//		in by default ; this removes it. It's sort of like "IMMEDIATE".
+//
+// ****************************************************************************************************
+
+:compiles 
+ 	ab>r here 3- + h ! r>ab 						// Which does compiles.
+;
+
+// ****************************************************************************************************
+//
+//		This creates a function (__compile.variable.handler) which creates a call to __variable.handler
+//		when it itself is compiled. So when the variable word below is run, this call causes 
+//		CALL <__variable.handler to be compiled inline. So we do not need to know what the address 
+//		of the variable handler is.
+//
+// ****************************************************************************************************
+
+:__compile.variable.handler
+:__variable.handler
+	235 1, 33 1, r>a 2,
+;
+
+// ****************************************************************************************************
+//
+//						Defines a word as a variable. :<identifier> variable
+//
+// ****************************************************************************************************
+
+:variable 
+ 	[compiles] 										// It's a compiles word, it executes this on compile.
+ 	compiles 										// Makes the word just defined compiles.
+ 	__compile.variable.handler  					// Creates a call to __variable handler which COMPILES
+ 													// a call to __variable_handler (Rule#1)
+ 													// which outputs ex de,hl ld hl,<tos>
+ 	0 2, 											// Compiling $0000
+;
+
+// ****************************************************************************************************
+//
+//		Fast variables. xx @@ and xx !! are functionally the same as xx @ and xx ! but are quicker
+//		because the code is rewritten to use direct access. However, it only works with variables.
+//		You can't do it with calculated things e.g. xx 3 + @
+//
+// ****************************************************************************************************
+
+:@@ [compiles]
+	here push 3- h +! 42 1, pop h !  				// Rewrites ex de,hl ; ld hl,x to ex de,hl;ld hl,(x)
+;
+
+:!! [compiles]
+	here push 4- h +! 0 1, 34 1, pop h ! 			// Rewrites ex de,hl ; ld hl,x to nop ; ld (x),hl
+;
+
+// ****************************************************************************************************
+//
+//									If .... Then / -If .... Then
+//
+// ****************************************************************************************************
+
+:__if.branch.address variable 
+
+:if 	[compiles]
+	ab>r
+	124 1, 181 1, 									// LD A,H ; OR L
+	202 1, 											// JP Z,
+	here __if.branch.address !! 					// save branch location
+	__if.unclosed @@ 2,
+	r>ab 											
+;
+
+:-if 	[compiles]
+	ab>r
+	203 1, 124 1, 									// BIT 7,H
+	202 1, 											// JP Z,
+	here __if.branch.address !!  					// save branch location
+	0 2,
+	r>ab
+;
+
+:then 	[compiles]
+	ab>r
+	here push   									// Save HERE on stack
+	0 @@ h ! 					 					// Back to branch address
+	pop 2, h ! 										// Compile address and write back
+	r>ab
+;
+
+// ****************************************************************************************************
+//
+//										Begin .... Until/-Until
+//
+// ****************************************************************************************************
+
+:__begin.loop.address variable
+
+:begin 	[compiles]
+	ab>r here __begin.loop.address !! r>ab  		// Save where we are
+;
+
+:until 	[compiles]
+	ab>r
+	124 1, 181 1, 									// LD A,H ; OR L
+	202 1, 											// JP Z,
+	__begin.loop.address @@ 2, 						// address
+	r>ab
+;
+
+:-until [compiles]
+	ab>r
+	203 1, 124 1, 									// BIT 7,H
+	202 1, 											// JP Z,
+	__begin.loop.address @@ 2, 						// address
+	r>ab
+;
+
+// ****************************************************************************************************
+//
+//											For .... Next
+//
+// ****************************************************************************************************
+
+:__for.loop.address variable 
+
+:for 	[compiles]
+	ab>r
+	here __for.loop.address !!						// Remember where we are.
+	43 1, 229 1, 									// DEC HL ; PUSH HL
+	r>ab
+;
+
+:next 	[compiles]
+	ab>r
+	225 1, 											// POP HL
+	124 1, 181 1, 									// LD A,H ; OR L
+	194 1, __for.loop.address @@ 2, 				// JP NZ,<loop>
+	r>ab
+;
+
+:i 		[compiles]
+	ab>r
+	225 1, 229 1, 									// POP HL ; PUSH HL
+	r>ab
+;
+
+// ****************************************************************************************************
+//
+//												Min and Max
+//
+// ****************************************************************************************************
+
+:min ab>r < if r>ab b>a ; then r>ab ;
+:max ab>r < if r>ab ; then r>ab b>a ;
+
+:test break 0 if ;
+
+[test]

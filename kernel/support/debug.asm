@@ -3,7 +3,7 @@
 ;
 ;		File:		debug.asm
 ;		Purpose:	Show A/B Registers on the screen.
-;		Date : 		10th December 2018
+;		Date : 		12th December 2018
 ;		Author:		paul@robsons.org.uk
 ;
 ; *********************************************************************************
