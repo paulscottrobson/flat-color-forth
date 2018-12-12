@@ -474,6 +474,23 @@ start_70_61_72_61_6d_21:
     ld   (Parameter),hl
     ret
 
+; =========== pop macro ===========
+
+start_70_6f_70:
+ call COMUCopyCode
+ db end_70_6f_70-start_70_6f_70-4
+    ex   de,hl
+    pop  hl
+end_70_6f_70:
+
+; =========== push macro ===========
+
+start_70_75_73_68:
+ call COMUCopyCode
+ db end_70_75_73_68-start_70_75_73_68-4
+    push  hl
+end_70_75_73_68:
+
 ; =========== r>a macro ===========
 
 start_72_3e_61:

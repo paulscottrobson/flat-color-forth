@@ -33,6 +33,7 @@ for root,dirs,files in os.walk("sources"):
 #
 source = [x if x.find("//") < 0 else x[:x.find("//")] for x in source]
 source = [x.replace("\t"," ").rstrip() for x in source if x.strip() != ""]
+source = [x for x in source if x[0] != ';']
 #
 #		Split it up into words
 #

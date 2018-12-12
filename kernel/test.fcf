@@ -1,3 +1,13 @@
+// ***************************************************************************************
+// ***************************************************************************************
+//
+//		Name : 		system.fcf
+//		Author :	Paul Robson (paul@robsons.org.uk)
+//		Date : 		12th December 2018
+//		Purpose :	Standard utility routines and structures
+//
+// ***************************************************************************************
+// ***************************************************************************************
  
 // ****************************************************************************************************
 //
@@ -27,7 +37,7 @@
 
 // ****************************************************************************************************
 //
-//		Defines a word as a variable.
+//						Defines a word as a variable. :<identifier> variable
 //
 // ****************************************************************************************************
 
@@ -35,12 +45,31 @@
  	[compiles] 										// It's a compiles word, it executes this on compile.
  	compiles 										// Makes the word just defined compiles.
  	__compile.variable.handler  					// Creates a call to __variable handler which COMPILES
- 													// a call to __variable_handler because thats what the word does
+ 													// a call to __variable_handler (Rule#1)
+ 													// which outputs ex de,hl ld hl,<tos>
  	0 2, 											// Compiling $0000
 ;
 
+// ****************************************************************************************************
+//
+//		Fast variables. xx @@ and xx !! are functionally the same as xx @ and xx ! but are quicker
+//		because the code is rewritten to use direct access. However, it only works with variables.
+//		You can't do it with calculated things e.g. xx 3 + @
+//
+// ****************************************************************************************************
 
-:test variable break
+:@@ [compiles]
+	here push 3- h +! 42 1, pop h !  				// Rewrites ex de,hl ; ld hl,x to ex de,hl;ld hl,(x)
+;
 
-// if then begin until (while ?) min and max ? requires proper < =
+:!! [compiles]
+	here push 4- h +! 0 1, 34 1, pop h ! 			// Rewrites ex de,hl ; ld hl,x to nop ; ld (x),hl
+;
+
+
+:testv variable 
+
+:demo1 99 testv @@ 98 testv !! 97 testv 96
+
+// !! @@ if then begin until (while ?) min and max ? requires proper < =
 
