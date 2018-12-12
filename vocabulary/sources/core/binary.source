@@ -59,3 +59,40 @@
 		xor 	e
 		ld 		l,a
 
+// ==================================================================================================================
+
+@word =
+		ld 		a,h 								; D = H^D
+		xor 	d
+		ld 		h,a
+		ld 		a,l 								; A = L^E | H^D
+		xor 	e
+		or 		h
+		ld 		hl,$0000 							; return 0 if any differences.
+		ret 	nz
+		dec 	hl
+
+// ==================================================================================================================
+
+@word < 										
+													; checking if B < A
+		ld 		a,h 								; signs different ??
+		xor 	d													
+		jp 		m,__Less_DiffSigns
+
+		push 	de
+		ex 		de,hl 								; HL = B, DE = A
+		sbc 	hl,de 								; calculate B-A, CS if -ve e.g. B < A
+		pop 	de
+		ld 		hl,$0000 							; so return 0 if B-A doesn't generate a borrow
+		ret 	nc
+		dec 	hl
+		ret
+
+__Less_DiffSigns:
+		bit 	7,d 								; if B bit 7 is set, -ve B must be < A
+		ld 		hl,$0000
+		ret 	z 									; so return zero if not set
+		dec 	hl
+		ret
+

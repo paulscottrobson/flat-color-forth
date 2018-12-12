@@ -38,6 +38,23 @@ start_2b_21:
     dec  hl
     ret
 
+; =========== ++ macro ===========
+
+start_2b_2b:
+ call COMUCopyCode
+ db end_2b_2b-start_2b_2b-4
+    inc  hl
+end_2b_2b:
+
+; =========== +++ macro ===========
+
+start_2b_2b_2b:
+ call COMUCopyCode
+ db end_2b_2b_2b-start_2b_2b_2b-4
+    inc  hl
+    inc  hl
+end_2b_2b_2b:
+
 ; =========== +or word ===========
 
 start_2b_6f_72:
@@ -62,6 +79,23 @@ start_2d:
     cpl
     ld   l,a
 end_2d:
+
+; =========== -- macro ===========
+
+start_2d_2d:
+ call COMUCopyCode
+ db end_2d_2d-start_2d_2d-4
+    dec  hl
+end_2d_2d:
+
+; =========== --- macro ===========
+
+start_2d_2d_2d:
+ call COMUCopyCode
+ db end_2d_2d_2d-start_2d_2d_2d-4
+    dec  hl
+    dec  hl
+end_2d_2d_2d:
 
 ; =========== / word ===========
 
@@ -120,6 +154,45 @@ start_3b:
  db end_3b-start_3b-4
     ret
 end_3b:
+
+; =========== < word ===========
+
+start_3c:
+ call COMUCompileCallToSelf
+    ; checking if B < A
+    ld   a,h         ; signs different ??
+    xor  d
+    jp   m,__Less_DiffSigns
+    push  de
+    ex   de,hl         ; HL = B, DE = A
+    sbc  hl,de         ; calculate B-A, CS if -ve e.g. B < A
+    pop  de
+    ld   hl,$0000        ; so return 0 if B-A doesn't generate a borrow
+    ret  nc
+    dec  hl
+    ret
+__Less_DiffSigns:
+    bit  7,d         ; if B bit 7 is set, -ve B must be < A
+    ld   hl,$0000
+    ret  z          ; so return zero if not set
+    dec  hl
+    ret
+    ret
+
+; =========== = word ===========
+
+start_3d:
+ call COMUCompileCallToSelf
+    ld   a,h         ; D = H^D
+    xor  d
+    ld   h,a
+    ld   a,l         ; A = L^E | H^D
+    xor  e
+    or   h
+    ld   hl,$0000        ; return 0 if any differences.
+    ret  nz
+    dec  hl
+    ret
 
 ; =========== @ macro ===========
 

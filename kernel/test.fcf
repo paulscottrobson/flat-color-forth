@@ -1,10 +1,11 @@
  
- // ****************************************************************************************************
- //
- //		Compiles overrides the normal behaviour of a word, so you can make a word do something 
- //		else when its compiled. 
- //
- // ****************************************************************************************************
+// ****************************************************************************************************
+//
+//		Compiles overrides the normal behaviour of a word, so you can make a word do something 
+//		else when its compiled. Every red word has CALL <CompileCallToNextInstruction> compiled
+//		in by default ; this removes it. It's sort of like "IMMEDIATE".
+//
+// ****************************************************************************************************
 
 :compiles 
  	ab>r here 3- + h ! r>ab 						// Which does compiles.
@@ -33,18 +34,13 @@
 :variable 
  	[compiles] 										// It's a compiles word, it executes this on compile.
  	compiles 										// Makes the word just defined compiles.
- 	__compile.variable.handler  					// This creates code to call __variable.handler here.
- 													// e.g. a CALL __variable.handler is compiled.
- 													// So when the variable is compiled, it does __variable.handler
- 													// and compiles EX DE,HL ; LD HL,xxxx
+ 	__compile.variable.handler  					// Creates a call to __variable handler which COMPILES
+ 													// a call to __variable_handler because thats what the word does
  	0 2, 											// Compiling $0000
 ;
 
 
 :test variable break
 
-[0] [0] [test] [0] [hex!] [debug] [halt]
-
-
-
+// if then begin until (while ?) min and max ? requires proper < =
 
