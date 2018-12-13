@@ -1,18 +1,2 @@
 
 
-:_variable_handler
-	205 1, 										// Compile CALL
-	[33] [1,] [here] [6] [+] [2,] 				// Code that puts HERE + 6 in A
-	2, ; 										// Compile that address and return
-	235 1, 33 1, r>a  2, ; 						// That call will do this code EX DE,HL ; LD HL,<tos>
-
-:variable [compiles] compiles 					// Variable is run immediately, as is its word. Ca
-	_variable_handler 							// Compile CALL <handler code>
-	0 2,										// Allocate space for the variable.
-;
-
-:jim variable
-:tim variable
-
-:test tim jim ;
-
