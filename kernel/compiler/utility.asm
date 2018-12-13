@@ -11,6 +11,21 @@
 
 ; ***************************************************************************************
 ;
+;								Compile call to E:HL
+;
+; ***************************************************************************************
+
+COMUCompileCall:
+		;
+		;	TODO: Crosspage call if >= $C000 and page different
+		;
+		ld 		a,$CD 								; Z80 Call
+		call 	FARCompileByte
+		call 	FARCompileWord						; compile address
+		ret
+
+; ***************************************************************************************
+;
 ;							Compile code to load constant
 ;
 ; ***************************************************************************************
@@ -31,12 +46,14 @@ COMUCompileConstant:
 
 COMUCopyCode:
 		ex 		(sp),hl 							; old HL on stack, new HL is return address
+		push 	bc 									; preserve BC
 		ld 		b,(hl) 								; count to copy
 __COMUCopyLoop:
 		inc 	hl
 		ld 		a,(hl) 								; read a byte
 		call 	FARCompileByte 						; compile it
 		djnz	__COMUCopyLoop
+		pop 	bc 									; restore BC
 		pop 	hl 									; restore old HL.
 		ret
 

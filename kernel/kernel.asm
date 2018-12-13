@@ -59,9 +59,6 @@ Boot:	ld 		sp,StackTop							; reset Z80 Stack
 		include "compiler/constant.asm"				; ASCII -> Integer conversion
 		include "compiler/dictionary.asm" 			; Dictionary workers
 		include "compiler/compiler.asm"				; compiler
-		include "compiler/com_compile.asm"			; compiler sub-parts
-		include "compiler/com_define.asm"		
-		include "compiler/com_execute.asm"		
 
 		include "temp/__words.asm"					; vocabulary file.
 		

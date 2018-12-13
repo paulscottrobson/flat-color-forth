@@ -1,9 +1,3 @@
-- rewrite compiler
-
-		red			compile dictionary entry.
-		green 		execute immediate, compile normal, compile constant, compile string
-		yellow 		execute normal, execute string
-
 - add string constant
 - if/-if crashout ?
 - cross page call

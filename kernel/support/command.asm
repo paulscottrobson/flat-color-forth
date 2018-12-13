@@ -93,8 +93,11 @@ __CLIExecute:
 		or 		$C0 								; 1 10 lllll
 		ld 		(bc),a 								; make that the tag/
 
-		; execute code at BC, yellow tagged.
-		
+		ld 		hl,(__ARegister) 					; Execute as a yellow word in context.
+		ld 		de,(__BRegister)
+		call 	COMXExecuteYellowWord
+		ld 		(__BRegister),de
+		ld 		(__ARegister),hl		
 		jp 		WarmStart
 
 __CLIGetKey:
@@ -115,6 +118,6 @@ __CLIChangeLoop:
 		ret
 
 __CLIWelcome:
-		db 		"flat color forth",$00
+		db 		"flat.color.forth",$00
 __CLIWarmStart:
 		db 		"ready",$00
