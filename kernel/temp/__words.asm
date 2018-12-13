@@ -371,9 +371,9 @@ start_62_73_77_61_70_3a_66:
     ld   l,a
     ret
 
-; =========== commands word ===========
+; =========== compiles word ===========
 
-start_63_6f_6d_6d_61_6e_64_73_3a_66:
+start_63_6f_6d_70_69_6c_65_73_3a_66:
     call  DICTMakeLastCompiles     ; make the last word defined a 'commands' (e.g. immediate)
     ret
 

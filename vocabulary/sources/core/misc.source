@@ -107,6 +107,6 @@ __haltz80:
 
 // ==================================================================================================================
 
-@word commands
+@word compiles
 		call 	DICTMakeLastCompiles 				; make the last word defined a 'commands' (e.g. immediate)
 		
