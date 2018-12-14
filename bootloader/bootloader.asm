@@ -3,7 +3,7 @@
 ;
 ;		Name : 		bootloader.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		10th December 2018
+;		Date : 		14th December 2018
 ;		Purpose :	Boot-Loads code by loading "boot.img" into memory
 ;					from $8000-$BFFF then banks 32-94 (2 per page) into $C000-$FFFF
 ;
@@ -146,5 +146,6 @@ FileHandle:
 ImageName:
 		db 		"boot.img",0
 
-		savesna "bootloader.sna",Start
+		org 	$FFFF
+		db 		0
 
