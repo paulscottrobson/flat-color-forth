@@ -11,17 +11,12 @@
 
 ; ***************************************************************************************
 ;
-;								Compile call to E:HL
+;						 Compile call to code following this call
 ;
 ; ***************************************************************************************
 
-COMUCompileCall:
-		;
-		;	TODO: Crosspage call if >= $C000 and page different
-		;
-		ld 		a,$CD 								; Z80 Call
-		call 	FARCompileByte
-		call 	FARCompileWord						; compile address
+COMUCompileCallToSelf:
+		db 		$DD,$01
 		ret
 
 ; ***************************************************************************************

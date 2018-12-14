@@ -1,15 +1,13 @@
 System:
 
 	Convert back to compilation rule compiles
-		@word 	@macro 	@xmacro 	@macro has a preceding NOP.
-									@xmacro has a post ret so it can be executed.
 
 		Red : add definition, add CALL <compile self>
 		Green : call if in dictionary, numeric constant
 		Yellow : Exec in place or do number switch.									
 
 
-- add string constant
+- add string constant compiler only.
 - if/-if crashout ?
 - cross page call
 - port libraries.

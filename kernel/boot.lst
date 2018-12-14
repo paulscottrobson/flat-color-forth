@@ -1,6 +1,6 @@
               	; --------------------------------------
               	; zasm: assemble "kernel.asm"
-              	; date: 2018-12-14 07:45:01
+              	; date: 2018-12-14 07:59:14
               	; --------------------------------------
 
 
@@ -33,7 +33,7 @@
 8000:         			org 	$8000 								; $8000 boot.
 8000: 1804    			jr 		Boot
 8002: FFFF    			org 	$8004 								; $8004 address of sysinfo
-8004: E38B    			dw 		SystemInformation 
+8004: 9E8B    			dw 		SystemInformation 
               	
 8006: 31FC7E  	Boot:	ld 		sp,StackTop							; reset Z80 Stack
 8009: F3      			di											; disable interrupts
@@ -75,7 +75,7 @@
 802F: CD4E83  			call 	PAGEInitialise
 8032: E5      			push 	hl 									; save error message
               	
-8033: 2AFB8B  			ld 		hl,(__DIScreenSize) 				; clear the 2nd line
+8033: 2AB68B  			ld 		hl,(__DIScreenSize) 				; clear the 2nd line
 8036: 11C0FF  			ld 		de,-64
 8039: 19      			add 	hl,de
 803A: 0620    			ld 		b,32
@@ -85,7 +85,7 @@
 8042: 23      			inc 	hl
 8043: 10F7    			djnz 	__CLIClear
               	
-8045: 2AFB8B  			ld 		hl,(__DIScreenSize) 				; half way down 2nd line.
+8045: 2AB68B  			ld 		hl,(__DIScreenSize) 				; half way down 2nd line.
 8048: 11D0FF  			ld 		de,-48
 804B: 19      			add 	hl,de
               	
@@ -102,14 +102,14 @@
 805A: 23      			inc 	hl
 805B: 18F1    			jr 		__CLIPrompt
 805D:         	__CLIPromptExit:
-805D: 2A078C  			ld 		hl,(__ARegister) 					; load A/B in
-8060: ED5B098C			ld 		de,(__BRegister) 					; update that part of the display.
+805D: 2AC28B  			ld 		hl,(__ARegister) 					; load A/B in
+8060: ED5BC48B			ld 		de,(__BRegister) 					; update that part of the display.
 8064: CDEA80  			call 	DEBUGShow
               	
-8067: 2AFB8B  			ld 		hl,(__DIScreenSize)					; bakck to start of 2nd to last row
+8067: 2AB68B  			ld 		hl,(__DIScreenSize)					; bakck to start of 2nd to last row
 806A: 11C0FF  			ld		de,-64
 806D: 19      			add 	hl,de
-806E: DD21218C			ld 		ix,__CLIBuffer 						; IX points to buffer
+806E: DD21DA8B			ld 		ix,__CLIBuffer 						; IX points to buffer
 8072:         	__CLILoop:
 8072: 117F05  			ld 		de,$057F 							; display prompt
 8075: CD1782  			call 	GFXWriteCharacter
@@ -136,17 +136,17 @@
 809B:         	__CLIExecute:
 809B: DD360080			ld 		(ix+0),$80 							; mark end
               	
-809F: 01208C  			ld 		bc,__CLIBuffer-1 					; get address of buffer into BC
+809F: 01D98B  			ld 		bc,__CLIBuffer-1 					; get address of buffer into BC
 80A2: 7D      			ld 		a,l 								; get length
 80A3: E60F    			and 	$0F 
 80A5: F6C0    			or 		$C0 								; 1 10 lllll
 80A7: 02      			ld 		(bc),a 								; make that the tag/
               	
-80A8: 2A078C  			ld 		hl,(__ARegister) 					; Execute as a yellow word in context.
-80AB: ED5B098C			ld 		de,(__BRegister)
-80AF: CD0887  			call 	COMXExecuteYellowWord
-80B2: ED53098C			ld 		(__BRegister),de
-80B6: 22078C  			ld 		(__ARegister),hl		
+80A8: 2AC28B  			ld 		hl,(__ARegister) 					; Execute as a yellow word in context.
+80AB: ED5BC48B			ld 		de,(__BRegister)
+80AF: CDBB86  			call 	COMXExecuteYellowWord
+80B2: ED53C48B			ld 		(__BRegister),de
+80B6: 22C28B  			ld 		(__ARegister),hl		
 80B9: C32180  			jp 		WarmStart
               	
 80BC:         	__CLIGetKey:
@@ -156,13 +156,13 @@
 80C2: C9      			ret
 80C3:         	__CLIGetChange:
 80C3: C5      			push 	bc
-80C4: 3A1F8C  			ld 		a,(__CLICurrentKey)
+80C4: 3AD88B  			ld 		a,(__CLICurrentKey)
 80C7: 47      			ld 		b,a
 80C8:         	__CLIChangeLoop:
 80C8: CD8182  			call 	IOScanKeyboard
 80CB: B8      			cp 		b
 80CC: 28FA    			jr 		z,__CLIChangeLoop
-80CE: 321F8C  			ld 		(__CLICurrentKey),a
+80CE: 32D88B  			ld 		(__CLICurrentKey),a
 80D1: C1      			pop 	bc
 80D2: C9      			ret
               	
@@ -195,7 +195,7 @@
 80ED: D5      			push 	de 									; save B then A
 80EE: E5      			push 	hl
               	
-80EF: 2AFB8B  			ld 		hl,(__DIScreenSize) 				; clear bottom line.
+80EF: 2AB68B  			ld 		hl,(__DIScreenSize) 				; clear bottom line.
 80F2: 11E0FF  			ld 		de,-32
 80F5: 19      			add 	hl,de
 80F6: E5      			push 	hl
@@ -390,13 +390,13 @@
 81A5: F5      			push 	af 									; save byte and HL
 81A6: E5      			push 	hl
 81A7: F5      			push 	af 									; save byte
-81A8: 3AE58B  			ld		a,(HerePage) 						; switch to page
+81A8: 3AA08B  			ld		a,(HerePage) 						; switch to page
 81AB: CD6083  			call 	PAGESwitch
-81AE: 2AE38B  			ld 		hl,(Here) 							; write to memory location
+81AE: 2A9E8B  			ld 		hl,(Here) 							; write to memory location
 81B1: F1      			pop 	af
 81B2: 77      			ld 		(hl),a
 81B3: 23      			inc 	hl 									; bump memory location
-81B4: 22E38B  			ld 		(Here),hl 							; write back
+81B4: 229E8B  			ld 		(Here),hl 							; write back
 81B7: CD7983  			call 	PAGERestore
 81BA: E1      			pop 	hl 									; restore and exit
 81BB: F1      			pop 	af
@@ -413,14 +413,14 @@
 81BE: D5      			push 	de
 81BF: E5      			push 	hl
 81C0: EB      			ex 		de,hl 								; word into DE
-81C1: 3AE58B  			ld		a,(HerePage) 						; switch to page
+81C1: 3AA08B  			ld		a,(HerePage) 						; switch to page
 81C4: CD6083  			call 	PAGESwitch
-81C7: 2AE38B  			ld 		hl,(Here) 							; write to memory location
+81C7: 2A9E8B  			ld 		hl,(Here) 							; write to memory location
 81CA: 73      			ld 		(hl),e
 81CB: 23      			inc 	hl 	
 81CC: 72      			ld 		(hl),d
 81CD: 23      			inc 	hl
-81CE: 22E38B  			ld 		(Here),hl 							; write back
+81CE: 229E8B  			ld 		(Here),hl 							; write back
 81D1: CD7983  			call 	PAGERestore
 81D4: E1      			pop 	hl
 81D5: D1      			pop 	de 									; restore and exit
@@ -446,7 +446,7 @@
               	
 81D8:         	GFXClearScreen:
 81D8: E5      			push 	hl 									; clear screen by reinitialising
-81D9: 3AFF8B  			ld 		a,(__DIScreenMode)
+81D9: 3ABA8B  			ld 		a,(__DIScreenMode)
 81DC: CDE281  			call 	GFXMode
 81DF: E1      			pop 	hl
 81E0: C9      			ret
@@ -464,7 +464,7 @@
 81E3: D5      			push 	de
 81E4: E5      			push 	hl
 81E5: 6F      			ld 		l,a 								; save current mode
-81E6: 32FF8B  			ld 		(__DIScreenMode),a
+81E6: 32BA8B  			ld 		(__DIScreenMode),a
 81E9: 2D      			dec 	l 									; L = 1 mode layer2
 81EA: 2808    			jr 		z,__GFXLayer2
 81EC: 2D      			dec 	l
@@ -482,16 +482,16 @@
               	
 81FC:         	__GFXConfigure:
 81FC: 7D      			ld 		a,l 								; save screen extent
-81FD: 32F38B  			ld 		(__DIScreenWidth),a
+81FD: 32AE8B  			ld 		(__DIScreenWidth),a
 8200: 7C      			ld 		a,h
-8201: 32F78B  			ld 		(__DIScreenHeight),a
+8201: 32B28B  			ld 		(__DIScreenHeight),a
 8204: EB      			ex 		de,hl 								; save driver
-8205: 22058C  			ld 		(__DIScreenDriver),hl
+8205: 22C08B  			ld 		(__DIScreenDriver),hl
 8208: 6A      			ld 		l,d 								; make sizes 16 bit in HL/DE
 8209: 2600    			ld 		h,0
 820B: 1600    			ld 		d,0
 820D: CD6081  			call 	MULTMultiply16
-8210: 22FB8B  			ld 		(__DIScreenSize),hl
+8210: 22B68B  			ld 		(__DIScreenSize),hl
 8213: E1      			pop 	hl
 8214: D1      			pop 	de
 8215: C1      			pop 	bc
@@ -510,7 +510,7 @@
 821A: E5      			push 	hl
 821B: 012582  			ld 		bc,__GFXWCExit
 821E: C5      			push 	bc
-821F: ED4B058C			ld 		bc,(__DIScreenDriver)
+821F: ED4BC08B			ld 		bc,(__DIScreenDriver)
 8223: C5      			push 	bc
 8224: C9      			ret
 8225:         	__GFXWCExit:
@@ -582,7 +582,7 @@
 8266: 29      			add 	hl,hl 								; x 8
 8267: 29      			add 	hl,hl
 8268: 29      			add 	hl,hl
-8269: ED5B038C			ld 		de,(__DIFontBase) 					; add the font base.
+8269: ED5BBE8B			ld 		de,(__DIFontBase) 					; add the font base.
 826D: 19      			add 	hl,de
 826E: EB      			ex 		de,hl 								; put in DE (font address)
 826F: E1      			pop 	hl
@@ -758,8 +758,8 @@
 8353: ED9257  			db 		$ED,$92,$57
 8356: 3D      			dec 	a
 8357: 08      			ex 		af,af' 								; put page in A'
-8358: 210F8C  			ld 		hl,__PAGEStackBase 					; reset the page stack
-835B: 220D8C  			ld 		(__PAGEStackPointer),hl
+8358: 21C88B  			ld 		hl,__PAGEStackBase 					; reset the page stack
+835B: 22C68B  			ld 		(__PAGEStackPointer),hl
 835E: E1      			pop 	hl
 835F: C9      			ret
               	
@@ -774,11 +774,11 @@
 8361: E5      			push 	hl
               	
 8362: F5      			push 	af 									; save A on stack
-8363: 2A0D8C  			ld 		hl,(__PAGEStackPointer) 			; put A' on the stack, the current page
+8363: 2AC68B  			ld 		hl,(__PAGEStackPointer) 			; put A' on the stack, the current page
 8366: 08      			ex 		af,af'
 8367: 77      			ld 		(hl),a
 8368: 23      			inc 	hl
-8369: 220D8C  			ld 		(__PAGEStackPointer),hl
+8369: 22C68B  			ld 		(__PAGEStackPointer),hl
               	
 836C: F1      			pop 	af 									; restore new A
 836D: ED9256  			db 		$ED,$92,$56							; switch to page A
@@ -800,10 +800,10 @@
 8379:         	PAGERestore:
 8379: F5      			push 	af
 837A: E5      			push 	hl
-837B: 2A0D8C  			ld 		hl,(__PAGEStackPointer) 			; pop the old page off
+837B: 2AC68B  			ld 		hl,(__PAGEStackPointer) 			; pop the old page off
 837E: 2B      			dec 	hl
 837F: 7E      			ld 		a,(hl)
-8380: 220D8C  			ld 		(__PAGEStackPointer),hl
+8380: 22C68B  			ld 		(__PAGEStackPointer),hl
 8383: ED9256  			db 		$ED,$92,$56							; switch to page A
 8386: 3C      			inc 	a
 8387: ED9257  			db 		$ED,$92,$57
@@ -1243,8 +1243,8 @@
 8526: 1102BB  			ld 		de,$BB02
 8529: 210000  			ld 		hl,$0000
 852C: 110000  			ld 		de,$0000
-852F: 22078C  			ld 		(__ARegister),hl
-8532: ED53098C			ld 		(__BRegister),de
+852F: 22C28B  			ld 		(__ARegister),hl
+8532: ED53C48B			ld 		(__BRegister),de
 8536: 1E22    			ld 		e,FirstSourcePage 					; set the first source page.
               	;
               	;		Loop here to scan the next source page.
@@ -1270,11 +1270,11 @@
 8551: EDB0    			ldir 
               	
 8553: 01087B  			ld 		bc,EditBuffer 						; BC is the code to compile.
-8556: 2A078C  			ld 		hl,(__ARegister)					; load registers
-8559: ED5B098C			ld 		de,(__BRegister)
-855D: CDAF86  			call 	COMCompileWordList 					; compile that word list.
-8560: ED53098C			ld 		(__BRegister),de
-8564: 22078C  			ld 		(__ARegister),hl
+8556: 2AC28B  			ld 		hl,(__ARegister)					; load registers
+8559: ED5BC48B			ld 		de,(__BRegister)
+855D: CD8986  			call 	COMCompileWordList 					; compile that word list.
+8560: ED53C48B			ld 		(__BRegister),de
+8564: 22C28B  			ld 		(__ARegister),hl
 8567: D1      			pop 	de 									; restore E
               			
 8568:         	__BUFFNextPage:		
@@ -1307,18 +1307,13 @@
               	
               	; ***************************************************************************************
               	;
-              	;								Compile call to E:HL
+              	;						 Compile call to code following this call
               	;
               	; ***************************************************************************************
               	
-857C:         	COMUCompileCall:
-              			;
-              			;	TODO: Crosspage call if >= $C000 and page different
-              			;
-857C: 3ECD    			ld 		a,$CD 								; Z80 Call
-857E: CDA581  			call 	FARCompileByte
-8581: CDBD81  			call 	FARCompileWord						; compile address
-8584: C9      			ret
+857C:         	COMUCompileCallToSelf:
+857C: DD01    			db 		$DD,$01
+857E: C9      			ret
               	
               	; ***************************************************************************************
               	;
@@ -1326,13 +1321,13 @@
               	;
               	; ***************************************************************************************
               	
-8585:         	COMUCompileConstant:
-8585: 3EEB    			ld 		a,$EB 								; EX DE,HL
-8587: CDA581  			call 	FARCompileByte
-858A: 3E21    			ld 		a,$21								; LD HL,xxxx
-858C: CDA581  			call 	FARCompileByte
-858F: CDBD81  			call 	FARCompileWord						; compile constant
-8592: C9      			ret
+857F:         	COMUCompileConstant:
+857F: 3EEB    			ld 		a,$EB 								; EX DE,HL
+8581: CDA581  			call 	FARCompileByte
+8584: 3E21    			ld 		a,$21								; LD HL,xxxx
+8586: CDA581  			call 	FARCompileByte
+8589: CDBD81  			call 	FARCompileWord						; compile constant
+858C: C9      			ret
               	
               	; ***************************************************************************************
               	;
@@ -1340,18 +1335,18 @@
               	;
               	; ***************************************************************************************
               	
-8593:         	COMUCopyCode:
-8593: E3      			ex 		(sp),hl 							; old HL on stack, new HL is return address
-8594: C5      			push 	bc 									; preserve BC
-8595: 46      			ld 		b,(hl) 								; count to copy
-8596:         	__COMUCopyLoop:
-8596: 23      			inc 	hl
-8597: 7E      			ld 		a,(hl) 								; read a byte
-8598: CDA581  			call 	FARCompileByte 						; compile it
-859B: 10F9    			djnz	__COMUCopyLoop
-859D: C1      			pop 	bc 									; restore BC
-859E: E1      			pop 	hl 									; restore old HL.
-859F: C9      			ret
+858D:         	COMUCopyCode:
+858D: E3      			ex 		(sp),hl 							; old HL on stack, new HL is return address
+858E: C5      			push 	bc 									; preserve BC
+858F: 46      			ld 		b,(hl) 								; count to copy
+8590:         	__COMUCopyLoop:
+8590: 23      			inc 	hl
+8591: 7E      			ld 		a,(hl) 								; read a byte
+8592: CDA581  			call 	FARCompileByte 						; compile it
+8595: 10F9    			djnz	__COMUCopyLoop
+8597: C1      			pop 	bc 									; restore BC
+8598: E1      			pop 	hl 									; restore old HL.
+8599: C9      			ret
               	
               	
               	
@@ -1374,66 +1369,66 @@
               	;
               	; ***********************************************************************************************
               	
-85A0:         	CONSTConvert:
-85A0: C5      		push 	bc
+859A:         	CONSTConvert:
+859A: C5      		push 	bc
               	
-85A1: 50      		ld 		d,b 									; string in DE.
-85A2: 59      		ld 		e,c
-85A3: 13      		inc 	de 										; skip over the tag byte.
+859B: 50      		ld 		d,b 									; string in DE.
+859C: 59      		ld 		e,c
+859D: 13      		inc 	de 										; skip over the tag byte.
               	
-85A4: 210000  		ld 		hl,$0000								; result in HL.
-85A7:         	__CONConvLoop:
-85A7: 1A      		ld 		a,(de)									; get next character
-85A8: 13      		inc 	de
+859E: 210000  		ld 		hl,$0000								; result in HL.
+85A1:         	__CONConvLoop:
+85A1: 1A      		ld 		a,(de)									; get next character
+85A2: 13      		inc 	de
               	
-85A9: FE30    		cp 		'0'										; must be 0-9 otherwise
-85AB: 382D    		jr 		c,__CONConFail
-85AD: FE3A    		cp 		'9'+1
-85AF: 3029    		jr 		nc,__CONConFail
+85A3: FE30    		cp 		'0'										; must be 0-9 otherwise
+85A5: 382D    		jr 		c,__CONConFail
+85A7: FE3A    		cp 		'9'+1
+85A9: 3029    		jr 		nc,__CONConFail
               	
-85B1: C5      		push 	bc
-85B2: E5      		push 	hl 										; HL -> BC
-85B3: C1      		pop 	bc
-85B4: 29      		add 	hl,hl 									; HL := HL * 4 + BC 
-85B5: 29      		add 	hl,hl
-85B6: 09      		add 	hl,bc 						
-85B7: 29      		add 	hl,hl 									; HL := HL * 10
-85B8: 0600    		ld 		b,0 									; add the digit into HL
-85BA: E60F    		and 	15
-85BC: 4F      		ld 		c,a
-85BD: 09      		add 	hl,bc
-85BE: C1      		pop 	bc
+85AB: C5      		push 	bc
+85AC: E5      		push 	hl 										; HL -> BC
+85AD: C1      		pop 	bc
+85AE: 29      		add 	hl,hl 									; HL := HL * 4 + BC 
+85AF: 29      		add 	hl,hl
+85B0: 09      		add 	hl,bc 						
+85B1: 29      		add 	hl,hl 									; HL := HL * 10
+85B2: 0600    		ld 		b,0 									; add the digit into HL
+85B4: E60F    		and 	15
+85B6: 4F      		ld 		c,a
+85B7: 09      		add 	hl,bc
+85B8: C1      		pop 	bc
               	
-85BF: 1A      		ld 		a,(de) 									; check ends in -
-85C0: FE2D    		cp 		'-'									
-85C2: 2806    		jr 		z,__CONMinusExit 						
-85C4: CB7F    		bit 	7,a										; keep going till reached the next tag.
-85C6: 28DF    		jr 		z,__CONConvLoop
-85C8: 180D    		jr 		__CONNotNegative
+85B9: 1A      		ld 		a,(de) 									; check ends in -
+85BA: FE2D    		cp 		'-'									
+85BC: 2806    		jr 		z,__CONMinusExit 						
+85BE: CB7F    		bit 	7,a										; keep going till reached the next tag.
+85C0: 28DF    		jr 		z,__CONConvLoop
+85C2: 180D    		jr 		__CONNotNegative
               	
-85CA:         	__CONMinusExit:
-85CA: 13      		inc 	de 										; if not the last, it's an error.
-85CB: 1A      		ld 		a,(de)
-85CC: CB7F    		bit 	7,a
-85CE: 280A    		jr		z,__CONConFail
+85C4:         	__CONMinusExit:
+85C4: 13      		inc 	de 										; if not the last, it's an error.
+85C5: 1A      		ld 		a,(de)
+85C6: CB7F    		bit 	7,a
+85C8: 280A    		jr		z,__CONConFail
               	
-85D0: 7C      		ld 		a,h 									; negate HL
-85D1: 2F      		cpl 	
-85D2: 67      		ld 		h,a
-85D3: 7D      		ld 		a,l
-85D4: 2F      		cpl
-85D5: 6F      		ld 		l,a
-85D6: 23      		inc 	hl
+85CA: 7C      		ld 		a,h 									; negate HL
+85CB: 2F      		cpl 	
+85CC: 67      		ld 		h,a
+85CD: 7D      		ld 		a,l
+85CE: 2F      		cpl
+85CF: 6F      		ld 		l,a
+85D0: 23      		inc 	hl
               	
-85D7:         	__CONNotNegative:
-85D7: AF      		xor 	a 										; clear carry
-85D8: C1      		pop 	bc
-85D9: C9      		ret
+85D1:         	__CONNotNegative:
+85D1: AF      		xor 	a 										; clear carry
+85D2: C1      		pop 	bc
+85D3: C9      		ret
               	
-85DA:         	__CONConFail: 										; didn't convert
-85DA: 37      		scf
-85DB: C1      		pop 	bc
-85DC: C9      		ret
+85D4:         	__CONConFail: 										; didn't convert
+85D4: 37      		scf
+85D5: C1      		pop 	bc
+85D6: C9      		ret
               		
               			include "compiler/dictionary.asm" 			; Dictionary workers
               	; ***************************************************************************************
@@ -1454,166 +1449,142 @@
               	;
               	; ***********************************************************************************************
               	
-85DD:         	DICTAddWord:
-85DD: F5      			push 	af 									; registers to stack.
-85DE: C5      			push 	bc
-85DF: D5      			push 	de
-85E0: E5      			push	hl
-85E1: DDE5    			push 	ix
+85D7:         	DICTAddWord:
+85D7: F5      			push 	af 									; registers to stack.
+85D8: C5      			push 	bc
+85D9: D5      			push 	de
+85DA: E5      			push	hl
+85DB: DDE5    			push 	ix
               	
-85E3: C5      			push 	bc 									; put word address in HL
-85E4: E1      			pop 	hl 
+85DD: C5      			push 	bc 									; put word address in HL
+85DE: E1      			pop 	hl 
               	
-85E5: 7E      			ld 		a,(hl) 								; get length from tag into B
-85E6: E61F    			and 	$1F
-85E8: 47      			ld 		b,a
-85E9: 23      			inc 	hl 									; HL = first character
+85DF: 7E      			ld 		a,(hl) 								; get length from tag into B
+85E0: E61F    			and 	$1F
+85E2: 47      			ld 		b,a
+85E3: 23      			inc 	hl 									; HL = first character
               	
-85EA: 3E20    			ld 		a,DictionaryPage					; switch to dictionary page
-85EC: CD6083  			call 	PAGESwitch
+85E4: 3E20    			ld 		a,DictionaryPage					; switch to dictionary page
+85E6: CD6083  			call 	PAGESwitch
               	
-85EF: DD2100C0			ld 		ix,$C000							; IX = Start of dictionary
+85E9: DD2100C0			ld 		ix,$C000							; IX = Start of dictionary
               	
-85F3:         	__DICTFindEndDictionary:
-85F3: DD7E00  			ld 		a,(ix+0) 							; follow down chain to the end
-85F6: B7      			or 		a
-85F7: 2807    			jr 		z,__DICTCreateEntry
-85F9: 5F      			ld 		e,a
-85FA: 1600    			ld 		d,0
-85FC: DD19    			add 	ix,de
-85FE: 18F3    			jr 		__DICTFindEndDictionary
+85ED:         	__DICTFindEndDictionary:
+85ED: DD7E00  			ld 		a,(ix+0) 							; follow down chain to the end
+85F0: B7      			or 		a
+85F1: 2807    			jr 		z,__DICTCreateEntry
+85F3: 5F      			ld 		e,a
+85F4: 1600    			ld 		d,0
+85F6: DD19    			add 	ix,de
+85F8: 18F3    			jr 		__DICTFindEndDictionary
               	
-8600:         	__DICTCreateEntry:
-8600: DD220B8C			ld 		(__DICTLastWordDefined),ix 			; set last word defined address
+85FA:         	__DICTCreateEntry:
+85FA: 78      			ld 		a,b
+85FB: C605    			add 	a,5
+85FD: DD7700  			ld 		(ix+0),a 							; offset is length + 5
               	
-8604: 78      			ld 		a,b
-8605: C605    			add 	a,5
-8607: DD7700  			ld 		(ix+0),a 							; offset is length + 5
+8600: 3AA08B  			ld 		a,(HerePage)						; code page
+8603: DD7701  			ld 		(ix+1),a
               	
-860A: 3AE58B  			ld 		a,(HerePage)						; code page
-860D: DD7701  			ld 		(ix+1),a
+8606: ED5B9E8B			ld 		de,(Here) 							; code address
+860A: DD7302  			ld 		(ix+2),e
+860D: DD7203  			ld 		(ix+3),d 
               	
-8610: ED5BE38B			ld 		de,(Here) 							; code address
-8614: DD7302  			ld 		(ix+2),e
-8617: DD7203  			ld 		(ix+3),d 
+8610: DD7004  			ld 		(ix+4),b 							; put length in.
               	
-861A: DD7004  			ld 		(ix+4),b 							; put length in.
+8613: EB      			ex 		de,hl 								; put name in DE
+8614:         	__DICTAddCopy:
+8614: 1A      			ld 		a,(de) 								; copy byte over as 7 bit ASCII.
+8615: DD7705  			ld 		(ix+5),a
+8618: DD23    			inc 	ix 									
+861A: 13      			inc 	de
+861B: 10F7    			djnz	__DICTAddCopy 						; until string is copied over.
               	
-861D: EB      			ex 		de,hl 								; put name in DE
-861E:         	__DICTAddCopy:
-861E: 1A      			ld 		a,(de) 								; copy byte over as 7 bit ASCII.
-861F: DD7705  			ld 		(ix+5),a
-8622: DD23    			inc 	ix 									
-8624: 13      			inc 	de
-8625: 10F7    			djnz	__DICTAddCopy 						; until string is copied over.
+861D: DD360500			ld 		(ix+5),0 							; write end of dictionary zero.
               	
-8627: DD360500			ld 		(ix+5),0 							; write end of dictionary zero.
-              	
-862B: CD7983  			call 	PAGERestore
-862E: DDE1    			pop 	ix 									; restore and exit
-8630: E1      			pop 	hl
-8631: D1      	 		pop 	de
-8632: C1      			pop 	bc
-8633: F1      			pop 	af
-8634: C9      			ret
-              	
-              	; ***********************************************************************************************
-              	;
-              	;									Make the last word "compiles"
-              	;
-              	; ***********************************************************************************************
-              	
-8635:         	DICTMakeLastCompiles:
-8635: F5      			push 	af
-8636: DDE5    			push 	ix
-8638: 3E20    			ld 		a,DictionaryPage					; switch to dictionary page
-863A: CD6083  			call 	PAGESwitch
-863D: DD2A0B8C			ld 		ix,(__DICTLastWordDefined) 			; address of last defined word
-8641: DDCB04FE			set 	7,(ix+4) 							; set bit 7 to make it 'commands'
-8645: DDE1    			pop 	ix
-8647: F1      			pop 	af
-8648: C9      			ret
+8621: CD7983  			call 	PAGERestore
+8624: DDE1    			pop 	ix 									; restore and exit
+8626: E1      			pop 	hl
+8627: D1      	 		pop 	de
+8628: C1      			pop 	bc
+8629: F1      			pop 	af
+862A: C9      			ret
               	
               	; ***********************************************************************************************
               	;
               	;			Find word in dictionary. BC points to tagged string which is the name.
-              	;			A is the flag to check if we are looking for compiles ($80) or normal ($00)
               	; 
               	;			On exit, HL is the address and E the page number with CC if found, 
               	;			CS set and HL=DE=0 if not found.
               	;
               	; ***********************************************************************************************
               	
-8649:         	DICTFindWord:
-8649: C5      			push 	bc 								; save registers - return in EHL Carry
-864A: DDE5    			push 	ix
+862B:         	DICTFindWord:
+862B: C5      			push 	bc 								; save registers - return in EHL Carry
+862C: DDE5    			push 	ix
               	
-864C: 60      			ld 		h,b 							; put address of name in HL. 
-864D: 69      			ld 		l,c
-864E: 4F      			ld 		c,a 							; save compiles flag check in C
-864F: 3E20    			ld 		a,DictionaryPage 				; switch to dictionary page
-8651: CD6083  			call 	PAGESwitch
+862E: 60      			ld 		h,b 							; put address of name in HL. 
+862F: 69      			ld 		l,c
               	
-8654: DD2100C0			ld 		ix,$C000 						; dictionary start			
-8658:         	__DICTFindMainLoop:
-8658: DD7E00  			ld 		a,(ix+0)						; examine offset, exit if zero.
-865B: B7      			or 		a
-865C: 2841    			jr 		z,__DICTFindFail
+8630: 3E20    			ld 		a,DictionaryPage 				; switch to dictionary page
+8632: CD6083  			call 	PAGESwitch
               	
-865E: DD7E04  			ld 		a,(ix+4) 						; length
-8661: AE      			xor 	(hl) 							; xor with tag length
-8662: E61F    			and 	$1F 							; check lower 5 bits
-8664: 2030    			jr 		nz,__DICTFindNext 				; if different can't be this word.
+8635: DD2100C0			ld 		ix,$C000 						; dictionary start			
+8639:         	__DICTFindMainLoop:
+8639: DD7E00  			ld 		a,(ix+0)						; examine offset, exit if zero.
+863C: B7      			or 		a
+863D: 283A    			jr 		z,__DICTFindFail
               	
-8666: DD7E04  			ld 		a,(ix+4) 						; are the sign bits of the length/type byte and 
-8669: A9      			xor 	c  								; the search parameter the same.
-866A: FA9686  			jp 		m,__DICTFindNext 				; if different, can't be this word.
-              			
-866D: DDE5    			push 	ix 								; save pointers on stack.
-866F: E5      			push 	hl 
+863F: DD7E04  			ld 		a,(ix+4) 						; length
+8642: AE      			xor 	(hl) 							; xor with tag length
+8643: E61F    			and 	$1F 							; check lower 5 bits
+8645: 2029    			jr 		nz,__DICTFindNext 				; if different can't be this word.
               	
-8670: DD7E04  			ld 		a,(ix+4)						; get the word length to test into B
-8673: E61F    			and 	$1F
-8675: 47      			ld 		b,a 							; into B
-8676: 23      			inc 	hl 								; skip over tag byte
-8677:         	__DICTCheckName:
-8677: DD7E05  			ld 		a,(ix+5) 						; compare dictionary vs character.
-867A: BE      			cp 		(hl) 							; compare vs the matching character.
-867B: 2016    			jr 		nz,__DICTFindNoMatch 			; no, not the same word.
-867D: 23      			inc 	hl 								; HL point to next character
-867E: DD23    			inc 	ix
-8680: 10F5    			djnz 	__DICTCheckName
+8647: DDE5    			push 	ix 								; save pointers on stack.
+8649: E5      			push 	hl 
               	
-8682: E1      			pop 	hl 								; Found a match. restore HL and IX
-8683: DDE1    			pop 	ix
+864A: DD7E04  			ld 		a,(ix+4)						; get the word length to test into B
+864D: E61F    			and 	$1F
+864F: 47      			ld 		b,a 							; into B
+8650: 23      			inc 	hl 								; skip over tag byte
+8651:         	__DICTCheckName:
+8651: DD7E05  			ld 		a,(ix+5) 						; compare dictionary vs character.
+8654: BE      			cp 		(hl) 							; compare vs the matching character.
+8655: 2016    			jr 		nz,__DICTFindNoMatch 			; no, not the same word.
+8657: 23      			inc 	hl 								; HL point to next character
+8658: DD23    			inc 	ix
+865A: 10F5    			djnz 	__DICTCheckName
+              	
+865C: E1      			pop 	hl 								; Found a match. restore HL and IX
+865D: DDE1    			pop 	ix
               		
-8685: 1600    			ld 		d,0 							; D = 0 for neatness.
-8687: DD5E01  			ld 		e,(ix+1)						; E = page
-868A: DD6E02  			ld 		l,(ix+2)						; HL = address
-868D: DD6603  			ld 		h,(ix+3)		
-8690: AF      			xor 	a 								; clear the carry flag.
-8691: 1813    			jr 		__DICTFindExit
+865F: 1600    			ld 		d,0 							; D = 0 for neatness.
+8661: DD5E01  			ld 		e,(ix+1)						; E = page
+8664: DD6E02  			ld 		l,(ix+2)						; HL = address
+8667: DD6603  			ld 		h,(ix+3)		
+866A: AF      			xor 	a 								; clear the carry flag.
+866B: 1813    			jr 		__DICTFindExit
               	
-8693:         	__DICTFindNoMatch:								; this one doesn't match.
-8693: E1      			pop 	hl 								; restore HL and IX
-8694: DDE1    			pop 	ix
-8696:         	__DICTFindNext:
-8696: DD5E00  			ld 		e,(ix+0)						; DE = offset
-8699: 1600    			ld 		d,$00
-869B: DD19    			add 	ix,de 							; next word.
-869D: 18B9    			jr 		__DICTFindMainLoop				; and try the next one.
+866D:         	__DICTFindNoMatch:								; this one doesn't match.
+866D: E1      			pop 	hl 								; restore HL and IX
+866E: DDE1    			pop 	ix
+8670:         	__DICTFindNext:
+8670: DD5E00  			ld 		e,(ix+0)						; DE = offset
+8673: 1600    			ld 		d,$00
+8675: DD19    			add 	ix,de 							; next word.
+8677: 18C0    			jr 		__DICTFindMainLoop				; and try the next one.
               	
-869F:         	__DICTFindFail:
-869F: 110000  			ld 		de,$0000 						; return all zeros.
-86A2: 210000  			ld 		hl,$0000
-86A5: 37      			scf 									; set carry flag
-86A6:         	__DICTFindExit:
-86A6: F5      			push 	af
-86A7: CD7983  			call 	PAGERestore
-86AA: F1      			pop 	af
-86AB: DDE1    			pop 	ix 								; pop registers and return.
-86AD: C1      			pop 	bc
-86AE: C9      			ret
+8679:         	__DICTFindFail:
+8679: 110000  			ld 		de,$0000 						; return all zeros.
+867C: 210000  			ld 		hl,$0000
+867F: 37      			scf 									; set carry flag
+8680:         	__DICTFindExit:
+8680: F5      			push 	af
+8681: CD7983  			call 	PAGERestore
+8684: F1      			pop 	af
+8685: DDE1    			pop 	ix 								; pop registers and return.
+8687: C1      			pop 	bc
+8688: C9      			ret
               			include "compiler/compiler.asm"				; compiler
               	; ***************************************************************************************
               	; ***************************************************************************************
@@ -1632,48 +1603,48 @@
               	;
               	; ***************************************************************************************
               	
-86AF:         	COMCompileWordList:
-86AF: C5      			push 	bc 									; save non value registers (HLDE can change)
-86B0: DDE5    			push 	ix
+8689:         	COMCompileWordList:
+8689: C5      			push 	bc 									; save non value registers (HLDE can change)
+868A: DDE5    			push 	ix
               	
-86B2:         	__COMWLoop:
-86B2: 0A      			ld 		a,(bc) 								; reached the end ?
-86B3: FE80    			cp 		$80
-86B5: 281E    			jr 		z,__COMWExit
+868C:         	__COMWLoop:
+868C: 0A      			ld 		a,(bc) 								; reached the end ?
+868D: FE80    			cp 		$80
+868F: 281E    			jr 		z,__COMWExit
               	
-86B7: 0A      			ld 		a,(bc) 								; 1 00 lllll (Red)
-86B8: E660    			and 	$60
-86BA: CCDF86  			call 	z,COMDCompileRedWord 				
+8691: 0A      			ld 		a,(bc) 								; 1 00 lllll (Red)
+8692: E660    			and 	$60
+8694: CCB986  			call 	z,COMDCompileRedWord 				
               	
-86BD: 0A      			ld 		a,(bc) 								; 1 01 lllll (Green)
-86BE: E660    			and 	$60
-86C0: FE20    			cp 		$20
-86C2: CCE386  			call 	z,COMCCompileGreenWord
+8697: 0A      			ld 		a,(bc) 								; 1 01 lllll (Green)
+8698: E660    			and 	$60
+869A: FE20    			cp 		$20
+869C: CCBA86  			call 	z,COMCCompileGreenWord
               	
-86C5: 0A      			ld 		a,(bc) 								; 1 10 lllll (Yellow)
-86C6: E660    			and 	$60
-86C8: FE40    			cp 		$40
-86CA: CC0887  			call 	z,COMXExecuteYellowWord
+869F: 0A      			ld 		a,(bc) 								; 1 10 lllll (Yellow)
+86A0: E660    			and 	$60
+86A2: FE40    			cp 		$40
+86A4: CCBB86  			call 	z,COMXExecuteYellowWord
               	
-86CD:         	__COMWNext: 										; advance to next tag.
-86CD: 03      			inc 	bc 
-86CE: 0A      			ld 		a,(bc)
-86CF: CB7F    			bit 	7,a
-86D1: 28FA    			jr 		z,__COMWNext
-86D3: 18DD    			jr 		__COMWLoop 							; go do that.
+86A7:         	__COMWNext: 										; advance to next tag.
+86A7: 03      			inc 	bc 
+86A8: 0A      			ld 		a,(bc)
+86A9: CB7F    			bit 	7,a
+86AB: 28FA    			jr 		z,__COMWNext
+86AD: 18DD    			jr 		__COMWLoop 							; go do that.
               			
-86D5:         	__COMWExit: 										; exit the routine
-86D5: DDE1    			pop 	ix
-86D7: C1      			pop 	bc
-86D8: C9      			ret
+86AF:         	__COMWExit: 										; exit the routine
+86AF: DDE1    			pop 	ix
+86B1: C1      			pop 	bc
+86B2: C9      			ret
               	;
               	;		Jump here on error.
               	;
-86D9:         	COMError:
-86D9: C5      			push 	bc
-86DA: E1      			pop 	hl
-86DB: 23      			inc 	hl
-86DC: C32880  			jp 		ErrorHandler
+86B3:         	COMError:
+86B3: C5      			push 	bc
+86B4: E1      			pop 	hl
+86B5: 23      			inc 	hl
+86B6: C32880  			jp 		ErrorHandler
               	
               	
               	; ***************************************************************************************
@@ -1682,9 +1653,8 @@
               	;
               	; ***************************************************************************************
               	
-86DF:         	COMDCompileRedWord:
-86DF: CDDD85  			call 	DICTAddWord 						; add word to the dictionary.
-86E2: C9      			ret
+86B9:         	COMDCompileRedWord:
+86B9: C9      			ret
               		
               	; ***************************************************************************************
               	;
@@ -1692,29 +1662,8 @@
               	;
               	; ***************************************************************************************
               	
-86E3:         	COMCCompileGreenWord:	
-86E3: D5      			push 	de 									; save A & B
-86E4: E5      			push 	hl
-86E5: 3E80    			ld 		a,$80 								; check for "compiles" entries
-86E7: CD4986  			call 	DICTFindWord
-86EA: 302F    			jr 		nc,__COMXExecuteWord 				; if found execute it.
-86EC: 3E00    			ld 		a,$00 								; check for normal entries
-86EE: CD4986  			call 	DICTFindWord
-86F1: 300F    			jr 		nc,__COMCCompile 					; if found, then compile it.
-86F3: CD4986  			call 	DICTFindWord
-86F6: CDA085  			call 	CONSTConvert 						; convert to integer
-86F9: DAD986  			jp 		c,COMError 							; failure
-86FC: CD8585  			call 	COMUCompileConstant 				; compile as constant.
-86FF: E1      			pop 	hl
-8700: D1      			pop 	de
-8701: C9      			ret
-              	;
-8702:         	__COMCCompile:
-8702: CD7C85  			call 	COMUCompileCall 					; compile a call to E:HL
-8705: E1      			pop 	hl
-8706: D1      			pop 	de
-8707: C9      			ret
-              	;
+86BA:         	COMCCompileGreenWord:	
+86BA: C9      			ret
               	
               	; ***************************************************************************************
               	;
@@ -1722,829 +1671,769 @@
               	;
               	; ***************************************************************************************
               	
-8708:         	COMXExecuteYellowWord:		
-8708: D5      			push 	de 									; save A & B
-8709: E5      			push 	hl
-870A: 3E00    			ld 		a,$00 								; look in normal words
-870C: CD4986  			call 	DICTFindWord
-870F: 300A    			jr 		nc,__COMXExecuteWord
-8711: CDA085  			call 	CONSTConvert 						; check if number
-8714: DAD986  			jp 		c,COMError 							; if not, report error.
-              	
-8717: D1      			pop 	de 									; restore A into DE, keep HL the same
-8718: 33      			inc 	sp
-8719: 33      			inc 	sp
-871A: C9      			ret
-              	
-871B:         	__COMXExecuteWord:
-871B: 7B      			ld 		a,e 								; switch to the relevaant page
-871C: CD6083  			call 	PAGESwitch 						
-871F: D1      			pop 	de 									; restore A into DE, wrongly.
-8720: E3      			ex 		(sp),hl 							; now A and B are the wrong way round and exec is on TOS
-8721: EB      			ex 		de,hl 								; A and B are now correct.
-8722: DDE3    			ex 		(sp),ix 							; IX now contains address, old IX on TOS
-8724: CD2D87  			call 	__CallIX 							; call (IX)
-8727: CD7983  			call 	PAGERestore 						; restore original page
-872A: DDE1    			pop 	ix 									; restore original IX.
-872C: C9      			ret
-              	
-872D:         	__CallIX:	 										; call here does CALL (IX)
-872D: DDE9    			jp 		(ix)
-              	
+86BB:         	COMXExecuteYellowWord:		
+86BB: C9      			ret
+              			
               			
               	
               			include "temp/__words.asm"					; vocabulary file.
-              	; =========== ! both ===========
+              	; =========== ! xmacro ===========
               	
-872F:         	start_21_3a_6d:
-872F: CD9385  	 call COMUCopyCode
-8732: 04      	 db end_21_3a_6d-start_21_3a_6d-4
-8733: 73      	    ld   (hl),e
-8734: 23      	    inc  hl
-8735: 72      	    ld   (hl),d
-8736: 2B      	    dec  hl
-8737:         	end_21_3a_6d:
-              	
-8737:         	start_21_3a_66:
-8737: 73      	    ld   (hl),e
-8738: 23      	    inc  hl
-8739: 72      	    ld   (hl),d
-873A: 2B      	    dec  hl
-873B: C9      	    ret
+86BC:         	start_21:
+86BC: CD8D85  	    call COMUCopyCode
+86BF: 04      	 db end_21-start_21-4
+86C0: 73      	    ld   (hl),e
+86C1: 23      	    inc  hl
+86C2: 72      	    ld   (hl),d
+86C3: 2B      	    dec  hl
+86C4:         	end_21:
+86C4: C9      	    ret
               	
               	; =========== * word ===========
               	
-873C:         	start_2a_3a_66:
-873C: CD6081  	    call  MULTMultiply16
-873F: C9      	    ret
+86C5: CD7C85  	    call COMUCompileCallToSelf
+86C8:         	start_2a:
+86C8: CD6081  	    call  MULTMultiply16
+86CB: C9      	    ret
               	
-              	; =========== + both ===========
+              	; =========== + xmacro ===========
               	
-8740:         	start_2b_3a_6d:
-8740: CD9385  	 call COMUCopyCode
-8743: 01      	 db end_2b_3a_6d-start_2b_3a_6d-4
-8744: 19      	    add  hl,de
-8745:         	end_2b_3a_6d:
-              	
-8745:         	start_2b_3a_66:
-8745: 19      	    add  hl,de
-8746: C9      	    ret
+86CC:         	start_2b:
+86CC: CD8D85  	    call COMUCopyCode
+86CF: 01      	 db end_2b-start_2b-4
+86D0: 19      	    add  hl,de
+86D1:         	end_2b:
+86D1: C9      	    ret
               	
               	; =========== +! word ===========
               	
-8747:         	start_2b_21_3a_66:
-8747: 7E      	    ld   a,(hl)
-8748: 83      	    add  a,e
-8749: 77      	    ld   (hl),a
-874A: 23      	    inc  hl
-874B: 7E      	    ld   a,(hl)
-874C: 8A      	    adc  a,d
-874D: 77      	    ld   (hl),a
-874E: 2B      	    dec  hl
-874F: C9      	    ret
+86D2: CD7C85  	    call COMUCompileCallToSelf
+86D5:         	start_2b_21:
+86D5: 7E      	    ld   a,(hl)
+86D6: 83      	    add  a,e
+86D7: 77      	    ld   (hl),a
+86D8: 23      	    inc  hl
+86D9: 7E      	    ld   a,(hl)
+86DA: 8A      	    adc  a,d
+86DB: 77      	    ld   (hl),a
+86DC: 2B      	    dec  hl
+86DD: C9      	    ret
               	
-              	; =========== ++ both ===========
+              	; =========== ++ xmacro ===========
               	
-8750:         	start_2b_2b_3a_6d:
-8750: CD9385  	 call COMUCopyCode
-8753: 01      	 db end_2b_2b_3a_6d-start_2b_2b_3a_6d-4
-8754: 23      	    inc  hl
-8755:         	end_2b_2b_3a_6d:
+86DE:         	start_2b_2b:
+86DE: CD8D85  	    call COMUCopyCode
+86E1: 01      	 db end_2b_2b-start_2b_2b-4
+86E2: 23      	    inc  hl
+86E3:         	end_2b_2b:
+86E3: C9      	    ret
               	
-8755:         	start_2b_2b_3a_66:
-8755: 23      	    inc  hl
-8756: C9      	    ret
+              	; =========== +++ xmacro ===========
               	
-              	; =========== +++ both ===========
-              	
-8757:         	start_2b_2b_2b_3a_6d:
-8757: CD9385  	 call COMUCopyCode
-875A: 02      	 db end_2b_2b_2b_3a_6d-start_2b_2b_2b_3a_6d-4
-875B: 23      	    inc  hl
-875C: 23      	    inc  hl
-875D:         	end_2b_2b_2b_3a_6d:
-              	
-875D:         	start_2b_2b_2b_3a_66:
-875D: 23      	    inc  hl
-875E: 23      	    inc  hl
-875F: C9      	    ret
+86E4:         	start_2b_2b_2b:
+86E4: CD8D85  	    call COMUCopyCode
+86E7: 02      	 db end_2b_2b_2b-start_2b_2b_2b-4
+86E8: 23      	    inc  hl
+86E9: 23      	    inc  hl
+86EA:         	end_2b_2b_2b:
+86EA: C9      	    ret
               	
               	; =========== +or word ===========
               	
-8760:         	start_2b_6f_72_3a_66:
-8760: 7C      	    ld   a,h
-8761: B2      	    or   d
-8762: 67      	    ld   h,a
-8763: 7D      	    ld   a,l
-8764: B3      	    or   e
-8765: 6F      	    ld   l,a
-8766: C9      	    ret
+86EB: CD7C85  	    call COMUCompileCallToSelf
+86EE:         	start_2b_6f_72:
+86EE: 7C      	    ld   a,h
+86EF: B2      	    or   d
+86F0: 67      	    ld   h,a
+86F1: 7D      	    ld   a,l
+86F2: B3      	    or   e
+86F3: 6F      	    ld   l,a
+86F4: C9      	    ret
               	
-              	; =========== - both ===========
+              	; =========== - xmacro ===========
               	
-8767:         	start_2d_3a_6d:
-8767: CD9385  	 call COMUCopyCode
-876A: 06      	 db end_2d_3a_6d-start_2d_3a_6d-4
-876B: 7C      	    ld   a,h
-876C: 2F      	    cpl
-876D: 67      	    ld   h,a
-876E: 7D      	    ld   a,l
-876F: 2F      	    cpl
-8770: 6F      	    ld   l,a
-8771:         	end_2d_3a_6d:
+86F5:         	start_2d:
+86F5: CD8D85  	    call COMUCopyCode
+86F8: 06      	 db end_2d-start_2d-4
+86F9: 7C      	    ld   a,h
+86FA: 2F      	    cpl
+86FB: 67      	    ld   h,a
+86FC: 7D      	    ld   a,l
+86FD: 2F      	    cpl
+86FE: 6F      	    ld   l,a
+86FF:         	end_2d:
+86FF: C9      	    ret
               	
-8771:         	start_2d_3a_66:
-8771: 7C      	    ld   a,h
-8772: 2F      	    cpl
-8773: 67      	    ld   h,a
-8774: 7D      	    ld   a,l
-8775: 2F      	    cpl
-8776: 6F      	    ld   l,a
-8777: C9      	    ret
+              	; =========== -- xmacro ===========
               	
-              	; =========== -- both ===========
+8700:         	start_2d_2d:
+8700: CD8D85  	    call COMUCopyCode
+8703: 01      	 db end_2d_2d-start_2d_2d-4
+8704: 2B      	    dec  hl
+8705:         	end_2d_2d:
+8705: C9      	    ret
               	
-8778:         	start_2d_2d_3a_6d:
-8778: CD9385  	 call COMUCopyCode
-877B: 01      	 db end_2d_2d_3a_6d-start_2d_2d_3a_6d-4
-877C: 2B      	    dec  hl
-877D:         	end_2d_2d_3a_6d:
+              	; =========== --- xmacro ===========
               	
-877D:         	start_2d_2d_3a_66:
-877D: 2B      	    dec  hl
-877E: C9      	    ret
-              	
-              	; =========== --- both ===========
-              	
-877F:         	start_2d_2d_2d_3a_6d:
-877F: CD9385  	 call COMUCopyCode
-8782: 02      	 db end_2d_2d_2d_3a_6d-start_2d_2d_2d_3a_6d-4
-8783: 2B      	    dec  hl
-8784: 2B      	    dec  hl
-8785:         	end_2d_2d_2d_3a_6d:
-              	
-8785:         	start_2d_2d_2d_3a_66:
-8785: 2B      	    dec  hl
-8786: 2B      	    dec  hl
-8787: C9      	    ret
+8706:         	start_2d_2d_2d:
+8706: CD8D85  	    call COMUCopyCode
+8709: 02      	 db end_2d_2d_2d-start_2d_2d_2d-4
+870A: 2B      	    dec  hl
+870B: 2B      	    dec  hl
+870C:         	end_2d_2d_2d:
+870C: C9      	    ret
               	
               	; =========== / word ===========
               	
-8788:         	start_2f_3a_66:
-8788: D5      	    push  de
-8789: CD7A81  	    call  DIVDivideMod16
-878C: EB      	    ex   de,hl
-878D: D1      	    pop  de
-878E: C9      	    ret
+870D: CD7C85  	    call COMUCompileCallToSelf
+8710:         	start_2f:
+8710: D5      	    push  de
+8711: CD7A81  	    call  DIVDivideMod16
+8714: EB      	    ex   de,hl
+8715: D1      	    pop  de
+8716: C9      	    ret
               	
               	; =========== /mod word ===========
               	
-878F:         	start_2f_6d_6f_64_3a_66:
-878F: CD7A81  	    call  DIVDivideMod16
-8792: EB      	    ex  de,hl
-8793: C9      	    ret
+8717: CD7C85  	    call COMUCompileCallToSelf
+871A:         	start_2f_6d_6f_64:
+871A: CD7A81  	    call  DIVDivideMod16
+871D: EB      	    ex  de,hl
+871E: C9      	    ret
               	
               	; =========== 1, word ===========
               	
-8794:         	start_31_2c_3a_66:
-8794: 7D      	    ld   a,l
-8795: CDA581  	    call  FARCompileByte
-8798: C9      	    ret
+871F: CD7C85  	    call COMUCompileCallToSelf
+8722:         	start_31_2c:
+8722: 7D      	    ld   a,l
+8723: CDA581  	    call  FARCompileByte
+8726: C9      	    ret
               	
-              	; =========== 2* both ===========
+              	; =========== 2* xmacro ===========
               	
-8799:         	start_32_2a_3a_6d:
-8799: CD9385  	 call COMUCopyCode
-879C: 01      	 db end_32_2a_3a_6d-start_32_2a_3a_6d-4
-879D: 29      	    add  hl,hl
-879E:         	end_32_2a_3a_6d:
-              	
-879E:         	start_32_2a_3a_66:
-879E: 29      	    add  hl,hl
-879F: C9      	    ret
+8727:         	start_32_2a:
+8727: CD8D85  	    call COMUCopyCode
+872A: 01      	 db end_32_2a-start_32_2a-4
+872B: 29      	    add  hl,hl
+872C:         	end_32_2a:
+872C: C9      	    ret
               	
               	; =========== 2, word ===========
               	
-87A0:         	start_32_2c_3a_66:
-87A0: CDBD81  	    call FARCompileWord
-87A3: C9      	    ret
+872D: CD7C85  	    call COMUCompileCallToSelf
+8730:         	start_32_2c:
+8730: CDBD81  	    call FARCompileWord
+8733: C9      	    ret
               	
-              	; =========== 2/ both ===========
+              	; =========== 2/ xmacro ===========
               	
-87A4:         	start_32_2f_3a_6d:
-87A4: CD9385  	 call COMUCopyCode
-87A7: 04      	 db end_32_2f_3a_6d-start_32_2f_3a_6d-4
-87A8: CB2C    	    sra  h
-87AA: CB1D    	    rr   l
-87AC:         	end_32_2f_3a_6d:
-              	
-87AC:         	start_32_2f_3a_66:
-87AC: CB2C    	    sra  h
-87AE: CB1D    	    rr   l
-87B0: C9      	    ret
+8734:         	start_32_2f:
+8734: CD8D85  	    call COMUCopyCode
+8737: 04      	 db end_32_2f-start_32_2f-4
+8738: CB2C    	    sra  h
+873A: CB1D    	    rr   l
+873C:         	end_32_2f:
+873C: C9      	    ret
               	
               	; =========== ; macro ===========
               	
-87B1:         	start_3b_3a_6d:
-87B1: CD9385  	 call COMUCopyCode
-87B4: 01      	 db end_3b_3a_6d-start_3b_3a_6d-4
-87B5: C9      	    ret
-87B6:         	end_3b_3a_6d:
+873D:         	start_3b:
+873D: 00      	    nop
+873E: CD8D85  	    call COMUCopyCode
+8741: 02      	 db end_3b-start_3b-4
+8742: C9      	    ret
+8743:         	end_3b:
+8743: C9      	    ret
               	
               	; =========== < word ===========
               	
-87B6:         	start_3c_3a_66:
+8744: CD7C85  	    call COMUCompileCallToSelf
+8747:         	start_3c:
               	    ; checking if B < A
-87B6: 7C      	    ld   a,h         ; signs different ??
-87B7: AA      	    xor  d
-87B8: FAC687  	    jp   m,__Less_DiffSigns
-87BB: D5      	    push  de
-87BC: EB      	    ex   de,hl         ; HL = B, DE = A
-87BD: ED52    	    sbc  hl,de         ; calculate B-A, CS if -ve e.g. B < A
-87BF: D1      	    pop  de
-87C0: 210000  	    ld   hl,$0000        ; so return 0 if B-A doesn't generate a borrow
-87C3: D0      	    ret  nc
-87C4: 2B      	    dec  hl
-87C5: C9      	    ret
-87C6:         	__Less_DiffSigns:
-87C6: CB7A    	    bit  7,d         ; if B bit 7 is set, -ve B must be < A
-87C8: 210000  	    ld   hl,$0000
-87CB: C8      	    ret  z          ; so return zero if not set
-87CC: 2B      	    dec  hl
-87CD: C9      	    ret
-87CE: C9      	    ret
+8747: 7C      	    ld   a,h         ; signs different ??
+8748: AA      	    xor  d
+8749: FA5787  	    jp   m,__Less_DiffSigns
+874C: D5      	    push  de
+874D: EB      	    ex   de,hl         ; HL = B, DE = A
+874E: ED52    	    sbc  hl,de         ; calculate B-A, CS if -ve e.g. B < A
+8750: D1      	    pop  de
+8751: 210000  	    ld   hl,$0000        ; so return 0 if B-A doesn't generate a borrow
+8754: D0      	    ret  nc
+8755: 2B      	    dec  hl
+8756: C9      	    ret
+8757:         	__Less_DiffSigns:
+8757: CB7A    	    bit  7,d         ; if B bit 7 is set, -ve B must be < A
+8759: 210000  	    ld   hl,$0000
+875C: C8      	    ret  z          ; so return zero if not set
+875D: 2B      	    dec  hl
+875E: C9      	    ret
+875F: C9      	    ret
               	
               	; =========== = word ===========
               	
-87CF:         	start_3d_3a_66:
-87CF: 7C      	    ld   a,h         ; D = H^D
-87D0: AA      	    xor  d
-87D1: 67      	    ld   h,a
-87D2: 7D      	    ld   a,l         ; A = L^E | H^D
-87D3: AB      	    xor  e
-87D4: B4      	    or   h
-87D5: 210000  	    ld   hl,$0000        ; return 0 if any differences.
-87D8: C0      	    ret  nz
-87D9: 2B      	    dec  hl
-87DA: C9      	    ret
+8760: CD7C85  	    call COMUCompileCallToSelf
+8763:         	start_3d:
+8763: 7C      	    ld   a,h         ; D = H^D
+8764: AA      	    xor  d
+8765: 67      	    ld   h,a
+8766: 7D      	    ld   a,l         ; A = L^E | H^D
+8767: AB      	    xor  e
+8768: B4      	    or   h
+8769: 210000  	    ld   hl,$0000        ; return 0 if any differences.
+876C: C0      	    ret  nz
+876D: 2B      	    dec  hl
+876E: C9      	    ret
               	
-              	; =========== @ both ===========
+              	; =========== @ xmacro ===========
               	
-87DB:         	start_40_3a_6d:
-87DB: CD9385  	 call COMUCopyCode
-87DE: 04      	 db end_40_3a_6d-start_40_3a_6d-4
-87DF: 7E      	    ld   a,(hl)
-87E0: 23      	    inc  hl
-87E1: 66      	    ld   h,(hl)
-87E2: 6F      	    ld   l,a
-87E3:         	end_40_3a_6d:
+876F:         	start_40:
+876F: CD8D85  	    call COMUCopyCode
+8772: 04      	 db end_40-start_40-4
+8773: 7E      	    ld   a,(hl)
+8774: 23      	    inc  hl
+8775: 66      	    ld   h,(hl)
+8776: 6F      	    ld   l,a
+8777:         	end_40:
+8777: C9      	    ret
               	
-87E3:         	start_40_3a_66:
-87E3: 7E      	    ld   a,(hl)
-87E4: 23      	    inc  hl
-87E5: 66      	    ld   h,(hl)
-87E6: 6F      	    ld   l,a
-87E7: C9      	    ret
+              	; =========== a>b xmacro ===========
               	
-              	; =========== a>b both ===========
-              	
-87E8:         	start_61_3e_62_3a_6d:
-87E8: CD9385  	 call COMUCopyCode
-87EB: 02      	 db end_61_3e_62_3a_6d-start_61_3e_62_3a_6d-4
-87EC: 5D      	    ld   e,l
-87ED: 54      	    ld   d,h
-87EE:         	end_61_3e_62_3a_6d:
-              	
-87EE:         	start_61_3e_62_3a_66:
-87EE: 5D      	    ld   e,l
-87EF: 54      	    ld   d,h
-87F0: C9      	    ret
+8778:         	start_61_3e_62:
+8778: CD8D85  	    call COMUCopyCode
+877B: 02      	 db end_61_3e_62-start_61_3e_62-4
+877C: 5D      	    ld   e,l
+877D: 54      	    ld   d,h
+877E:         	end_61_3e_62:
+877E: C9      	    ret
               	
               	; =========== a>r macro ===========
               	
-87F1:         	start_61_3e_72_3a_6d:
-87F1: CD9385  	 call COMUCopyCode
-87F4: 01      	 db end_61_3e_72_3a_6d-start_61_3e_72_3a_6d-4
-87F5: E5      	    push  hl
-87F6:         	end_61_3e_72_3a_6d:
+877F:         	start_61_3e_72:
+877F: 00      	    nop
+8780: CD8D85  	    call COMUCopyCode
+8783: 02      	 db end_61_3e_72-start_61_3e_72-4
+8784: E5      	    push  hl
+8785:         	end_61_3e_72:
+8785: C9      	    ret
               	
               	; =========== ab>r macro ===========
               	
-87F6:         	start_61_62_3e_72_3a_6d:
-87F6: CD9385  	 call COMUCopyCode
-87F9: 02      	 db end_61_62_3e_72_3a_6d-start_61_62_3e_72_3a_6d-4
-87FA: E5      	    push  hl
-87FB: D5      	    push  de
-87FC:         	end_61_62_3e_72_3a_6d:
+8786:         	start_61_62_3e_72:
+8786: 00      	    nop
+8787: CD8D85  	    call COMUCopyCode
+878A: 03      	 db end_61_62_3e_72-start_61_62_3e_72-4
+878B: E5      	    push  hl
+878C: D5      	    push  de
+878D:         	end_61_62_3e_72:
+878D: C9      	    ret
               	
               	; =========== abs word ===========
               	
-87FC:         	start_61_62_73_3a_66:
-87FC: CB7C    	    bit  7,h
-87FE: C29188  	    jp   nz,__Negate
-8801: C9      	    ret
+878E: CD7C85  	    call COMUCompileCallToSelf
+8791:         	start_61_62_73:
+8791: CB7C    	    bit  7,h
+8793: C23B88  	    jp   nz,__Negate
+8796: C9      	    ret
               	
               	; =========== and word ===========
               	
-8802:         	start_61_6e_64_3a_66:
-8802: 7C      	    ld   a,h
-8803: A2      	    and  d
-8804: 67      	    ld   h,a
-8805: 7D      	    ld   a,l
-8806: A3      	    and  e
-8807: 6F      	    ld   l,a
-8808: C9      	    ret
+8797: CD7C85  	    call COMUCompileCallToSelf
+879A:         	start_61_6e_64:
+879A: 7C      	    ld   a,h
+879B: A2      	    and  d
+879C: 67      	    ld   h,a
+879D: 7D      	    ld   a,l
+879E: A3      	    and  e
+879F: 6F      	    ld   l,a
+87A0: C9      	    ret
               	
-              	; =========== b! both ===========
+              	; =========== b! xmacro ===========
               	
-8809:         	start_62_21_3a_6d:
-8809: CD9385  	 call COMUCopyCode
-880C: 01      	 db end_62_21_3a_6d-start_62_21_3a_6d-4
-880D: 73      	    ld   (hl),e
-880E:         	end_62_21_3a_6d:
+87A1:         	start_62_21:
+87A1: CD8D85  	    call COMUCopyCode
+87A4: 01      	 db end_62_21-start_62_21-4
+87A5: 73      	    ld   (hl),e
+87A6:         	end_62_21:
+87A6: C9      	    ret
               	
-880E:         	start_62_21_3a_66:
-880E: 73      	    ld   (hl),e
-880F: C9      	    ret
+              	; =========== b>a xmacro ===========
               	
-              	; =========== b>a both ===========
-              	
-8810:         	start_62_3e_61_3a_6d:
-8810: CD9385  	 call COMUCopyCode
-8813: 02      	 db end_62_3e_61_3a_6d-start_62_3e_61_3a_6d-4
-8814: 6B      	    ld   l,e
-8815: 62      	    ld   h,d
-8816:         	end_62_3e_61_3a_6d:
-              	
-8816:         	start_62_3e_61_3a_66:
-8816: 6B      	    ld   l,e
-8817: 62      	    ld   h,d
-8818: C9      	    ret
+87A7:         	start_62_3e_61:
+87A7: CD8D85  	    call COMUCopyCode
+87AA: 02      	 db end_62_3e_61-start_62_3e_61-4
+87AB: 6B      	    ld   l,e
+87AC: 62      	    ld   h,d
+87AD:         	end_62_3e_61:
+87AD: C9      	    ret
               	
               	; =========== b>r macro ===========
               	
-8819:         	start_62_3e_72_3a_6d:
-8819: CD9385  	 call COMUCopyCode
-881C: 01      	 db end_62_3e_72_3a_6d-start_62_3e_72_3a_6d-4
-881D: D5      	    push  de
-881E:         	end_62_3e_72_3a_6d:
+87AE:         	start_62_3e_72:
+87AE: 00      	    nop
+87AF: CD8D85  	    call COMUCopyCode
+87B2: 02      	 db end_62_3e_72-start_62_3e_72-4
+87B3: D5      	    push  de
+87B4:         	end_62_3e_72:
+87B4: C9      	    ret
               	
-              	; =========== b@ both ===========
+              	; =========== b@ xmacro ===========
               	
-881E:         	start_62_40_3a_6d:
-881E: CD9385  	 call COMUCopyCode
-8821: 03      	 db end_62_40_3a_6d-start_62_40_3a_6d-4
-8822: 6E      	    ld   l,(hl)
-8823: 2600    	    ld   h,$00
-8825:         	end_62_40_3a_6d:
-              	
-8825:         	start_62_40_3a_66:
-8825: 6E      	    ld   l,(hl)
-8826: 2600    	    ld   h,$00
-8828: C9      	    ret
+87B5:         	start_62_40:
+87B5: CD8D85  	    call COMUCopyCode
+87B8: 03      	 db end_62_40-start_62_40-4
+87B9: 6E      	    ld   l,(hl)
+87BA: 2600    	    ld   h,$00
+87BC:         	end_62_40:
+87BC: C9      	    ret
               	
               	; =========== break macro ===========
               	
-8829:         	start_62_72_65_61_6b_3a_6d:
-8829: CD9385  	 call COMUCopyCode
-882C: 02      	 db end_62_72_65_61_6b_3a_6d-start_62_72_65_61_6b_3a_6d-4
-882D: DD01    	    db   $DD,$01
-882F:         	end_62_72_65_61_6b_3a_6d:
+87BD:         	start_62_72_65_61_6b:
+87BD: 00      	    nop
+87BE: CD8D85  	    call COMUCopyCode
+87C1: 03      	 db end_62_72_65_61_6b-start_62_72_65_61_6b-4
+87C2: DD01    	    db   $DD,$01
+87C4:         	end_62_72_65_61_6b:
+87C4: C9      	    ret
               	
-              	; =========== bswap both ===========
+              	; =========== bswap xmacro ===========
               	
-882F:         	start_62_73_77_61_70_3a_6d:
-882F: CD9385  	 call COMUCopyCode
-8832: 03      	 db end_62_73_77_61_70_3a_6d-start_62_73_77_61_70_3a_6d-4
-8833: 7C      	    ld   a,h
-8834: 65      	    ld   h,l
-8835: 6F      	    ld   l,a
-8836:         	end_62_73_77_61_70_3a_6d:
-              	
-8836:         	start_62_73_77_61_70_3a_66:
-8836: 7C      	    ld   a,h
-8837: 65      	    ld   h,l
-8838: 6F      	    ld   l,a
-8839: C9      	    ret
-              	
-              	; =========== compiles word ===========
-              	
-883A:         	start_63_6f_6d_70_69_6c_65_73_3a_66:
-883A: CD3586  	    call  DICTMakeLastCompiles     ; make the last word defined a 'commands' (e.g. immediate)
-883D: C9      	    ret
+87C5:         	start_62_73_77_61_70:
+87C5: CD8D85  	    call COMUCopyCode
+87C8: 03      	 db end_62_73_77_61_70-start_62_73_77_61_70-4
+87C9: 7C      	    ld   a,h
+87CA: 65      	    ld   h,l
+87CB: 6F      	    ld   l,a
+87CC:         	end_62_73_77_61_70:
+87CC: C9      	    ret
               	
               	; =========== copy word ===========
               	
-883E:         	start_63_6f_70_79_3a_66:
+87CD: CD7C85  	    call COMUCompileCallToSelf
+87D0:         	start_63_6f_70_79:
               	    ; B (DE) = source A (HL) = target
-883E: ED4BEF8B	    ld   bc,(Parameter)       ; get count
-8842: 78      	    ld   a,b         ; zero check
-8843: B1      	    or   c
-8844: 2817    	    jr   z,__copyExit
-8846: D5      	    push  de          ; save A/B
-8847: E5      	    push  hl
-8848: AF      	    xor  a          ; find direction.
-8849: ED52    	    sbc  hl,de
-884B: 7C      	    ld   a,h
-884C: 19      	    add  hl,de
-884D: CB7F    	    bit  7,a         ; if +ve use LDDR
-884F: 2805    	    jr   z,__copy2
-8851: EB      	    ex   de,hl         ; LDIR etc do (DE) <- (HL)
-8852: EDB0    	    ldir
-8854: 1807    	    jr   __copyExit
-8856:         	__copy2:
-8856: 09      	    add  hl,bc         ; add length to HL,DE, swap as LDDR does (DE) <- (HL)
-8857: EB      	    ex   de,hl
-8858: 09      	    add  hl,bc
-8859: 1B      	    dec  de          ; -1 to point to last byte
-885A: 2B      	    dec  hl
-885B: EDB8    	    lddr
-885D:         	__copyExit:
-885D: E1      	    pop  hl
-885E: D1      	    pop  de
-885F: C9      	    ret
+87D0: ED4BAA8B	    ld   bc,(Parameter)       ; get count
+87D4: 78      	    ld   a,b         ; zero check
+87D5: B1      	    or   c
+87D6: 2817    	    jr   z,__copyExit
+87D8: D5      	    push  de          ; save A/B
+87D9: E5      	    push  hl
+87DA: AF      	    xor  a          ; find direction.
+87DB: ED52    	    sbc  hl,de
+87DD: 7C      	    ld   a,h
+87DE: 19      	    add  hl,de
+87DF: CB7F    	    bit  7,a         ; if +ve use LDDR
+87E1: 2805    	    jr   z,__copy2
+87E3: EB      	    ex   de,hl         ; LDIR etc do (DE) <- (HL)
+87E4: EDB0    	    ldir
+87E6: 1807    	    jr   __copyExit
+87E8:         	__copy2:
+87E8: 09      	    add  hl,bc         ; add length to HL,DE, swap as LDDR does (DE) <- (HL)
+87E9: EB      	    ex   de,hl
+87EA: 09      	    add  hl,bc
+87EB: 1B      	    dec  de          ; -1 to point to last byte
+87EC: 2B      	    dec  hl
+87ED: EDB8    	    lddr
+87EF:         	__copyExit:
+87EF: E1      	    pop  hl
+87F0: D1      	    pop  de
+87F1: C9      	    ret
               	
               	; =========== debug word ===========
               	
-8860:         	start_64_65_62_75_67_3a_66:
-8860: CDEA80  	    call  DEBUGShow
-8863: C9      	    ret
+87F2: CD7C85  	    call COMUCompileCallToSelf
+87F5:         	start_64_65_62_75_67:
+87F5: CDEA80  	    call  DEBUGShow
+87F8: C9      	    ret
               	
               	; =========== fill word ===========
               	
-8864:         	start_66_69_6c_6c_3a_66:
-8864: ED4BEF8B	    ld   bc,(Parameter)       ; count to do.
-8868: 78      	    ld   a,b
-8869: B1      	    or   c
-886A: 2809    	    jr   z,__fillExit       ; if count zero exit.
-886C: D5      	    push  de
-886D: E5      	    push  hl
-886E:         	__fillLoop:
-886E: 73      	    ld   (hl),e
-886F: 23      	    inc  hl
-8870: 0B      	    dec  bc
-8871: 78      	    ld   a,b
-8872: B1      	    or   c
-8873: 20F9    	    jr   nz,__fillLoop
-8875:         	__fillExit:
-8875: E1      	    pop  hl
-8876: D1      	    pop  de
-8877: C9      	    ret
+87F9: CD7C85  	    call COMUCompileCallToSelf
+87FC:         	start_66_69_6c_6c:
+87FC: ED4BAA8B	    ld   bc,(Parameter)       ; count to do.
+8800: 78      	    ld   a,b
+8801: B1      	    or   c
+8802: 2809    	    jr   z,__fillExit       ; if count zero exit.
+8804: D5      	    push  de
+8805: E5      	    push  hl
+8806:         	__fillLoop:
+8806: 73      	    ld   (hl),e
+8807: 23      	    inc  hl
+8808: 0B      	    dec  bc
+8809: 78      	    ld   a,b
+880A: B1      	    or   c
+880B: 20F9    	    jr   nz,__fillLoop
+880D:         	__fillExit:
+880D: E1      	    pop  hl
+880E: D1      	    pop  de
+880F: C9      	    ret
               	
               	; =========== h word ===========
               	
-8878:         	start_68_3a_66:
-8878: EB      	    ex   de,hl
-8879: 21E38B  	    ld   hl,Here
-887C: C9      	    ret
+8810: CD7C85  	    call COMUCompileCallToSelf
+8813:         	start_68:
+8813: EB      	    ex   de,hl
+8814: 219E8B  	    ld   hl,Here
+8817: C9      	    ret
               	
               	; =========== halt word ===========
               	
-887D:         	start_68_61_6c_74_3a_66:
-887D:         	__haltz80:
-887D: F3      	    di
-887E: 76      	    halt
-887F: 18FC    	    jr   __haltz80
-8881: C9      	    ret
+8818: CD7C85  	    call COMUCompileCallToSelf
+881B:         	start_68_61_6c_74:
+881B:         	__haltz80:
+881B: F3      	    di
+881C: 76      	    halt
+881D: 18FC    	    jr   __haltz80
+881F: C9      	    ret
               	
               	; =========== here word ===========
               	
-8882:         	start_68_65_72_65_3a_66:
-8882: EB      	    ex   de,hl
-8883: 2AE38B  	    ld   hl,(Here)
-8886: C9      	    ret
+8820: CD7C85  	    call COMUCompileCallToSelf
+8823:         	start_68_65_72_65:
+8823: EB      	    ex   de,hl
+8824: 2A9E8B  	    ld   hl,(Here)
+8827: C9      	    ret
               	
               	; =========== hex! word ===========
               	
-8887:         	start_68_65_78_21_3a_66:
+8828: CD7C85  	    call COMUCompileCallToSelf
+882B:         	start_68_65_78_21:
               	    ; DE = word, HL = pos
-8887: CD2A82  	    call  GFXWriteHexWord      ; write out the word
-888A: C9      	    ret
+882B: CD2A82  	    call  GFXWriteHexWord      ; write out the word
+882E: C9      	    ret
               	
               	; =========== mod word ===========
               	
-888B:         	start_6d_6f_64_3a_66:
-888B: D5      	    push  de
-888C: CD7A81  	    call  DIVDivideMod16
-888F: D1      	    pop  de
-8890: C9      	    ret
+882F: CD7C85  	    call COMUCompileCallToSelf
+8832:         	start_6d_6f_64:
+8832: D5      	    push  de
+8833: CD7A81  	    call  DIVDivideMod16
+8836: D1      	    pop  de
+8837: C9      	    ret
               	
               	; =========== negate word ===========
               	
-8891:         	start_6e_65_67_61_74_65_3a_66:
-8891:         	__Negate:
-8891: 7C      	    ld   a,h
-8892: 2F      	    cpl
-8893: 67      	    ld   h,a
-8894: 7D      	    ld   a,l
-8895: 2F      	    cpl
-8896: 6F      	    ld   l,a
-8897: 23      	    inc  hl
-8898: C9      	    ret
+8838: CD7C85  	    call COMUCompileCallToSelf
+883B:         	start_6e_65_67_61_74_65:
+883B:         	__Negate:
+883B: 7C      	    ld   a,h
+883C: 2F      	    cpl
+883D: 67      	    ld   h,a
+883E: 7D      	    ld   a,l
+883F: 2F      	    cpl
+8840: 6F      	    ld   l,a
+8841: 23      	    inc  hl
+8842: C9      	    ret
               	
               	; =========== or word ===========
               	
-8899:         	start_6f_72_3a_66:
-8899: 7C      	    ld   a,h
-889A: AA      	    xor  d
-889B: 67      	    ld   h,a
-889C: 7D      	    ld   a,l
-889D: AB      	    xor  e
-889E: 6F      	    ld   l,a
-889F: C9      	    ret
+8843: CD7C85  	    call COMUCompileCallToSelf
+8846:         	start_6f_72:
+8846: 7C      	    ld   a,h
+8847: AA      	    xor  d
+8848: 67      	    ld   h,a
+8849: 7D      	    ld   a,l
+884A: AB      	    xor  e
+884B: 6F      	    ld   l,a
+884C: C9      	    ret
               	
               	; =========== or! word ===========
               	
-88A0:         	start_6f_72_21_3a_66:
-88A0: 7E      	    ld   a,(hl)
-88A1: B3      	    or   e
-88A2: 77      	    ld   (hl),a
-88A3: 23      	    inc  hl
-88A4: 7E      	    ld   a,(hl)
-88A5: B2      	    or   d
-88A6: 77      	    ld   (hl),a
-88A7: 2B      	    dec  hl
-88A8: C9      	    ret
+884D: CD7C85  	    call COMUCompileCallToSelf
+8850:         	start_6f_72_21:
+8850: 7E      	    ld   a,(hl)
+8851: B3      	    or   e
+8852: 77      	    ld   (hl),a
+8853: 23      	    inc  hl
+8854: 7E      	    ld   a,(hl)
+8855: B2      	    or   d
+8856: 77      	    ld   (hl),a
+8857: 2B      	    dec  hl
+8858: C9      	    ret
               	
-              	; =========== p! both ===========
+              	; =========== p! xmacro ===========
               	
-88A9:         	start_70_21_3a_6d:
-88A9: CD9385  	 call COMUCopyCode
-88AC: 04      	 db end_70_21_3a_6d-start_70_21_3a_6d-4
-88AD: 4D      	    ld   c,l
-88AE: 44      	    ld   b,h
-88AF: ED59    	    out  (c),e
-88B1:         	end_70_21_3a_6d:
-              	
-88B1:         	start_70_21_3a_66:
-88B1: 4D      	    ld   c,l
-88B2: 44      	    ld   b,h
-88B3: ED59    	    out  (c),e
-88B5: C9      	    ret
+8859:         	start_70_21:
+8859: CD8D85  	    call COMUCopyCode
+885C: 04      	 db end_70_21-start_70_21-4
+885D: 4D      	    ld   c,l
+885E: 44      	    ld   b,h
+885F: ED59    	    out  (c),e
+8861:         	end_70_21:
+8861: C9      	    ret
               	
               	; =========== p@ word ===========
               	
-88B6:         	start_70_40_3a_66:
-88B6: 4D      	    ld   c,l
-88B7: 44      	    ld   b,h
-88B8: ED68    	    in   l,(c)
-88BA: 2600    	    ld   h,0
-88BC: C9      	    ret
+8862: CD7C85  	    call COMUCompileCallToSelf
+8865:         	start_70_40:
+8865: 4D      	    ld   c,l
+8866: 44      	    ld   b,h
+8867: ED68    	    in   l,(c)
+8869: 2600    	    ld   h,0
+886B: C9      	    ret
               	
               	; =========== param! word ===========
               	
-88BD:         	start_70_61_72_61_6d_21_3a_66:
-88BD: 22EF8B  	    ld   (Parameter),hl
-88C0: C9      	    ret
+886C: CD7C85  	    call COMUCompileCallToSelf
+886F:         	start_70_61_72_61_6d_21:
+886F: 22AA8B  	    ld   (Parameter),hl
+8872: C9      	    ret
               	
               	; =========== pop macro ===========
               	
-88C1:         	start_70_6f_70_3a_6d:
-88C1: CD9385  	 call COMUCopyCode
-88C4: 02      	 db end_70_6f_70_3a_6d-start_70_6f_70_3a_6d-4
-88C5: EB      	    ex   de,hl
-88C6: E1      	    pop  hl
-88C7:         	end_70_6f_70_3a_6d:
+8873:         	start_70_6f_70:
+8873: 00      	    nop
+8874: CD8D85  	    call COMUCopyCode
+8877: 03      	 db end_70_6f_70-start_70_6f_70-4
+8878: EB      	    ex   de,hl
+8879: E1      	    pop  hl
+887A:         	end_70_6f_70:
+887A: C9      	    ret
               	
               	; =========== push macro ===========
               	
-88C7:         	start_70_75_73_68_3a_6d:
-88C7: CD9385  	 call COMUCopyCode
-88CA: 01      	 db end_70_75_73_68_3a_6d-start_70_75_73_68_3a_6d-4
-88CB: E5      	    push  hl
-88CC:         	end_70_75_73_68_3a_6d:
+887B:         	start_70_75_73_68:
+887B: 00      	    nop
+887C: CD8D85  	    call COMUCopyCode
+887F: 02      	 db end_70_75_73_68-start_70_75_73_68-4
+8880: E5      	    push  hl
+8881:         	end_70_75_73_68:
+8881: C9      	    ret
               	
               	; =========== r>a macro ===========
               	
-88CC:         	start_72_3e_61_3a_6d:
-88CC: CD9385  	 call COMUCopyCode
-88CF: 01      	 db end_72_3e_61_3a_6d-start_72_3e_61_3a_6d-4
-88D0: E1      	    pop  hl
-88D1:         	end_72_3e_61_3a_6d:
+8882:         	start_72_3e_61:
+8882: 00      	    nop
+8883: CD8D85  	    call COMUCopyCode
+8886: 02      	 db end_72_3e_61-start_72_3e_61-4
+8887: E1      	    pop  hl
+8888:         	end_72_3e_61:
+8888: C9      	    ret
               	
               	; =========== r>ab macro ===========
               	
-88D1:         	start_72_3e_61_62_3a_6d:
-88D1: CD9385  	 call COMUCopyCode
-88D4: 02      	 db end_72_3e_61_62_3a_6d-start_72_3e_61_62_3a_6d-4
-88D5: D1      	    pop  de
-88D6: E1      	    pop  hl
-88D7:         	end_72_3e_61_62_3a_6d:
+8889:         	start_72_3e_61_62:
+8889: 00      	    nop
+888A: CD8D85  	    call COMUCopyCode
+888D: 03      	 db end_72_3e_61_62-start_72_3e_61_62-4
+888E: D1      	    pop  de
+888F: E1      	    pop  hl
+8890:         	end_72_3e_61_62:
+8890: C9      	    ret
               	
               	; =========== r>b macro ===========
               	
-88D7:         	start_72_3e_62_3a_6d:
-88D7: CD9385  	 call COMUCopyCode
-88DA: 01      	 db end_72_3e_62_3a_6d-start_72_3e_62_3a_6d-4
-88DB: D1      	    pop  de
-88DC:         	end_72_3e_62_3a_6d:
+8891:         	start_72_3e_62:
+8891: 00      	    nop
+8892: CD8D85  	    call COMUCopyCode
+8895: 02      	 db end_72_3e_62-start_72_3e_62-4
+8896: D1      	    pop  de
+8897:         	end_72_3e_62:
+8897: C9      	    ret
               	
-              	; =========== swap both ===========
+              	; =========== swap xmacro ===========
               	
-88DC:         	start_73_77_61_70_3a_6d:
-88DC: CD9385  	 call COMUCopyCode
-88DF: 01      	 db end_73_77_61_70_3a_6d-start_73_77_61_70_3a_6d-4
-88E0: EB      	    ex   de,hl         ; 2nd now TOS
-88E1:         	end_73_77_61_70_3a_6d:
-              	
-88E1:         	start_73_77_61_70_3a_66:
-88E1: EB      	    ex   de,hl         ; 2nd now TOS
-88E2: C9      	    ret
+8898:         	start_73_77_61_70:
+8898: CD8D85  	    call COMUCopyCode
+889B: 01      	 db end_73_77_61_70-start_73_77_61_70-4
+889C: EB      	    ex   de,hl         ; 2nd now TOS
+889D:         	end_73_77_61_70:
+889D: C9      	    ret
               	
               			
-88E3:         	AlternateFont:										; nicer font
+889E:         	AlternateFont:										; nicer font
               			include "font.inc" 							; can be $3D00 here to save memory
-88E3: 00000000	  db 0,0,0,0,0,0,0,0,12,30,30,12,12,0,12,0,54,54,0,0,0,0,0,0,54,54,127,54,127,54,54,0,24,62,96,60,6,124,24,0,0,99,102,12,24,51,99,0,28,54,28,59,110,102,59,0,48,48,96,0,0,0,0,0,12,24,48,48,48,24,12,0,48,24,12,12,12,24,48,0,0,51,30,127,30,51,0,0,0,24,24,126,24,24,0,0,0,0,0,0,0,24,24,48,0,0,0,126,0,0,0,0,0,0,0,0,0,24,24,0,3,6,12,24,48,96,64,0,62,99,103,111,123,115,62,0,24,56,24,24,24,24,126,0,60,102,6,28,48,102,126,0,60,102,6,28,6,102,60,0,14,30,54,102,127,6,15,0,126,96,124,6,6,102,60,0,28,48,96,124,102,102,60,0,126,102,6,12,24,24,24,0,60,102,102,60,102,102,60,0,60,102,102,62,6,12,56,0,0,24,24,0,0,24,24,0,0,24,24,0,0,24,24,48,12,24,48,96,48,24,12,0,0,0,126,0,0,126,0,0,48,24,12,6,12,24,48,0,60,102,6,12,24,0,24,0,62,99,111,111,111,96,60,0,24,60,102,102,126,102,102,0,126,51,51,62,51,51,126,0,30,51,96,96,96,51,30,0,124,54,51,51,51,54,124,0,127,49,52,60,52,49,127,0,127,49,52,60,52,48,120,0,30,51,96,96,103,51,31,0,102,102,102,126,102,102,102,0,60,24,24,24,24,24,60,0,15,6,6,6,102,102,60,0,115,51,54,60,54,51,115,0,120,48,48,48,49,51,127,0,99,119,127,127,107,99,99,0,99,115,123,111,103,99,99,0,28,54,99,99,99,54,28,0,126,51,51,62,48,48,120,0,60,102,102,102,110,60,14,0,126,51,51,62,54,51,115,0,60,102,112,56,14,102,60,0,126,90,24,24,24,24,60,0,102,102,102,102,102,102,126,0,102,102,102,102,102,60,24,0,99,99,99,107,127,119,99,0,99,99,54,28,28,54,99,0,102,102,102,60,24,24,60,0,127,99,70,12,25,51,127,0,60,48,48,48,48,48,60,0,96,48,24,12,6,3,1,0,60,12,12,12,12,12,60,0,8,28,54,99,0,0,0,0,0,0,0,0,0,0,0,127,24,24,12,0,0,0,0,0,0,0,60,6,62,102,59,0,112,48,48,62,51,51,110,0,0,0,60,102,96,102,60,0,14,6,6,62,102,102,59,0,0,0,60,102,126,96,60,0,28,54,48,120,48,48,120,0,0,0,59,102,102,62,6,124,112,48,54,59,51,51,115,0,24,0,56,24,24,24,60,0,6,0,6,6,6,102,102,60,112,48,51,54,60,54,115,0,56,24,24,24,24,24,60,0,0,0,102,127,127,107,99,0,0,0,124,102,102,102,102,0,0,0,60,102,102,102,60,0,0,0,110,51,51,62,48,120,0,0,59,102,102,62,6,15,0,0,110,59,51,48,120,0,0,0,62,96,60,6,124,0,8,24,62,24,24,26,12,0,0,0,102,102,102,102,59,0,0,0,102,102,102,60,24,0,0,0,99,107,127,127,54,0,0,0,99,54,28,54,99,0,0,0,102,102,102,62,6,124,0,0,126,76,24,50,126,0,14,24,24,112,24,24,14,0,12,12,12,0,12,12,12,0,112,24,24,14,24,24,112,0,59,110,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-88E7: 00000000	
-88EB: 0C1E1E0C	
-88EF: 0C000C00	
-88F3: 36360000	
-88F7: 00000000	
-88FB: 36367F36	
-88FF: 7F363600	
-8903: 183E603C	
-8907: 067C1800	
-890B: 0063660C	
-890F: 18336300	
-8913: 1C361C3B	
-8917: 6E663B00	
-891B: 30306000	
-891F: 00000000	
-8923: 0C183030	
-8927: 30180C00	
-892B: 30180C0C	
-892F: 0C183000	
-8933: 00331E7F	
-8937: 1E330000	
-893B: 0018187E	
-893F: 18180000	
-8943: 00000000	
-8947: 00181830	
-894B: 0000007E	
-894F: 00000000	
-8953: 00000000	
-8957: 00181800	
-895B: 03060C18	
-895F: 30604000	
-8963: 3E63676F	
-8967: 7B733E00	
-896B: 18381818	
-896F: 18187E00	
-8973: 3C66061C	
-8977: 30667E00	
-897B: 3C66061C	
-897F: 06663C00	
-8983: 0E1E3666	
-8987: 7F060F00	
-898B: 7E607C06	
-898F: 06663C00	
-8993: 1C30607C	
-8997: 66663C00	
-899B: 7E66060C	
-899F: 18181800	
-89A3: 3C66663C	
-89A7: 66663C00	
-89AB: 3C66663E	
-89AF: 060C3800	
-89B3: 00181800	
-89B7: 00181800	
-89BB: 00181800	
-89BF: 00181830	
-89C3: 0C183060	
-89C7: 30180C00	
-89CB: 00007E00	
-89CF: 007E0000	
-89D3: 30180C06	
-89D7: 0C183000	
-89DB: 3C66060C	
-89DF: 18001800	
-89E3: 3E636F6F	
-89E7: 6F603C00	
-89EB: 183C6666	
-89EF: 7E666600	
-89F3: 7E33333E	
-89F7: 33337E00	
-89FB: 1E336060	
-89FF: 60331E00	
-8A03: 7C363333	
-8A07: 33367C00	
-8A0B: 7F31343C	
-8A0F: 34317F00	
-8A13: 7F31343C	
-8A17: 34307800	
-8A1B: 1E336060	
-8A1F: 67331F00	
-8A23: 6666667E	
-8A27: 66666600	
-8A2B: 3C181818	
-8A2F: 18183C00	
-8A33: 0F060606	
-8A37: 66663C00	
-8A3B: 7333363C	
-8A3F: 36337300	
-8A43: 78303030	
-8A47: 31337F00	
-8A4B: 63777F7F	
-8A4F: 6B636300	
-8A53: 63737B6F	
-8A57: 67636300	
-8A5B: 1C366363	
-8A5F: 63361C00	
-8A63: 7E33333E	
-8A67: 30307800	
-8A6B: 3C666666	
-8A6F: 6E3C0E00	
-8A73: 7E33333E	
-8A77: 36337300	
-8A7B: 3C667038	
-8A7F: 0E663C00	
-8A83: 7E5A1818	
-8A87: 18183C00	
-8A8B: 66666666	
-8A8F: 66667E00	
-8A93: 66666666	
-8A97: 663C1800	
-8A9B: 6363636B	
-8A9F: 7F776300	
-8AA3: 6363361C	
-8AA7: 1C366300	
-8AAB: 6666663C	
-8AAF: 18183C00	
-8AB3: 7F63460C	
-8AB7: 19337F00	
-8ABB: 3C303030	
-8ABF: 30303C00	
-8AC3: 6030180C	
-8AC7: 06030100	
-8ACB: 3C0C0C0C	
-8ACF: 0C0C3C00	
-8AD3: 081C3663	
-8AD7: 00000000	
-8ADB: 00000000	
-8ADF: 0000007F	
-8AE3: 18180C00	
-8AE7: 00000000	
-8AEB: 00003C06	
-8AEF: 3E663B00	
-8AF3: 7030303E	
-8AF7: 33336E00	
-8AFB: 00003C66	
-8AFF: 60663C00	
-8B03: 0E06063E	
-8B07: 66663B00	
-8B0B: 00003C66	
-8B0F: 7E603C00	
-8B13: 1C363078	
-8B17: 30307800	
-8B1B: 00003B66	
-8B1F: 663E067C	
-8B23: 7030363B	
-8B27: 33337300	
-8B2B: 18003818	
-8B2F: 18183C00	
-8B33: 06000606	
-8B37: 0666663C	
-8B3B: 70303336	
-8B3F: 3C367300	
-8B43: 38181818	
-8B47: 18183C00	
-8B4B: 0000667F	
-8B4F: 7F6B6300	
-8B53: 00007C66	
-8B57: 66666600	
-8B5B: 00003C66	
-8B5F: 66663C00	
-8B63: 00006E33	
-8B67: 333E3078	
-8B6B: 00003B66	
-8B6F: 663E060F	
-8B73: 00006E3B	
-8B77: 33307800	
-8B7B: 00003E60	
-8B7F: 3C067C00	
-8B83: 08183E18	
-8B87: 181A0C00	
-8B8B: 00006666	
-8B8F: 66663B00	
-8B93: 00006666	
-8B97: 663C1800	
-8B9B: 0000636B	
-8B9F: 7F7F3600	
-8BA3: 00006336	
-8BA7: 1C366300	
-8BAB: 00006666	
-8BAF: 663E067C	
-8BB3: 00007E4C	
-8BB7: 18327E00	
-8BBB: 0E181870	
-8BBF: 18180E00	
-8BC3: 0C0C0C00	
-8BC7: 0C0C0C00	
-8BCB: 7018180E	
-8BCF: 18187000	
-8BD3: 3B6E0000	
-8BD7: 00000000	
-8BDB: 00...   	
+889E: 00000000	  db 0,0,0,0,0,0,0,0,12,30,30,12,12,0,12,0,54,54,0,0,0,0,0,0,54,54,127,54,127,54,54,0,24,62,96,60,6,124,24,0,0,99,102,12,24,51,99,0,28,54,28,59,110,102,59,0,48,48,96,0,0,0,0,0,12,24,48,48,48,24,12,0,48,24,12,12,12,24,48,0,0,51,30,127,30,51,0,0,0,24,24,126,24,24,0,0,0,0,0,0,0,24,24,48,0,0,0,126,0,0,0,0,0,0,0,0,0,24,24,0,3,6,12,24,48,96,64,0,62,99,103,111,123,115,62,0,24,56,24,24,24,24,126,0,60,102,6,28,48,102,126,0,60,102,6,28,6,102,60,0,14,30,54,102,127,6,15,0,126,96,124,6,6,102,60,0,28,48,96,124,102,102,60,0,126,102,6,12,24,24,24,0,60,102,102,60,102,102,60,0,60,102,102,62,6,12,56,0,0,24,24,0,0,24,24,0,0,24,24,0,0,24,24,48,12,24,48,96,48,24,12,0,0,0,126,0,0,126,0,0,48,24,12,6,12,24,48,0,60,102,6,12,24,0,24,0,62,99,111,111,111,96,60,0,24,60,102,102,126,102,102,0,126,51,51,62,51,51,126,0,30,51,96,96,96,51,30,0,124,54,51,51,51,54,124,0,127,49,52,60,52,49,127,0,127,49,52,60,52,48,120,0,30,51,96,96,103,51,31,0,102,102,102,126,102,102,102,0,60,24,24,24,24,24,60,0,15,6,6,6,102,102,60,0,115,51,54,60,54,51,115,0,120,48,48,48,49,51,127,0,99,119,127,127,107,99,99,0,99,115,123,111,103,99,99,0,28,54,99,99,99,54,28,0,126,51,51,62,48,48,120,0,60,102,102,102,110,60,14,0,126,51,51,62,54,51,115,0,60,102,112,56,14,102,60,0,126,90,24,24,24,24,60,0,102,102,102,102,102,102,126,0,102,102,102,102,102,60,24,0,99,99,99,107,127,119,99,0,99,99,54,28,28,54,99,0,102,102,102,60,24,24,60,0,127,99,70,12,25,51,127,0,60,48,48,48,48,48,60,0,96,48,24,12,6,3,1,0,60,12,12,12,12,12,60,0,8,28,54,99,0,0,0,0,0,0,0,0,0,0,0,127,24,24,12,0,0,0,0,0,0,0,60,6,62,102,59,0,112,48,48,62,51,51,110,0,0,0,60,102,96,102,60,0,14,6,6,62,102,102,59,0,0,0,60,102,126,96,60,0,28,54,48,120,48,48,120,0,0,0,59,102,102,62,6,124,112,48,54,59,51,51,115,0,24,0,56,24,24,24,60,0,6,0,6,6,6,102,102,60,112,48,51,54,60,54,115,0,56,24,24,24,24,24,60,0,0,0,102,127,127,107,99,0,0,0,124,102,102,102,102,0,0,0,60,102,102,102,60,0,0,0,110,51,51,62,48,120,0,0,59,102,102,62,6,15,0,0,110,59,51,48,120,0,0,0,62,96,60,6,124,0,8,24,62,24,24,26,12,0,0,0,102,102,102,102,59,0,0,0,102,102,102,60,24,0,0,0,99,107,127,127,54,0,0,0,99,54,28,54,99,0,0,0,102,102,102,62,6,124,0,0,126,76,24,50,126,0,14,24,24,112,24,24,14,0,12,12,12,0,12,12,12,0,112,24,24,14,24,24,112,0,59,110,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+88A2: 00000000	
+88A6: 0C1E1E0C	
+88AA: 0C000C00	
+88AE: 36360000	
+88B2: 00000000	
+88B6: 36367F36	
+88BA: 7F363600	
+88BE: 183E603C	
+88C2: 067C1800	
+88C6: 0063660C	
+88CA: 18336300	
+88CE: 1C361C3B	
+88D2: 6E663B00	
+88D6: 30306000	
+88DA: 00000000	
+88DE: 0C183030	
+88E2: 30180C00	
+88E6: 30180C0C	
+88EA: 0C183000	
+88EE: 00331E7F	
+88F2: 1E330000	
+88F6: 0018187E	
+88FA: 18180000	
+88FE: 00000000	
+8902: 00181830	
+8906: 0000007E	
+890A: 00000000	
+890E: 00000000	
+8912: 00181800	
+8916: 03060C18	
+891A: 30604000	
+891E: 3E63676F	
+8922: 7B733E00	
+8926: 18381818	
+892A: 18187E00	
+892E: 3C66061C	
+8932: 30667E00	
+8936: 3C66061C	
+893A: 06663C00	
+893E: 0E1E3666	
+8942: 7F060F00	
+8946: 7E607C06	
+894A: 06663C00	
+894E: 1C30607C	
+8952: 66663C00	
+8956: 7E66060C	
+895A: 18181800	
+895E: 3C66663C	
+8962: 66663C00	
+8966: 3C66663E	
+896A: 060C3800	
+896E: 00181800	
+8972: 00181800	
+8976: 00181800	
+897A: 00181830	
+897E: 0C183060	
+8982: 30180C00	
+8986: 00007E00	
+898A: 007E0000	
+898E: 30180C06	
+8992: 0C183000	
+8996: 3C66060C	
+899A: 18001800	
+899E: 3E636F6F	
+89A2: 6F603C00	
+89A6: 183C6666	
+89AA: 7E666600	
+89AE: 7E33333E	
+89B2: 33337E00	
+89B6: 1E336060	
+89BA: 60331E00	
+89BE: 7C363333	
+89C2: 33367C00	
+89C6: 7F31343C	
+89CA: 34317F00	
+89CE: 7F31343C	
+89D2: 34307800	
+89D6: 1E336060	
+89DA: 67331F00	
+89DE: 6666667E	
+89E2: 66666600	
+89E6: 3C181818	
+89EA: 18183C00	
+89EE: 0F060606	
+89F2: 66663C00	
+89F6: 7333363C	
+89FA: 36337300	
+89FE: 78303030	
+8A02: 31337F00	
+8A06: 63777F7F	
+8A0A: 6B636300	
+8A0E: 63737B6F	
+8A12: 67636300	
+8A16: 1C366363	
+8A1A: 63361C00	
+8A1E: 7E33333E	
+8A22: 30307800	
+8A26: 3C666666	
+8A2A: 6E3C0E00	
+8A2E: 7E33333E	
+8A32: 36337300	
+8A36: 3C667038	
+8A3A: 0E663C00	
+8A3E: 7E5A1818	
+8A42: 18183C00	
+8A46: 66666666	
+8A4A: 66667E00	
+8A4E: 66666666	
+8A52: 663C1800	
+8A56: 6363636B	
+8A5A: 7F776300	
+8A5E: 6363361C	
+8A62: 1C366300	
+8A66: 6666663C	
+8A6A: 18183C00	
+8A6E: 7F63460C	
+8A72: 19337F00	
+8A76: 3C303030	
+8A7A: 30303C00	
+8A7E: 6030180C	
+8A82: 06030100	
+8A86: 3C0C0C0C	
+8A8A: 0C0C3C00	
+8A8E: 081C3663	
+8A92: 00000000	
+8A96: 00000000	
+8A9A: 0000007F	
+8A9E: 18180C00	
+8AA2: 00000000	
+8AA6: 00003C06	
+8AAA: 3E663B00	
+8AAE: 7030303E	
+8AB2: 33336E00	
+8AB6: 00003C66	
+8ABA: 60663C00	
+8ABE: 0E06063E	
+8AC2: 66663B00	
+8AC6: 00003C66	
+8ACA: 7E603C00	
+8ACE: 1C363078	
+8AD2: 30307800	
+8AD6: 00003B66	
+8ADA: 663E067C	
+8ADE: 7030363B	
+8AE2: 33337300	
+8AE6: 18003818	
+8AEA: 18183C00	
+8AEE: 06000606	
+8AF2: 0666663C	
+8AF6: 70303336	
+8AFA: 3C367300	
+8AFE: 38181818	
+8B02: 18183C00	
+8B06: 0000667F	
+8B0A: 7F6B6300	
+8B0E: 00007C66	
+8B12: 66666600	
+8B16: 00003C66	
+8B1A: 66663C00	
+8B1E: 00006E33	
+8B22: 333E3078	
+8B26: 00003B66	
+8B2A: 663E060F	
+8B2E: 00006E3B	
+8B32: 33307800	
+8B36: 00003E60	
+8B3A: 3C067C00	
+8B3E: 08183E18	
+8B42: 181A0C00	
+8B46: 00006666	
+8B4A: 66663B00	
+8B4E: 00006666	
+8B52: 663C1800	
+8B56: 0000636B	
+8B5A: 7F7F3600	
+8B5E: 00006336	
+8B62: 1C366300	
+8B66: 00006666	
+8B6A: 663E067C	
+8B6E: 00007E4C	
+8B72: 18327E00	
+8B76: 0E181870	
+8B7A: 18180E00	
+8B7E: 0C0C0C00	
+8B82: 0C0C0C00	
+8B86: 7018180E	
+8B8A: 18187000	
+8B8E: 3B6E0000	
+8B92: 00000000	
+8B96: 00...   	
               	
               			include "data.asm"		
               	; ***************************************************************************************
@@ -2564,18 +2453,18 @@
               	;
               	; ***************************************************************************************
               	
-8BE3:         	SystemInformation:
+8B9E:         	SystemInformation:
               	
-8BE3:         	Here:												; +0 	Here 
-8BE3: 00A0    			dw 		FreeMemory
-8BE5:         	HerePage: 											; +2	Here.Page
-8BE5: 2A00    			db 		FirstCodePage,0
-8BE7:         	NextFreePage: 										; +4 	Next available code page.
-8BE7: 2B000000			db 		FirstCodePage+1,0,0,0
-8BEB:         	DisplayInfo: 										; +8 	Display information
-8BEB: F38B0000			dw 		DisplayInformation,0		
-8BEF:         	Parameter: 											; +12 	Third Parameter used in some functions.
-8BEF: 00000000			dw 		0,0
+8B9E:         	Here:												; +0 	Here 
+8B9E: 00A0    			dw 		FreeMemory
+8BA0:         	HerePage: 											; +2	Here.Page
+8BA0: 2A00    			db 		FirstCodePage,0
+8BA2:         	NextFreePage: 										; +4 	Next available code page.
+8BA2: 2B000000			db 		FirstCodePage+1,0,0,0
+8BA6:         	DisplayInfo: 										; +8 	Display information
+8BA6: AE8B0000			dw 		DisplayInformation,0		
+8BAA:         	Parameter: 											; +12 	Third Parameter used in some functions.
+8BAA: 00000000			dw 		0,0
               	
               	; ***************************************************************************************
               	;
@@ -2583,20 +2472,20 @@
               	;
               	; ***************************************************************************************
               	
-8BF3:         	DisplayInformation:
+8BAE:         	DisplayInformation:
               	
-8BF3:         	__DIScreenWidth: 									; +0 	screen width
-8BF3: 00000000			db 		0,0,0,0
-8BF7:         	__DIScreenHeight:									; +4 	screen height
-8BF7: 00000000			db 		0,0,0,0
-8BFB:         	__DIScreenSize:										; +8 	char size of screen
-8BFB: 00000000			dw 		0,0		
-8BFF:         	__DIScreenMode:										; +12 	current mode
-8BFF: 00000000			db 		0,0,0,0
-8C03:         	__DIFontBase:										; font in use
-8C03: E388    			dw 		AlternateFont
-8C05:         	__DIScreenDriver:									; Screen Driver
-8C05: 0000    			dw 		0	
+8BAE:         	__DIScreenWidth: 									; +0 	screen width
+8BAE: 00000000			db 		0,0,0,0
+8BB2:         	__DIScreenHeight:									; +4 	screen height
+8BB2: 00000000			db 		0,0,0,0
+8BB6:         	__DIScreenSize:										; +8 	char size of screen
+8BB6: 00000000			dw 		0,0		
+8BBA:         	__DIScreenMode:										; +12 	current mode
+8BBA: 00000000			db 		0,0,0,0
+8BBE:         	__DIFontBase:										; font in use
+8BBE: 9E88    			dw 		AlternateFont
+8BC0:         	__DIScreenDriver:									; Screen Driver
+8BC0: 0000    			dw 		0	
               	
               	; ***************************************************************************************
               	;
@@ -2604,30 +2493,28 @@
               	;
               	; ***************************************************************************************
               	
-8C07:         	__ARegister:										; register values when not running.
-8C07: 0000    			dw 		0
-8C09:         	__BRegister:
-8C09: 0000    			dw 		0
+8BC2:         	__ARegister:										; register values when not running.
+8BC2: 0000    			dw 		0
+8BC4:         	__BRegister:
+8BC4: 0000    			dw 		0
               	
-8C0B:         	__DICTLastWordDefined: 								; address of last word defined.
-8C0B: 0000    			dw 		0
               	
-8C0D:         	__PAGEStackPointer: 								; stack used for switching pages
-8C0D: 0000    			dw 		0
-8C0F:         	__PAGEStackBase:
-8C0F: FFFFFFFF			ds 		16
-8C13: FF...   	
+8BC6:         	__PAGEStackPointer: 								; stack used for switching pages
+8BC6: 0000    			dw 		0
+8BC8:         	__PAGEStackBase:
+8BC8: FFFFFFFF			ds 		16
+8BCC: FF...   	
               	
-8C1F:         	__CLICurrentKey: 									; current inkey state on CLI
-8C1F: 00      			db 		0
+8BD8:         	__CLICurrentKey: 									; current inkey state on CLI
+8BD8: 00      			db 		0
               	
-8C20: 86      			db 		$86 								; buffer for executing, tags it yellow effectively.
-8C21:         	__CLIBuffer:
-8C21: FFFFFFFF			ds 		20
-8C25: FF...   	
+8BD9: 86      			db 		$86 								; buffer for executing, tags it yellow effectively.
+8BDA:         	__CLIBuffer:
+8BDA: FFFFFFFF			ds 		20
+8BDE: FF...   	
               	
-8C35: FFFFFFFF			org 	$A000
-8C39: FF...   	
+8BEE: FFFFFFFF			org 	$A000
+8BF2: FF...   	
 A000:         	FreeMemory:		
 A000: FFFFFFFF			org 	$C000
 A004: FF...   	
@@ -2641,262 +2528,239 @@ C000: 00      			db 		0 									; start of dictionary, which is empty.
 
 ; +++ global symbols +++
 
-AlternateFont            = $88E3 = 35043          kernel.asm:64
-BUFFScan                 = $8523 = 34083          buffer.asm:18
-Boot                     = $8006 = 32774          kernel.asm:32
-COMCCompileGreenWord     = $86E3 = 34531          compiler.asm:78
-COMCompileWordList       = $86AF = 34479          compiler.asm:18
-COMDCompileRedWord       = $86DF = 34527          compiler.asm:68
-COMError                 = $86D9 = 34521          compiler.asm:55
-COMUCompileCall          = $857C = 34172          utility.asm:18
-COMUCompileConstant      = $8585 = 34181          utility.asm:33
-COMUCopyCode             = $8593 = 34195          utility.asm:47
-COMXExecuteYellowWord    = $8708 = 34568          compiler.asm:108
-CONSTConvert             = $85A0 = 34208          constant.asm:19
-CommandLineStart         = $801A = 32794          command.asm:12
-DEBUGShow                = $80EA = 33002          debug.asm:12
-DICTAddWord              = $85DD = 34269          dictionary.asm:19
-DICTFindWord             = $8649 = 34377          dictionary.asm:109
-DICTMakeLastCompiles     = $8635 = 34357          dictionary.asm:88
-DIVDivideMod16           = $817A = 33146          divide.asm:18
-DictionaryPage           = $0020 =    32          kernel.asm:16
-DisplayInfo              = $8BEB = 35819          data.asm:26 (unused)
-DisplayInformation       = $8BF3 = 35827          data.asm:37
-Div16_Loop1              = $8184 = 33156          divide.asm:27
-Div16_Loop2              = $8195 = 33173          divide.asm:41
-Div16_NoAdd1             = $818C = 33164          divide.asm:33
-Div16_NoAdd2             = $819D = 33181          divide.asm:47
-EditBuffer               = $7B08 = 31496          kernel.asm:24
-EditPageSize             = $0200 =   512          kernel.asm:19
-ErrorHandler             = $8028 = 32808          command.asm:20
-FARCompileByte           = $81A5 = 33189          farmemory.asm:18
-FARCompileWord           = $81BD = 33213          farmemory.asm:40
-FirstCodePage            = $002A =    42          kernel.asm:20
-FirstSourcePage          = $0022 =    34          kernel.asm:17
-FreeMemory               = $A000 = 40960          data.asm:79
-GFXClearScreen           = $81D8 = 33240          graphics.asm:18 (unused)
-GFXGetFontGraphicDE      = $825C = 33372          graphics.asm:145
-GFXInitialise48k         = $838F = 33679          screen48k.asm:19
-GFXInitialiseLayer2      = $83F2 = 33778          screen_layer2.asm:19
-GFXInitialiseLowRes      = $849E = 33950          screen_lores.asm:18
-GFXMode                  = $81E2 = 33250          graphics.asm:33
-GFXModeE                 = $81E1 = 33249          graphics.asm:31 (unused)
-GFXPrintCharacter48k     = $83BB = 33723          screen48k.asm:53
-GFXPrintCharacterLayer2  = $8422 = 33826          screen_layer2.asm:56
-GFXPrintCharacterLowRes  = $84C8 = 33992          screen_lores.asm:50
-GFXWriteCharacter        = $8217 = 33303          graphics.asm:77
-GFXWriteHexWord          = $822A = 33322          graphics.asm:100
-GFXWriteHexWordA         = $822C = 33324          graphics.asm:102 (unused)
-Here                     = $8BE3 = 35811          data.asm:20
-HerePage                 = $8BE5 = 35813          data.asm:22
-IOScanKeyboard           = $8281 = 33409          keyboard.asm:18
-L2PClear                 = $83FB = 33787          screen_layer2.asm:26
-L2PClearBank             = $840B = 33803          screen_layer2.asm:35
-LowClearScreen           = $84B1 = 33969          screen_lores.asm:30
-MULTMultiply16           = $8160 = 33120          multiply.asm:18
-NextFreePage             = $8BE7 = 35815          data.asm:24 (unused)
-PAGEInitialise           = $834E = 33614          paging.asm:18
-PAGERestore              = $8379 = 33657          paging.asm:64
-PAGESwitch               = $8360 = 33632          paging.asm:36
-Parameter                = $8BEF = 35823          data.asm:28
-SourcePageCount          = $0004 =     4          kernel.asm:18
-StackTop                 = $7EFC = 32508          kernel.asm:25
-SystemInformation        = $8BE3 = 35811          data.asm:18
-WarmStart                = $8021 = 32801          command.asm:16
-WarmStartSetup           = $802A = 32810          command.asm:22
-__ARegister              = $8C07 = 35847          data.asm:58
-__BRegister              = $8C09 = 35849          data.asm:60
-__BUFFNextPage           = $8568 = 34152          buffer.asm:57
+AlternateFont         = $889E = 34974          kernel.asm:64
+BUFFScan              = $8523 = 34083          buffer.asm:18
+Boot                  = $8006 = 32774          kernel.asm:32
+COMCCompileGreenWord  = $86BA = 34490          compiler.asm:77
+COMCompileWordList    = $8689 = 34441          compiler.asm:18
+COMDCompileRedWord    = $86B9 = 34489          compiler.asm:68
+COMError              = $86B3 = 34483          compiler.asm:55 (unused)
+COMUCompileCallToSelf = $857C = 34172          utility.asm:18
+COMUCompileConstant   = $857F = 34175          utility.asm:28 (unused)
+COMUCopyCode          = $858D = 34189          utility.asm:42
+COMXExecuteYellowWord = $86BB = 34491          compiler.asm:86
+CONSTConvert          = $859A = 34202          constant.asm:19 (unused)
+CommandLineStart      = $801A = 32794          command.asm:12
+DEBUGShow             = $80EA = 33002          debug.asm:12
+DICTAddWord           = $85D7 = 34263          dictionary.asm:19 (unused)
+DICTFindWord          = $862B = 34347          dictionary.asm:89 (unused)
+DIVDivideMod16        = $817A = 33146          divide.asm:18
+DictionaryPage        = $0020 =    32          kernel.asm:16
+DisplayInfo           = $8BA6 = 35750          data.asm:26 (unused)
+DisplayInformation    = $8BAE = 35758          data.asm:37
+Div16_Loop1           = $8184 = 33156          divide.asm:27
+Div16_Loop2           = $8195 = 33173          divide.asm:41
+Div16_NoAdd1          = $818C = 33164          divide.asm:33
+Div16_NoAdd2          = $819D = 33181          divide.asm:47
+EditBuffer            = $7B08 = 31496          kernel.asm:24
+EditPageSize          = $0200 =   512          kernel.asm:19
+ErrorHandler          = $8028 = 32808          command.asm:20
+FARCompileByte        = $81A5 = 33189          farmemory.asm:18
+FARCompileWord        = $81BD = 33213          farmemory.asm:40
+FirstCodePage         = $002A =    42          kernel.asm:20
+FirstSourcePage       = $0022 =    34          kernel.asm:17
+FreeMemory            = $A000 = 40960          data.asm:77
+GFXClearScreen        = $81D8 = 33240          graphics.asm:18 (unused)
+GFXGetFontGraphicDE   = $825C = 33372          graphics.asm:145
+GFXInitialise48k      = $838F = 33679          screen48k.asm:19
+GFXInitialiseLayer2   = $83F2 = 33778          screen_layer2.asm:19
+GFXInitialiseLowRes   = $849E = 33950          screen_lores.asm:18
+GFXMode               = $81E2 = 33250          graphics.asm:33
+GFXModeE              = $81E1 = 33249          graphics.asm:31 (unused)
+GFXPrintCharacter48k  = $83BB = 33723          screen48k.asm:53
+GFXPrintCharacterLayer2 = $8422 = 33826          screen_layer2.asm:56
+GFXPrintCharacterLowRes = $84C8 = 33992          screen_lores.asm:50
+GFXWriteCharacter     = $8217 = 33303          graphics.asm:77
+GFXWriteHexWord       = $822A = 33322          graphics.asm:100
+GFXWriteHexWordA      = $822C = 33324          graphics.asm:102 (unused)
+Here                  = $8B9E = 35742          data.asm:20
+HerePage              = $8BA0 = 35744          data.asm:22
+IOScanKeyboard        = $8281 = 33409          keyboard.asm:18
+L2PClear              = $83FB = 33787          screen_layer2.asm:26
+L2PClearBank          = $840B = 33803          screen_layer2.asm:35
+LowClearScreen        = $84B1 = 33969          screen_lores.asm:30
+MULTMultiply16        = $8160 = 33120          multiply.asm:18
+NextFreePage          = $8BA2 = 35746          data.asm:24 (unused)
+PAGEInitialise        = $834E = 33614          paging.asm:18
+PAGERestore           = $8379 = 33657          paging.asm:64
+PAGESwitch            = $8360 = 33632          paging.asm:36
+Parameter             = $8BAA = 35754          data.asm:28
+SourcePageCount       = $0004 =     4          kernel.asm:18
+StackTop              = $7EFC = 32508          kernel.asm:25
+SystemInformation     = $8B9E = 35742          data.asm:18
+WarmStart             = $8021 = 32801          command.asm:16
+WarmStartSetup        = $802A = 32810          command.asm:22
+__ARegister           = $8BC2 = 35778          data.asm:58
+__BRegister           = $8BC4 = 35780          data.asm:60
+__BUFFNextPage        = $8568 = 34152          buffer.asm:57
 __BUFFScanNextPageInBuffer = $8540 = 34112          buffer.asm:36
-__BUFFScanSourcePage     = $8538 = 34104          buffer.asm:29
-__CLIBuffer              = $8C21 = 35873          data.asm:75
-__CLIChangeLoop          = $80C8 = 32968          command.asm:112
-__CLIClear               = $803C = 32828          command.asm:33
-__CLICurrentKey          = $8C1F = 35871          data.asm:71
-__CLIExecute             = $809B = 32923          command.asm:87
-__CLIGetChange           = $80C3 = 32963          command.asm:108
-__CLIGetKey              = $80BC = 32956          command.asm:103
-__CLILoop                = $8072 = 32882          command.asm:64
-__CLIPrompt              = $804E = 32846          command.asm:45
-__CLIPromptExit          = $805D = 32861          command.asm:55
-__CLIWarmStart           = $80E4 = 32996          command.asm:122
-__CLIWelcome             = $80D3 = 32979          command.asm:120
-__COMCCompile            = $8702 = 34562          compiler.asm:95
-__COMUCopyLoop           = $8596 = 34198          utility.asm:51
-__COMWExit               = $86D5 = 34517          compiler.asm:48
-__COMWLoop               = $86B2 = 34482          compiler.asm:22
-__COMWNext               = $86CD = 34509          compiler.asm:41
-__COMXExecuteWord        = $871B = 34587          compiler.asm:122
-__CONConFail             = $85DA = 34266          constant.asm:75
-__CONConvLoop            = $85A7 = 34215          constant.asm:27
-__CONMinusExit           = $85CA = 34250          constant.asm:56
-__CONNotNegative         = $85D7 = 34263          constant.asm:70
-__CallIX                 = $872D = 34605          compiler.asm:134
-__Core__Mult_Loop        = $8167 = 33127          multiply.asm:24
-__Core__Mult_Shift       = $816C = 33132          multiply.asm:28
+__BUFFScanSourcePage  = $8538 = 34104          buffer.asm:29
+__CLIBuffer           = $8BDA = 35802          data.asm:73
+__CLIChangeLoop       = $80C8 = 32968          command.asm:112
+__CLIClear            = $803C = 32828          command.asm:33
+__CLICurrentKey       = $8BD8 = 35800          data.asm:69
+__CLIExecute          = $809B = 32923          command.asm:87
+__CLIGetChange        = $80C3 = 32963          command.asm:108
+__CLIGetKey           = $80BC = 32956          command.asm:103
+__CLILoop             = $8072 = 32882          command.asm:64
+__CLIPrompt           = $804E = 32846          command.asm:45
+__CLIPromptExit       = $805D = 32861          command.asm:55
+__CLIWarmStart        = $80E4 = 32996          command.asm:122
+__CLIWelcome          = $80D3 = 32979          command.asm:120
+__COMUCopyLoop        = $8590 = 34192          utility.asm:46
+__COMWExit            = $86AF = 34479          compiler.asm:48
+__COMWLoop            = $868C = 34444          compiler.asm:22
+__COMWNext            = $86A7 = 34471          compiler.asm:41
+__CONConFail          = $85D4 = 34260          constant.asm:75
+__CONConvLoop         = $85A1 = 34209          constant.asm:27
+__CONMinusExit        = $85C4 = 34244          constant.asm:56
+__CONNotNegative      = $85D1 = 34257          constant.asm:70
+__Core__Mult_Loop     = $8167 = 33127          multiply.asm:24
+__Core__Mult_Shift    = $816C = 33132          multiply.asm:28
 __DEBUGPrintDERecursively = $8147 = 33095          debug.asm:79
 __DEBUGPrintDecNotNegative = $8138 = 33080          debug.asm:68
 __DEBUGPrintDecimalInteger = $812C = 33068          debug.asm:57
-__DEBUGShowClear         = $80F9 = 33017          debug.asm:25
-__DICTAddCopy            = $861E = 34334          dictionary.asm:65
-__DICTCheckName          = $8677 = 34423          dictionary.asm:141
-__DICTCreateEntry        = $8600 = 34304          dictionary.asm:48
-__DICTFindEndDictionary  = $85F3 = 34291          dictionary.asm:39
-__DICTFindExit           = $86A6 = 34470          dictionary.asm:172
-__DICTFindFail           = $869F = 34463          dictionary.asm:168
-__DICTFindMainLoop       = $8658 = 34392          dictionary.asm:120
-__DICTFindNext           = $8696 = 34454          dictionary.asm:162
-__DICTFindNoMatch        = $8693 = 34451          dictionary.asm:159
-__DICTLastWordDefined    = $8C0B = 35851          data.asm:63
-__DIFontBase             = $8C03 = 35843          data.asm:47
-__DIScreenDriver         = $8C05 = 35845          data.asm:49
-__DIScreenHeight         = $8BF7 = 35831          data.asm:41
-__DIScreenMode           = $8BFF = 35839          data.asm:45
-__DIScreenSize           = $8BFB = 35835          data.asm:43
-__DIScreenWidth          = $8BF3 = 35827          data.asm:39
-__GFXConfigure           = $81FC = 33276          graphics.asm:54
-__GFXLayer2              = $81F4 = 33268          graphics.asm:47
-__GFXLowRes              = $81F9 = 33273          graphics.asm:51
-__GFXPromptCharacter     = $8279 = 33401          graphics.asm:167
-__GFXWCExit              = $8225 = 33317          graphics.asm:87
-__GFXWHByte              = $823E = 33342          graphics.asm:118
-__GFXWHDigit             = $8254 = 33364          graphics.asm:132
-__GFXWHNibble            = $824B = 33355          graphics.asm:126
-__L2Blank                = $8482 = 33922          screen_layer2.asm:135
-__L2Exit                 = $8497 = 33943          screen_layer2.asm:157
-__L2Exit1                = $8492 = 33938          screen_layer2.asm:152
-__L2Loop                 = $8476 = 33910          screen_layer2.asm:125
-__L2Not1                 = $8438 = 33848          screen_layer2.asm:76
-__L2Not2                 = $843E = 33854          screen_layer2.asm:80
-__L2Not3                 = $8444 = 33860          screen_layer2.asm:84
-__L2NotSet               = $847C = 33916          screen_layer2.asm:130
-__L2Outer                = $846B = 33899          screen_layer2.asm:118
-__LPExit                 = $851C = 34076          screen_lores.asm:120
-__Less_DiffSigns         = $87C6 = 34758          __words.asm:213
-__LowLoop                = $8508 = 34056          screen_lores.asm:104
-__LowNotLower2           = $84FE = 34046          screen_lores.asm:97
-__LowNotSet              = $850E = 34062          screen_lores.asm:109
-__LowOuter               = $8500 = 34048          screen_lores.asm:99
-__Negate                 = $8891 = 34961          __words.asm:479
-__PAGEStackBase          = $8C0F = 35855          data.asm:68
-__PAGEStackPointer       = $8C0D = 35853          data.asm:66
-__ZXWCCopy               = $83E7 = 33767          screen48k.asm:101
-__ZXWCExit               = $83ED = 33773          screen48k.asm:107
-___kr4                   = $82B2 = 33458          keyboard.asm:49
-__copy2                  = $8856 = 34902          __words.asm:399
-__copyExit               = $885D = 34909          __words.asm:406
-__cs1                    = $839F = 33695          screen48k.asm:29
-__cs2                    = $83A7 = 33703          screen48k.asm:34
-__fillExit               = $8875 = 34933          __words.asm:433
-__fillLoop               = $886E = 34926          __words.asm:426
-__haltz80                = $887D = 34941          __words.asm:448
-__kr1                    = $8296 = 33430          keyboard.asm:32
-__kr2                    = $82A1 = 33441          keyboard.asm:38
-__kr3                    = $82A3 = 33443          keyboard.asm:41
-__kr_exit                = $82D2 = 33490          keyboard.asm:79
-__kr_keypressed          = $82CC = 33484          keyboard.asm:73
-__kr_no_shift_table      = $82D6 = 33494          keyboard.asm:94
-__kr_shift_table         = $82FE = 33534          keyboard.asm:100
-__kr_symbol_shift_table  = $82FE = 33534          keyboard.asm:101
-_end                     = $C001 = 49153          kernel.asm:26 (unused)
-_size                    = $4001 = 16385          kernel.asm:26 (unused)
-end_21_3a_6d             = $8737 = 34615          __words.asm:10
-end_2b_2b_2b_3a_6d       = $875D = 34653          __words.asm:69
-end_2b_2b_3a_6d          = $8755 = 34645          __words.asm:56
-end_2b_3a_6d             = $8745 = 34629          __words.asm:31
-end_2d_2d_2d_3a_6d       = $8785 = 34693          __words.asm:128
-end_2d_2d_3a_6d          = $877D = 34685          __words.asm:115
-end_2d_3a_6d             = $8771 = 34673          __words.asm:98
-end_32_2a_3a_6d          = $879E = 34718          __words.asm:164
-end_32_2f_3a_6d          = $87AC = 34732          __words.asm:183
-end_3b_3a_6d             = $87B6 = 34742          __words.asm:196
-end_40_3a_6d             = $87E3 = 34787          __words.asm:244
-end_61_3e_62_3a_6d       = $87EE = 34798          __words.asm:260
-end_61_3e_72_3a_6d       = $87F6 = 34806          __words.asm:273
-end_61_62_3e_72_3a_6d    = $87FC = 34812          __words.asm:282
-end_62_21_3a_6d          = $880E = 34830          __words.asm:308
-end_62_3e_61_3a_6d       = $8816 = 34838          __words.asm:321
-end_62_3e_72_3a_6d       = $881E = 34846          __words.asm:334
-end_62_40_3a_6d          = $8825 = 34853          __words.asm:343
-end_62_72_65_61_6b_3a_6d = $882F = 34863          __words.asm:356
-end_62_73_77_61_70_3a_6d = $8836 = 34870          __words.asm:366
-end_70_21_3a_6d          = $88B1 = 34993          __words.asm:521
-end_70_6f_70_3a_6d       = $88C7 = 35015          __words.asm:551
-end_70_75_73_68_3a_6d    = $88CC = 35020          __words.asm:559
-end_72_3e_61_3a_6d       = $88D1 = 35025          __words.asm:567
-end_72_3e_61_62_3a_6d    = $88D7 = 35031          __words.asm:576
-end_72_3e_62_3a_6d       = $88DC = 35036          __words.asm:584
-end_73_77_61_70_3a_6d    = $88E1 = 35041          __words.asm:592
-start_21_3a_66           = $8737 = 34615          __words.asm:12 (unused)
-start_21_3a_6d           = $872F = 34607          __words.asm:3
-start_2a_3a_66           = $873C = 34620          __words.asm:21 (unused)
-start_2b_21_3a_66        = $8747 = 34631          __words.asm:39 (unused)
-start_2b_2b_2b_3a_66     = $875D = 34653          __words.asm:71 (unused)
-start_2b_2b_2b_3a_6d     = $8757 = 34647          __words.asm:64
-start_2b_2b_3a_66        = $8755 = 34645          __words.asm:58 (unused)
-start_2b_2b_3a_6d        = $8750 = 34640          __words.asm:52
-start_2b_3a_66           = $8745 = 34629          __words.asm:33 (unused)
-start_2b_3a_6d           = $8740 = 34624          __words.asm:27
-start_2b_6f_72_3a_66     = $8760 = 34656          __words.asm:78 (unused)
-start_2d_2d_2d_3a_66     = $8785 = 34693          __words.asm:130 (unused)
-start_2d_2d_2d_3a_6d     = $877F = 34687          __words.asm:123
-start_2d_2d_3a_66        = $877D = 34685          __words.asm:117 (unused)
-start_2d_2d_3a_6d        = $8778 = 34680          __words.asm:111
-start_2d_3a_66           = $8771 = 34673          __words.asm:100 (unused)
-start_2d_3a_6d           = $8767 = 34663          __words.asm:89
-start_2f_3a_66           = $8788 = 34696          __words.asm:137 (unused)
-start_2f_6d_6f_64_3a_66  = $878F = 34703          __words.asm:146 (unused)
-start_31_2c_3a_66        = $8794 = 34708          __words.asm:153 (unused)
-start_32_2a_3a_66        = $879E = 34718          __words.asm:166 (unused)
-start_32_2a_3a_6d        = $8799 = 34713          __words.asm:160
-start_32_2c_3a_66        = $87A0 = 34720          __words.asm:172 (unused)
-start_32_2f_3a_66        = $87AC = 34732          __words.asm:185 (unused)
-start_32_2f_3a_6d        = $87A4 = 34724          __words.asm:178
-start_3b_3a_6d           = $87B1 = 34737          __words.asm:192
-start_3c_3a_66           = $87B6 = 34742          __words.asm:200 (unused)
-start_3d_3a_66           = $87CF = 34767          __words.asm:223 (unused)
-start_40_3a_66           = $87E3 = 34787          __words.asm:246 (unused)
-start_40_3a_6d           = $87DB = 34779          __words.asm:237
-start_61_3e_62_3a_66     = $87EE = 34798          __words.asm:262 (unused)
-start_61_3e_62_3a_6d     = $87E8 = 34792          __words.asm:255
-start_61_3e_72_3a_6d     = $87F1 = 34801          __words.asm:269
-start_61_62_3e_72_3a_6d  = $87F6 = 34806          __words.asm:277
-start_61_62_73_3a_66     = $87FC = 34812          __words.asm:286 (unused)
-start_61_6e_64_3a_66     = $8802 = 34818          __words.asm:293 (unused)
-start_62_21_3a_66        = $880E = 34830          __words.asm:310 (unused)
-start_62_21_3a_6d        = $8809 = 34825          __words.asm:304
-start_62_3e_61_3a_66     = $8816 = 34838          __words.asm:323 (unused)
-start_62_3e_61_3a_6d     = $8810 = 34832          __words.asm:316
-start_62_3e_72_3a_6d     = $8819 = 34841          __words.asm:330
-start_62_40_3a_66        = $8825 = 34853          __words.asm:345 (unused)
-start_62_40_3a_6d        = $881E = 34846          __words.asm:338
-start_62_72_65_61_6b_3a_6d = $8829 = 34857          __words.asm:352
-start_62_73_77_61_70_3a_66 = $8836 = 34870          __words.asm:368 (unused)
-start_62_73_77_61_70_3a_6d = $882F = 34863          __words.asm:360
-start_63_6f_6d_70_69_6c_65_73_3a_66 = $883A = 34874          __words.asm:376 (unused)
-start_63_6f_70_79_3a_66  = $883E = 34878          __words.asm:382 (unused)
-start_64_65_62_75_67_3a_66 = $8860 = 34912          __words.asm:413 (unused)
-start_66_69_6c_6c_3a_66  = $8864 = 34916          __words.asm:419 (unused)
-start_68_3a_66           = $8878 = 34936          __words.asm:440 (unused)
-start_68_61_6c_74_3a_66  = $887D = 34941          __words.asm:447 (unused)
-start_68_65_72_65_3a_66  = $8882 = 34946          __words.asm:456 (unused)
-start_68_65_78_21_3a_66  = $8887 = 34951          __words.asm:463 (unused)
-start_6d_6f_64_3a_66     = $888B = 34955          __words.asm:470 (unused)
-start_6e_65_67_61_74_65_3a_66 = $8891 = 34961          __words.asm:478 (unused)
-start_6f_72_21_3a_66     = $88A0 = 34976          __words.asm:502 (unused)
-start_6f_72_3a_66        = $8899 = 34969          __words.asm:491 (unused)
-start_70_21_3a_66        = $88B1 = 34993          __words.asm:523 (unused)
-start_70_21_3a_6d        = $88A9 = 34985          __words.asm:515
-start_70_40_3a_66        = $88B6 = 34998          __words.asm:531 (unused)
-start_70_61_72_61_6d_21_3a_66 = $88BD = 35005          __words.asm:540 (unused)
-start_70_6f_70_3a_6d     = $88C1 = 35009          __words.asm:546
-start_70_75_73_68_3a_6d  = $88C7 = 35015          __words.asm:555
-start_72_3e_61_3a_6d     = $88CC = 35020          __words.asm:563
-start_72_3e_61_62_3a_6d  = $88D1 = 35025          __words.asm:571
-start_72_3e_62_3a_6d     = $88D7 = 35031          __words.asm:580
-start_73_77_61_70_3a_66  = $88E1 = 35041          __words.asm:594 (unused)
-start_73_77_61_70_3a_6d  = $88DC = 35036          __words.asm:588
+__DEBUGShowClear      = $80F9 = 33017          debug.asm:25
+__DICTAddCopy         = $8614 = 34324          dictionary.asm:63
+__DICTCheckName       = $8651 = 34385          dictionary.asm:117
+__DICTCreateEntry     = $85FA = 34298          dictionary.asm:48
+__DICTFindEndDictionary = $85ED = 34285          dictionary.asm:39
+__DICTFindExit        = $8680 = 34432          dictionary.asm:148
+__DICTFindFail        = $8679 = 34425          dictionary.asm:144
+__DICTFindMainLoop    = $8639 = 34361          dictionary.asm:100
+__DICTFindNext        = $8670 = 34416          dictionary.asm:138
+__DICTFindNoMatch     = $866D = 34413          dictionary.asm:135
+__DIFontBase          = $8BBE = 35774          data.asm:47
+__DIScreenDriver      = $8BC0 = 35776          data.asm:49
+__DIScreenHeight      = $8BB2 = 35762          data.asm:41
+__DIScreenMode        = $8BBA = 35770          data.asm:45
+__DIScreenSize        = $8BB6 = 35766          data.asm:43
+__DIScreenWidth       = $8BAE = 35758          data.asm:39
+__GFXConfigure        = $81FC = 33276          graphics.asm:54
+__GFXLayer2           = $81F4 = 33268          graphics.asm:47
+__GFXLowRes           = $81F9 = 33273          graphics.asm:51
+__GFXPromptCharacter  = $8279 = 33401          graphics.asm:167
+__GFXWCExit           = $8225 = 33317          graphics.asm:87
+__GFXWHByte           = $823E = 33342          graphics.asm:118
+__GFXWHDigit          = $8254 = 33364          graphics.asm:132
+__GFXWHNibble         = $824B = 33355          graphics.asm:126
+__L2Blank             = $8482 = 33922          screen_layer2.asm:135
+__L2Exit              = $8497 = 33943          screen_layer2.asm:157
+__L2Exit1             = $8492 = 33938          screen_layer2.asm:152
+__L2Loop              = $8476 = 33910          screen_layer2.asm:125
+__L2Not1              = $8438 = 33848          screen_layer2.asm:76
+__L2Not2              = $843E = 33854          screen_layer2.asm:80
+__L2Not3              = $8444 = 33860          screen_layer2.asm:84
+__L2NotSet            = $847C = 33916          screen_layer2.asm:130
+__L2Outer             = $846B = 33899          screen_layer2.asm:118
+__LPExit              = $851C = 34076          screen_lores.asm:120
+__Less_DiffSigns      = $8757 = 34647          __words.asm:185
+__LowLoop             = $8508 = 34056          screen_lores.asm:104
+__LowNotLower2        = $84FE = 34046          screen_lores.asm:97
+__LowNotSet           = $850E = 34062          screen_lores.asm:109
+__LowOuter            = $8500 = 34048          screen_lores.asm:99
+__Negate              = $883B = 34875          __words.asm:439
+__PAGEStackBase       = $8BC8 = 35784          data.asm:66
+__PAGEStackPointer    = $8BC6 = 35782          data.asm:64
+__ZXWCCopy            = $83E7 = 33767          screen48k.asm:101
+__ZXWCExit            = $83ED = 33773          screen48k.asm:107
+___kr4                = $82B2 = 33458          keyboard.asm:49
+__copy2               = $87E8 = 34792          __words.asm:351
+__copyExit            = $87EF = 34799          __words.asm:358
+__cs1                 = $839F = 33695          screen48k.asm:29
+__cs2                 = $83A7 = 33703          screen48k.asm:34
+__fillExit            = $880D = 34829          __words.asm:387
+__fillLoop            = $8806 = 34822          __words.asm:380
+__haltz80             = $881B = 34843          __words.asm:404
+__kr1                 = $8296 = 33430          keyboard.asm:32
+__kr2                 = $82A1 = 33441          keyboard.asm:38
+__kr3                 = $82A3 = 33443          keyboard.asm:41
+__kr_exit             = $82D2 = 33490          keyboard.asm:79
+__kr_keypressed       = $82CC = 33484          keyboard.asm:73
+__kr_no_shift_table   = $82D6 = 33494          keyboard.asm:94
+__kr_shift_table      = $82FE = 33534          keyboard.asm:100
+__kr_symbol_shift_table = $82FE = 33534          keyboard.asm:101
+_end                  = $C001 = 49153          kernel.asm:26 (unused)
+_size                 = $4001 = 16385          kernel.asm:26 (unused)
+end_21                = $86C4 = 34500          __words.asm:10
+end_2b                = $86D1 = 34513          __words.asm:26
+end_2b_2b             = $86E3 = 34531          __words.asm:49
+end_2b_2b_2b          = $86EA = 34538          __words.asm:59
+end_2d                = $86FF = 34559          __words.asm:85
+end_2d_2d             = $8705 = 34565          __words.asm:94
+end_2d_2d_2d          = $870C = 34572          __words.asm:104
+end_32_2a             = $872C = 34604          __words.asm:139
+end_32_2f             = $873C = 34620          __words.asm:156
+end_3b                = $8743 = 34627          __words.asm:166
+end_40                = $8777 = 34679          __words.asm:217
+end_61_3e_62          = $877E = 34686          __words.asm:227
+end_61_3e_72          = $8785 = 34693          __words.asm:237
+end_61_62_3e_72       = $878D = 34701          __words.asm:248
+end_62_21             = $87A6 = 34726          __words.asm:277
+end_62_3e_61          = $87AD = 34733          __words.asm:287
+end_62_3e_72          = $87B4 = 34740          __words.asm:297
+end_62_40             = $87BC = 34748          __words.asm:307
+end_62_72_65_61_6b    = $87C4 = 34756          __words.asm:317
+end_62_73_77_61_70    = $87CC = 34764          __words.asm:328
+end_70_21             = $8861 = 34913          __words.asm:483
+end_70_6f_70          = $887A = 34938          __words.asm:511
+end_70_75_73_68       = $8881 = 34945          __words.asm:521
+end_72_3e_61          = $8888 = 34952          __words.asm:531
+end_72_3e_61_62       = $8890 = 34960          __words.asm:542
+end_72_3e_62          = $8897 = 34967          __words.asm:552
+end_73_77_61_70       = $889D = 34973          __words.asm:561
+start_21              = $86BC = 34492          __words.asm:3
+start_2a              = $86C8 = 34504          __words.asm:16 (unused)
+start_2b              = $86CC = 34508          __words.asm:22
+start_2b_21           = $86D5 = 34517          __words.asm:32 (unused)
+start_2b_2b           = $86DE = 34526          __words.asm:45
+start_2b_2b_2b        = $86E4 = 34532          __words.asm:54
+start_2b_6f_72        = $86EE = 34542          __words.asm:65 (unused)
+start_2d              = $86F5 = 34549          __words.asm:76
+start_2d_2d           = $8700 = 34560          __words.asm:90
+start_2d_2d_2d        = $8706 = 34566          __words.asm:99
+start_2f              = $8710 = 34576          __words.asm:110 (unused)
+start_2f_6d_6f_64     = $871A = 34586          __words.asm:120 (unused)
+start_31_2c           = $8722 = 34594          __words.asm:128 (unused)
+start_32_2a           = $8727 = 34599          __words.asm:135
+start_32_2c           = $8730 = 34608          __words.asm:145 (unused)
+start_32_2f           = $8734 = 34612          __words.asm:151
+start_3b              = $873D = 34621          __words.asm:161
+start_3c              = $8747 = 34631          __words.asm:172 (unused)
+start_3d              = $8763 = 34659          __words.asm:196 (unused)
+start_40              = $876F = 34671          __words.asm:210
+start_61_3e_62        = $8778 = 34680          __words.asm:222
+start_61_3e_72        = $877F = 34687          __words.asm:232
+start_61_62_3e_72     = $8786 = 34694          __words.asm:242
+start_61_62_73        = $8791 = 34705          __words.asm:254 (unused)
+start_61_6e_64        = $879A = 34714          __words.asm:262 (unused)
+start_62_21           = $87A1 = 34721          __words.asm:273
+start_62_3e_61        = $87A7 = 34727          __words.asm:282
+start_62_3e_72        = $87AE = 34734          __words.asm:292
+start_62_40           = $87B5 = 34741          __words.asm:302
+start_62_72_65_61_6b  = $87BD = 34749          __words.asm:312
+start_62_73_77_61_70  = $87C5 = 34757          __words.asm:322
+start_63_6f_70_79     = $87D0 = 34768          __words.asm:334 (unused)
+start_64_65_62_75_67  = $87F5 = 34805          __words.asm:366 (unused)
+start_66_69_6c_6c     = $87FC = 34812          __words.asm:373 (unused)
+start_68              = $8813 = 34835          __words.asm:395 (unused)
+start_68_61_6c_74     = $881B = 34843          __words.asm:403 (unused)
+start_68_65_72_65     = $8823 = 34851          __words.asm:413 (unused)
+start_68_65_78_21     = $882B = 34859          __words.asm:421 (unused)
+start_6d_6f_64        = $8832 = 34866          __words.asm:429 (unused)
+start_6e_65_67_61_74_65 = $883B = 34875          __words.asm:438 (unused)
+start_6f_72           = $8846 = 34886          __words.asm:452 (unused)
+start_6f_72_21        = $8850 = 34896          __words.asm:464 (unused)
+start_70_21           = $8859 = 34905          __words.asm:477
+start_70_40           = $8865 = 34917          __words.asm:489 (unused)
+start_70_61_72_61_6d_21 = $886F = 34927          __words.asm:499 (unused)
+start_70_6f_70        = $8873 = 34931          __words.asm:505
+start_70_75_73_68     = $887B = 34939          __words.asm:516
+start_72_3e_61        = $8882 = 34946          __words.asm:526
+start_72_3e_61_62     = $8889 = 34953          __words.asm:536
+start_72_3e_62        = $8891 = 34961          __words.asm:547
+start_73_77_61_70     = $8898 = 34968          __words.asm:557
 
 
-total time: 0.0091 sec.
+total time: 0.0088 sec.
 no errors

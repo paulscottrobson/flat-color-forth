@@ -26,12 +26,8 @@ words = [x for x in labels.keys() if x[:6] == "start_"]
 words.sort()
 for w in words:
 	name = "".join([chr(int(x,16)) for x in w[6:].split("_")])
-	#print(w,name)
-	assert name[-2:] == ":m" or name[-2:] == ":f"
-	isCommands = name[-1] == "m"
-	name = name[:-2]
 	#print(name,labels[w],isCommands)
-	image.addDictionary(name,image.getCodePage(),labels[w],isCommands)
+	image.addDictionary(name,image.getCodePage(),labels[w])
 	count += 1
 image.save()
 print("\tImported {0} words.".format(count))

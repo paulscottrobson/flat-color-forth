@@ -1,42 +1,35 @@
-; =========== ! both ===========
+; =========== ! xmacro ===========
 
-start_21_3a_6d:
- call COMUCopyCode
- db end_21_3a_6d-start_21_3a_6d-4
+start_21:
+    call COMUCopyCode
+ db end_21-start_21-4
     ld   (hl),e
     inc  hl
     ld   (hl),d
     dec  hl
-end_21_3a_6d:
-
-start_21_3a_66:
-    ld   (hl),e
-    inc  hl
-    ld   (hl),d
-    dec  hl
+end_21:
     ret
 
 ; =========== * word ===========
 
-start_2a_3a_66:
+    call COMUCompileCallToSelf
+start_2a:
     call  MULTMultiply16
     ret
 
-; =========== + both ===========
+; =========== + xmacro ===========
 
-start_2b_3a_6d:
- call COMUCopyCode
- db end_2b_3a_6d-start_2b_3a_6d-4
+start_2b:
+    call COMUCopyCode
+ db end_2b-start_2b-4
     add  hl,de
-end_2b_3a_6d:
-
-start_2b_3a_66:
-    add  hl,de
+end_2b:
     ret
 
 ; =========== +! word ===========
 
-start_2b_21_3a_66:
+    call COMUCompileCallToSelf
+start_2b_21:
     ld   a,(hl)
     add  a,e
     ld   (hl),a
@@ -47,35 +40,29 @@ start_2b_21_3a_66:
     dec  hl
     ret
 
-; =========== ++ both ===========
+; =========== ++ xmacro ===========
 
-start_2b_2b_3a_6d:
- call COMUCopyCode
- db end_2b_2b_3a_6d-start_2b_2b_3a_6d-4
+start_2b_2b:
+    call COMUCopyCode
+ db end_2b_2b-start_2b_2b-4
     inc  hl
-end_2b_2b_3a_6d:
-
-start_2b_2b_3a_66:
-    inc  hl
+end_2b_2b:
     ret
 
-; =========== +++ both ===========
+; =========== +++ xmacro ===========
 
-start_2b_2b_2b_3a_6d:
- call COMUCopyCode
- db end_2b_2b_2b_3a_6d-start_2b_2b_2b_3a_6d-4
+start_2b_2b_2b:
+    call COMUCopyCode
+ db end_2b_2b_2b-start_2b_2b_2b-4
     inc  hl
     inc  hl
-end_2b_2b_2b_3a_6d:
-
-start_2b_2b_2b_3a_66:
-    inc  hl
-    inc  hl
+end_2b_2b_2b:
     ret
 
 ; =========== +or word ===========
 
-start_2b_6f_72_3a_66:
+    call COMUCompileCallToSelf
+start_2b_6f_72:
     ld   a,h
     or   d
     ld   h,a
@@ -84,57 +71,43 @@ start_2b_6f_72_3a_66:
     ld   l,a
     ret
 
-; =========== - both ===========
+; =========== - xmacro ===========
 
-start_2d_3a_6d:
- call COMUCopyCode
- db end_2d_3a_6d-start_2d_3a_6d-4
+start_2d:
+    call COMUCopyCode
+ db end_2d-start_2d-4
     ld   a,h
     cpl
     ld   h,a
     ld   a,l
     cpl
     ld   l,a
-end_2d_3a_6d:
-
-start_2d_3a_66:
-    ld   a,h
-    cpl
-    ld   h,a
-    ld   a,l
-    cpl
-    ld   l,a
+end_2d:
     ret
 
-; =========== -- both ===========
+; =========== -- xmacro ===========
 
-start_2d_2d_3a_6d:
- call COMUCopyCode
- db end_2d_2d_3a_6d-start_2d_2d_3a_6d-4
+start_2d_2d:
+    call COMUCopyCode
+ db end_2d_2d-start_2d_2d-4
     dec  hl
-end_2d_2d_3a_6d:
-
-start_2d_2d_3a_66:
-    dec  hl
+end_2d_2d:
     ret
 
-; =========== --- both ===========
+; =========== --- xmacro ===========
 
-start_2d_2d_2d_3a_6d:
- call COMUCopyCode
- db end_2d_2d_2d_3a_6d-start_2d_2d_2d_3a_6d-4
+start_2d_2d_2d:
+    call COMUCopyCode
+ db end_2d_2d_2d-start_2d_2d_2d-4
     dec  hl
     dec  hl
-end_2d_2d_2d_3a_6d:
-
-start_2d_2d_2d_3a_66:
-    dec  hl
-    dec  hl
+end_2d_2d_2d:
     ret
 
 ; =========== / word ===========
 
-start_2f_3a_66:
+    call COMUCompileCallToSelf
+start_2f:
     push  de
     call  DIVDivideMod16
     ex   de,hl
@@ -143,61 +116,60 @@ start_2f_3a_66:
 
 ; =========== /mod word ===========
 
-start_2f_6d_6f_64_3a_66:
+    call COMUCompileCallToSelf
+start_2f_6d_6f_64:
     call  DIVDivideMod16
     ex  de,hl
     ret
 
 ; =========== 1, word ===========
 
-start_31_2c_3a_66:
+    call COMUCompileCallToSelf
+start_31_2c:
     ld   a,l
     call  FARCompileByte
     ret
 
-; =========== 2* both ===========
+; =========== 2* xmacro ===========
 
-start_32_2a_3a_6d:
- call COMUCopyCode
- db end_32_2a_3a_6d-start_32_2a_3a_6d-4
+start_32_2a:
+    call COMUCopyCode
+ db end_32_2a-start_32_2a-4
     add  hl,hl
-end_32_2a_3a_6d:
-
-start_32_2a_3a_66:
-    add  hl,hl
+end_32_2a:
     ret
 
 ; =========== 2, word ===========
 
-start_32_2c_3a_66:
+    call COMUCompileCallToSelf
+start_32_2c:
     call FARCompileWord
     ret
 
-; =========== 2/ both ===========
+; =========== 2/ xmacro ===========
 
-start_32_2f_3a_6d:
- call COMUCopyCode
- db end_32_2f_3a_6d-start_32_2f_3a_6d-4
+start_32_2f:
+    call COMUCopyCode
+ db end_32_2f-start_32_2f-4
     sra  h
     rr   l
-end_32_2f_3a_6d:
-
-start_32_2f_3a_66:
-    sra  h
-    rr   l
+end_32_2f:
     ret
 
 ; =========== ; macro ===========
 
-start_3b_3a_6d:
- call COMUCopyCode
- db end_3b_3a_6d-start_3b_3a_6d-4
+start_3b:
+    nop
+    call COMUCopyCode
+ db end_3b-start_3b-4
     ret
-end_3b_3a_6d:
+end_3b:
+    ret
 
 ; =========== < word ===========
 
-start_3c_3a_66:
+    call COMUCompileCallToSelf
+start_3c:
     ; checking if B < A
     ld   a,h         ; signs different ??
     xor  d
@@ -220,7 +192,8 @@ __Less_DiffSigns:
 
 ; =========== = word ===========
 
-start_3d_3a_66:
+    call COMUCompileCallToSelf
+start_3d:
     ld   a,h         ; D = H^D
     xor  d
     ld   h,a
@@ -232,65 +205,61 @@ start_3d_3a_66:
     dec  hl
     ret
 
-; =========== @ both ===========
+; =========== @ xmacro ===========
 
-start_40_3a_6d:
- call COMUCopyCode
- db end_40_3a_6d-start_40_3a_6d-4
+start_40:
+    call COMUCopyCode
+ db end_40-start_40-4
     ld   a,(hl)
     inc  hl
     ld   h,(hl)
     ld   l,a
-end_40_3a_6d:
-
-start_40_3a_66:
-    ld   a,(hl)
-    inc  hl
-    ld   h,(hl)
-    ld   l,a
+end_40:
     ret
 
-; =========== a>b both ===========
+; =========== a>b xmacro ===========
 
-start_61_3e_62_3a_6d:
- call COMUCopyCode
- db end_61_3e_62_3a_6d-start_61_3e_62_3a_6d-4
+start_61_3e_62:
+    call COMUCopyCode
+ db end_61_3e_62-start_61_3e_62-4
     ld   e,l
     ld   d,h
-end_61_3e_62_3a_6d:
-
-start_61_3e_62_3a_66:
-    ld   e,l
-    ld   d,h
+end_61_3e_62:
     ret
 
 ; =========== a>r macro ===========
 
-start_61_3e_72_3a_6d:
- call COMUCopyCode
- db end_61_3e_72_3a_6d-start_61_3e_72_3a_6d-4
+start_61_3e_72:
+    nop
+    call COMUCopyCode
+ db end_61_3e_72-start_61_3e_72-4
     push  hl
-end_61_3e_72_3a_6d:
+end_61_3e_72:
+    ret
 
 ; =========== ab>r macro ===========
 
-start_61_62_3e_72_3a_6d:
- call COMUCopyCode
- db end_61_62_3e_72_3a_6d-start_61_62_3e_72_3a_6d-4
+start_61_62_3e_72:
+    nop
+    call COMUCopyCode
+ db end_61_62_3e_72-start_61_62_3e_72-4
     push  hl
     push  de
-end_61_62_3e_72_3a_6d:
+end_61_62_3e_72:
+    ret
 
 ; =========== abs word ===========
 
-start_61_62_73_3a_66:
+    call COMUCompileCallToSelf
+start_61_62_73:
     bit  7,h
     jp   nz,__Negate
     ret
 
 ; =========== and word ===========
 
-start_61_6e_64_3a_66:
+    call COMUCompileCallToSelf
+start_61_6e_64:
     ld   a,h
     and  d
     ld   h,a
@@ -299,87 +268,70 @@ start_61_6e_64_3a_66:
     ld   l,a
     ret
 
-; =========== b! both ===========
+; =========== b! xmacro ===========
 
-start_62_21_3a_6d:
- call COMUCopyCode
- db end_62_21_3a_6d-start_62_21_3a_6d-4
+start_62_21:
+    call COMUCopyCode
+ db end_62_21-start_62_21-4
     ld   (hl),e
-end_62_21_3a_6d:
-
-start_62_21_3a_66:
-    ld   (hl),e
+end_62_21:
     ret
 
-; =========== b>a both ===========
+; =========== b>a xmacro ===========
 
-start_62_3e_61_3a_6d:
- call COMUCopyCode
- db end_62_3e_61_3a_6d-start_62_3e_61_3a_6d-4
+start_62_3e_61:
+    call COMUCopyCode
+ db end_62_3e_61-start_62_3e_61-4
     ld   l,e
     ld   h,d
-end_62_3e_61_3a_6d:
-
-start_62_3e_61_3a_66:
-    ld   l,e
-    ld   h,d
+end_62_3e_61:
     ret
 
 ; =========== b>r macro ===========
 
-start_62_3e_72_3a_6d:
- call COMUCopyCode
- db end_62_3e_72_3a_6d-start_62_3e_72_3a_6d-4
+start_62_3e_72:
+    nop
+    call COMUCopyCode
+ db end_62_3e_72-start_62_3e_72-4
     push  de
-end_62_3e_72_3a_6d:
+end_62_3e_72:
+    ret
 
-; =========== b@ both ===========
+; =========== b@ xmacro ===========
 
-start_62_40_3a_6d:
- call COMUCopyCode
- db end_62_40_3a_6d-start_62_40_3a_6d-4
+start_62_40:
+    call COMUCopyCode
+ db end_62_40-start_62_40-4
     ld   l,(hl)
     ld   h,$00
-end_62_40_3a_6d:
-
-start_62_40_3a_66:
-    ld   l,(hl)
-    ld   h,$00
+end_62_40:
     ret
 
 ; =========== break macro ===========
 
-start_62_72_65_61_6b_3a_6d:
- call COMUCopyCode
- db end_62_72_65_61_6b_3a_6d-start_62_72_65_61_6b_3a_6d-4
+start_62_72_65_61_6b:
+    nop
+    call COMUCopyCode
+ db end_62_72_65_61_6b-start_62_72_65_61_6b-4
     db   $DD,$01
-end_62_72_65_61_6b_3a_6d:
-
-; =========== bswap both ===========
-
-start_62_73_77_61_70_3a_6d:
- call COMUCopyCode
- db end_62_73_77_61_70_3a_6d-start_62_73_77_61_70_3a_6d-4
-    ld   a,h
-    ld   h,l
-    ld   l,a
-end_62_73_77_61_70_3a_6d:
-
-start_62_73_77_61_70_3a_66:
-    ld   a,h
-    ld   h,l
-    ld   l,a
+end_62_72_65_61_6b:
     ret
 
-; =========== compiles word ===========
+; =========== bswap xmacro ===========
 
-start_63_6f_6d_70_69_6c_65_73_3a_66:
-    call  DICTMakeLastCompiles     ; make the last word defined a 'commands' (e.g. immediate)
+start_62_73_77_61_70:
+    call COMUCopyCode
+ db end_62_73_77_61_70-start_62_73_77_61_70-4
+    ld   a,h
+    ld   h,l
+    ld   l,a
+end_62_73_77_61_70:
     ret
 
 ; =========== copy word ===========
 
-start_63_6f_70_79_3a_66:
+    call COMUCompileCallToSelf
+start_63_6f_70_79:
     ; B (DE) = source A (HL) = target
     ld   bc,(Parameter)       ; get count
     ld   a,b         ; zero check
@@ -410,13 +362,15 @@ __copyExit:
 
 ; =========== debug word ===========
 
-start_64_65_62_75_67_3a_66:
+    call COMUCompileCallToSelf
+start_64_65_62_75_67:
     call  DEBUGShow
     ret
 
 ; =========== fill word ===========
 
-start_66_69_6c_6c_3a_66:
+    call COMUCompileCallToSelf
+start_66_69_6c_6c:
     ld   bc,(Parameter)       ; count to do.
     ld   a,b
     or   c
@@ -437,14 +391,16 @@ __fillExit:
 
 ; =========== h word ===========
 
-start_68_3a_66:
+    call COMUCompileCallToSelf
+start_68:
     ex   de,hl
     ld   hl,Here
     ret
 
 ; =========== halt word ===========
 
-start_68_61_6c_74_3a_66:
+    call COMUCompileCallToSelf
+start_68_61_6c_74:
 __haltz80:
     di
     halt
@@ -453,21 +409,24 @@ __haltz80:
 
 ; =========== here word ===========
 
-start_68_65_72_65_3a_66:
+    call COMUCompileCallToSelf
+start_68_65_72_65:
     ex   de,hl
     ld   hl,(Here)
     ret
 
 ; =========== hex! word ===========
 
-start_68_65_78_21_3a_66:
+    call COMUCompileCallToSelf
+start_68_65_78_21:
     ; DE = word, HL = pos
     call  GFXWriteHexWord      ; write out the word
     ret
 
 ; =========== mod word ===========
 
-start_6d_6f_64_3a_66:
+    call COMUCompileCallToSelf
+start_6d_6f_64:
     push  de
     call  DIVDivideMod16
     pop  de
@@ -475,7 +434,8 @@ start_6d_6f_64_3a_66:
 
 ; =========== negate word ===========
 
-start_6e_65_67_61_74_65_3a_66:
+    call COMUCompileCallToSelf
+start_6e_65_67_61_74_65:
 __Negate:
     ld   a,h
     cpl
@@ -488,7 +448,8 @@ __Negate:
 
 ; =========== or word ===========
 
-start_6f_72_3a_66:
+    call COMUCompileCallToSelf
+start_6f_72:
     ld   a,h
     xor  d
     ld   h,a
@@ -499,7 +460,8 @@ start_6f_72_3a_66:
 
 ; =========== or! word ===========
 
-start_6f_72_21_3a_66:
+    call COMUCompileCallToSelf
+start_6f_72_21:
     ld   a,(hl)
     or   e
     ld   (hl),a
@@ -510,25 +472,21 @@ start_6f_72_21_3a_66:
     dec  hl
     ret
 
-; =========== p! both ===========
+; =========== p! xmacro ===========
 
-start_70_21_3a_6d:
- call COMUCopyCode
- db end_70_21_3a_6d-start_70_21_3a_6d-4
+start_70_21:
+    call COMUCopyCode
+ db end_70_21-start_70_21-4
     ld   c,l
     ld   b,h
     out  (c),e
-end_70_21_3a_6d:
-
-start_70_21_3a_66:
-    ld   c,l
-    ld   b,h
-    out  (c),e
+end_70_21:
     ret
 
 ; =========== p@ word ===========
 
-start_70_40_3a_66:
+    call COMUCompileCallToSelf
+start_70_40:
     ld   c,l
     ld   b,h
     in   l,(c)
@@ -537,61 +495,69 @@ start_70_40_3a_66:
 
 ; =========== param! word ===========
 
-start_70_61_72_61_6d_21_3a_66:
+    call COMUCompileCallToSelf
+start_70_61_72_61_6d_21:
     ld   (Parameter),hl
     ret
 
 ; =========== pop macro ===========
 
-start_70_6f_70_3a_6d:
- call COMUCopyCode
- db end_70_6f_70_3a_6d-start_70_6f_70_3a_6d-4
+start_70_6f_70:
+    nop
+    call COMUCopyCode
+ db end_70_6f_70-start_70_6f_70-4
     ex   de,hl
     pop  hl
-end_70_6f_70_3a_6d:
+end_70_6f_70:
+    ret
 
 ; =========== push macro ===========
 
-start_70_75_73_68_3a_6d:
- call COMUCopyCode
- db end_70_75_73_68_3a_6d-start_70_75_73_68_3a_6d-4
+start_70_75_73_68:
+    nop
+    call COMUCopyCode
+ db end_70_75_73_68-start_70_75_73_68-4
     push  hl
-end_70_75_73_68_3a_6d:
+end_70_75_73_68:
+    ret
 
 ; =========== r>a macro ===========
 
-start_72_3e_61_3a_6d:
- call COMUCopyCode
- db end_72_3e_61_3a_6d-start_72_3e_61_3a_6d-4
+start_72_3e_61:
+    nop
+    call COMUCopyCode
+ db end_72_3e_61-start_72_3e_61-4
     pop  hl
-end_72_3e_61_3a_6d:
+end_72_3e_61:
+    ret
 
 ; =========== r>ab macro ===========
 
-start_72_3e_61_62_3a_6d:
- call COMUCopyCode
- db end_72_3e_61_62_3a_6d-start_72_3e_61_62_3a_6d-4
+start_72_3e_61_62:
+    nop
+    call COMUCopyCode
+ db end_72_3e_61_62-start_72_3e_61_62-4
     pop  de
     pop  hl
-end_72_3e_61_62_3a_6d:
+end_72_3e_61_62:
+    ret
 
 ; =========== r>b macro ===========
 
-start_72_3e_62_3a_6d:
- call COMUCopyCode
- db end_72_3e_62_3a_6d-start_72_3e_62_3a_6d-4
+start_72_3e_62:
+    nop
+    call COMUCopyCode
+ db end_72_3e_62-start_72_3e_62-4
     pop  de
-end_72_3e_62_3a_6d:
+end_72_3e_62:
+    ret
 
-; =========== swap both ===========
+; =========== swap xmacro ===========
 
-start_73_77_61_70_3a_6d:
- call COMUCopyCode
- db end_73_77_61_70_3a_6d-start_73_77_61_70_3a_6d-4
+start_73_77_61_70:
+    call COMUCopyCode
+ db end_73_77_61_70-start_73_77_61_70-4
     ex   de,hl         ; 2nd now TOS
-end_73_77_61_70_3a_6d:
-
-start_73_77_61_70_3a_66:
-    ex   de,hl         ; 2nd now TOS
+end_73_77_61_70:
     ret
 

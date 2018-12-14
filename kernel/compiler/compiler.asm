@@ -66,7 +66,7 @@ COMError:
 ; ***************************************************************************************
 
 COMDCompileRedWord:
-		call 	DICTAddWord 						; add word to the dictionary.
+		db 		$DD,$01
 		ret
 	
 ; ***************************************************************************************
@@ -76,28 +76,8 @@ COMDCompileRedWord:
 ; ***************************************************************************************
 
 COMCCompileGreenWord:	
-		push 	de 									; save A & B
-		push 	hl
-		ld 		a,$80 								; check for "compiles" entries
-		call 	DICTFindWord
-		jr 		nc,__COMXExecuteWord 				; if found execute it.
-		ld 		a,$00 								; check for normal entries
-		call 	DICTFindWord
-		jr 		nc,__COMCCompile 					; if found, then compile it.
-		call 	DICTFindWord
-		call 	CONSTConvert 						; convert to integer
-		jp 		c,COMError 							; failure
-		call 	COMUCompileConstant 				; compile as constant.
-		pop 	hl
-		pop 	de
+		db 		$DD,$01
 		ret
-;
-__COMCCompile:
-		call 	COMUCompileCall 					; compile a call to E:HL
-		pop 	hl
-		pop 	de
-		ret
-;
 
 ; ***************************************************************************************
 ;
@@ -106,32 +86,7 @@ __COMCCompile:
 ; ***************************************************************************************
 
 COMXExecuteYellowWord:		
-		push 	de 									; save A & B
-		push 	hl
-		ld 		a,$00 								; look in normal words
-		call 	DICTFindWord
-		jr 		nc,__COMXExecuteWord
-		call 	CONSTConvert 						; check if number
-		jp 		c,COMError 							; if not, report error.
-
-		pop 	de 									; restore A into DE, keep HL the same
-		inc 	sp
-		inc 	sp
+		db 		$DD,$01
 		ret
-
-__COMXExecuteWord:
-		ld 		a,e 								; switch to the relevaant page
-		call 	PAGESwitch 						
-		pop 	de 									; restore A into DE, wrongly.
-		ex 		(sp),hl 							; now A and B are the wrong way round and exec is on TOS
-		ex 		de,hl 								; A and B are now correct.
-		ex 		(sp),ix 							; IX now contains address, old IX on TOS
-		call 	__CallIX 							; call (IX)
-		call 	PAGERestore 						; restore original page
-		pop 	ix 									; restore original IX.
-		ret
-
-__CallIX:	 										; call here does CALL (IX)
-		jp 		(ix)
 
 		

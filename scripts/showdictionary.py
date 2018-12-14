@@ -24,7 +24,6 @@ while image.read(dictPage,p) != 0:
 	for i in range(0,image.read(dictPage,p+4) & 0x3F):
 		name = name + chr(image.read(dictPage,p+5+i))
 	dByte = image.read(dictPage,p + 4)
-	commands = "" if (dByte & 0x80) == 0 else "[C]"
-	print("[{0:04x}] {1:02x}:{2:04x} {3} {4}".format(p,page,addr,name,commands))
+	print("[{0:04x}] {1:02x}:{2:04x} {3}".format(p,page,addr,name))
 	p = p + image.read(dictPage,p)
 	

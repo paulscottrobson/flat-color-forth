@@ -60,8 +60,6 @@ __ARegister:										; register values when not running.
 __BRegister:
 		dw 		0
 
-__DICTLastWordDefined: 								; address of last word defined.
-		dw 		0
 
 __PAGEStackPointer: 								; stack used for switching pages
 		dw 		0
