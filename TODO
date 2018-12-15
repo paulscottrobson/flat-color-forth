@@ -4,7 +4,7 @@ System:
 
 		Red : add definition, add CALL <compile self>
 		Green : call if in dictionary, numeric constant
-		Yellow : Exec in place or do number switch.									
+		Yellow : Exec in place (macro or std compilation) or do number switch.									
 
 
 - add string constant compiler only.

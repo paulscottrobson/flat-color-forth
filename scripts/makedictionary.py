@@ -17,7 +17,7 @@ print("Importing core words into dictionary.")
 #		Read labels
 #
 image = imagelib.ColorForthImage()
-labels = LabelExtractor("boot.lst").getLabels()
+labels = LabelExtractor("boot.img.vice").getLabels()
 count = 0
 #
 #		Add each pair to the dictionary
