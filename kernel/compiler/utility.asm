@@ -16,7 +16,11 @@
 ; ***************************************************************************************
 
 COMUCompileCallToSelf:
-		db 		$DD,$01
+		ex 		(sp),hl 							; addr in HL, old HL on TOS
+		ld 		a,$CD								; CALL xxxx
+		call 	FARCompileByte
+		call 	FARCompileWord						; compile address
+		pop 	hl 									; restore HL.
 		ret
 
 ; ***************************************************************************************
@@ -42,6 +46,7 @@ COMUCompileConstant:
 COMUCopyCode:
 		ex 		(sp),hl 							; old HL on stack, new HL is return address
 		push 	bc 									; preserve BC
+		inc 	hl 									; skip the LD A opcode.
 		ld 		b,(hl) 								; count to copy
 __COMUCopyLoop:
 		inc 	hl

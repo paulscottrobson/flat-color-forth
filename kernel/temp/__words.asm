@@ -2,7 +2,7 @@
 
 start_21:
     call COMUCopyCode
- db end_21-start_21-4
+ ld a,end_21-start_21-5
     ld   (hl),e
     inc  hl
     ld   (hl),d
@@ -12,8 +12,8 @@ end_21:
 
 ; =========== * word ===========
 
-    call COMUCompileCallToSelf
 start_2a:
+    call COMUCompileCallToSelf
     call  MULTMultiply16
     ret
 
@@ -21,15 +21,15 @@ start_2a:
 
 start_2b:
     call COMUCopyCode
- db end_2b-start_2b-4
+ ld a,end_2b-start_2b-5
     add  hl,de
 end_2b:
     ret
 
 ; =========== +! word ===========
 
-    call COMUCompileCallToSelf
 start_2b_21:
+    call COMUCompileCallToSelf
     ld   a,(hl)
     add  a,e
     ld   (hl),a
@@ -44,7 +44,7 @@ start_2b_21:
 
 start_2b_2b:
     call COMUCopyCode
- db end_2b_2b-start_2b_2b-4
+ ld a,end_2b_2b-start_2b_2b-5
     inc  hl
 end_2b_2b:
     ret
@@ -53,7 +53,7 @@ end_2b_2b:
 
 start_2b_2b_2b:
     call COMUCopyCode
- db end_2b_2b_2b-start_2b_2b_2b-4
+ ld a,end_2b_2b_2b-start_2b_2b_2b-5
     inc  hl
     inc  hl
 end_2b_2b_2b:
@@ -61,8 +61,8 @@ end_2b_2b_2b:
 
 ; =========== +or word ===========
 
-    call COMUCompileCallToSelf
 start_2b_6f_72:
+    call COMUCompileCallToSelf
     ld   a,h
     or   d
     ld   h,a
@@ -75,7 +75,7 @@ start_2b_6f_72:
 
 start_2d:
     call COMUCopyCode
- db end_2d-start_2d-4
+ ld a,end_2d-start_2d-5
     ld   a,h
     cpl
     ld   h,a
@@ -89,7 +89,7 @@ end_2d:
 
 start_2d_2d:
     call COMUCopyCode
- db end_2d_2d-start_2d_2d-4
+ ld a,end_2d_2d-start_2d_2d-5
     dec  hl
 end_2d_2d:
     ret
@@ -98,7 +98,7 @@ end_2d_2d:
 
 start_2d_2d_2d:
     call COMUCopyCode
- db end_2d_2d_2d-start_2d_2d_2d-4
+ ld a,end_2d_2d_2d-start_2d_2d_2d-5
     dec  hl
     dec  hl
 end_2d_2d_2d:
@@ -106,8 +106,8 @@ end_2d_2d_2d:
 
 ; =========== / word ===========
 
-    call COMUCompileCallToSelf
 start_2f:
+    call COMUCompileCallToSelf
     push  de
     call  DIVDivideMod16
     ex   de,hl
@@ -116,16 +116,16 @@ start_2f:
 
 ; =========== /mod word ===========
 
-    call COMUCompileCallToSelf
 start_2f_6d_6f_64:
+    call COMUCompileCallToSelf
     call  DIVDivideMod16
     ex  de,hl
     ret
 
 ; =========== 1, word ===========
 
-    call COMUCompileCallToSelf
 start_31_2c:
+    call COMUCompileCallToSelf
     ld   a,l
     call  FARCompileByte
     ret
@@ -134,15 +134,15 @@ start_31_2c:
 
 start_32_2a:
     call COMUCopyCode
- db end_32_2a-start_32_2a-4
+ ld a,end_32_2a-start_32_2a-5
     add  hl,hl
 end_32_2a:
     ret
 
 ; =========== 2, word ===========
 
-    call COMUCompileCallToSelf
 start_32_2c:
+    call COMUCompileCallToSelf
     call FARCompileWord
     ret
 
@@ -150,7 +150,7 @@ start_32_2c:
 
 start_32_2f:
     call COMUCopyCode
- db end_32_2f-start_32_2f-4
+ ld a,end_32_2f-start_32_2f-5
     sra  h
     rr   l
 end_32_2f:
@@ -161,15 +161,15 @@ end_32_2f:
 start_3b:
     nop
     call COMUCopyCode
- db end_3b-start_3b-4
+ ld a,end_3b-start_3b-5
     ret
 end_3b:
     ret
 
 ; =========== < word ===========
 
-    call COMUCompileCallToSelf
 start_3c:
+    call COMUCompileCallToSelf
     ; checking if B < A
     ld   a,h         ; signs different ??
     xor  d
@@ -192,8 +192,8 @@ __Less_DiffSigns:
 
 ; =========== = word ===========
 
-    call COMUCompileCallToSelf
 start_3d:
+    call COMUCompileCallToSelf
     ld   a,h         ; D = H^D
     xor  d
     ld   h,a
@@ -209,7 +209,7 @@ start_3d:
 
 start_40:
     call COMUCopyCode
- db end_40-start_40-4
+ ld a,end_40-start_40-5
     ld   a,(hl)
     inc  hl
     ld   h,(hl)
@@ -221,7 +221,7 @@ end_40:
 
 start_61_3e_62:
     call COMUCopyCode
- db end_61_3e_62-start_61_3e_62-4
+ ld a,end_61_3e_62-start_61_3e_62-5
     ld   e,l
     ld   d,h
 end_61_3e_62:
@@ -232,7 +232,7 @@ end_61_3e_62:
 start_61_3e_72:
     nop
     call COMUCopyCode
- db end_61_3e_72-start_61_3e_72-4
+ ld a,end_61_3e_72-start_61_3e_72-5
     push  hl
 end_61_3e_72:
     ret
@@ -242,7 +242,7 @@ end_61_3e_72:
 start_61_62_3e_72:
     nop
     call COMUCopyCode
- db end_61_62_3e_72-start_61_62_3e_72-4
+ ld a,end_61_62_3e_72-start_61_62_3e_72-5
     push  hl
     push  de
 end_61_62_3e_72:
@@ -250,16 +250,16 @@ end_61_62_3e_72:
 
 ; =========== abs word ===========
 
-    call COMUCompileCallToSelf
 start_61_62_73:
+    call COMUCompileCallToSelf
     bit  7,h
     jp   nz,__Negate
     ret
 
 ; =========== and word ===========
 
-    call COMUCompileCallToSelf
 start_61_6e_64:
+    call COMUCompileCallToSelf
     ld   a,h
     and  d
     ld   h,a
@@ -272,7 +272,7 @@ start_61_6e_64:
 
 start_62_21:
     call COMUCopyCode
- db end_62_21-start_62_21-4
+ ld a,end_62_21-start_62_21-5
     ld   (hl),e
 end_62_21:
     ret
@@ -281,7 +281,7 @@ end_62_21:
 
 start_62_3e_61:
     call COMUCopyCode
- db end_62_3e_61-start_62_3e_61-4
+ ld a,end_62_3e_61-start_62_3e_61-5
     ld   l,e
     ld   h,d
 end_62_3e_61:
@@ -292,7 +292,7 @@ end_62_3e_61:
 start_62_3e_72:
     nop
     call COMUCopyCode
- db end_62_3e_72-start_62_3e_72-4
+ ld a,end_62_3e_72-start_62_3e_72-5
     push  de
 end_62_3e_72:
     ret
@@ -301,7 +301,7 @@ end_62_3e_72:
 
 start_62_40:
     call COMUCopyCode
- db end_62_40-start_62_40-4
+ ld a,end_62_40-start_62_40-5
     ld   l,(hl)
     ld   h,$00
 end_62_40:
@@ -312,7 +312,7 @@ end_62_40:
 start_62_72_65_61_6b:
     nop
     call COMUCopyCode
- db end_62_72_65_61_6b-start_62_72_65_61_6b-4
+ ld a,end_62_72_65_61_6b-start_62_72_65_61_6b-5
     db   $DD,$01
 end_62_72_65_61_6b:
     ret
@@ -321,7 +321,7 @@ end_62_72_65_61_6b:
 
 start_62_73_77_61_70:
     call COMUCopyCode
- db end_62_73_77_61_70-start_62_73_77_61_70-4
+ ld a,end_62_73_77_61_70-start_62_73_77_61_70-5
     ld   a,h
     ld   h,l
     ld   l,a
@@ -330,8 +330,8 @@ end_62_73_77_61_70:
 
 ; =========== copy word ===========
 
-    call COMUCompileCallToSelf
 start_63_6f_70_79:
+    call COMUCompileCallToSelf
     ; B (DE) = source A (HL) = target
     ld   bc,(Parameter)       ; get count
     ld   a,b         ; zero check
@@ -362,15 +362,15 @@ __copyExit:
 
 ; =========== debug word ===========
 
-    call COMUCompileCallToSelf
 start_64_65_62_75_67:
+    call COMUCompileCallToSelf
     call  DEBUGShow
     ret
 
 ; =========== fill word ===========
 
-    call COMUCompileCallToSelf
 start_66_69_6c_6c:
+    call COMUCompileCallToSelf
     ld   bc,(Parameter)       ; count to do.
     ld   a,b
     or   c
@@ -391,16 +391,16 @@ __fillExit:
 
 ; =========== h word ===========
 
-    call COMUCompileCallToSelf
 start_68:
+    call COMUCompileCallToSelf
     ex   de,hl
     ld   hl,Here
     ret
 
 ; =========== halt word ===========
 
-    call COMUCompileCallToSelf
 start_68_61_6c_74:
+    call COMUCompileCallToSelf
 __haltz80:
     di
     halt
@@ -409,24 +409,24 @@ __haltz80:
 
 ; =========== here word ===========
 
-    call COMUCompileCallToSelf
 start_68_65_72_65:
+    call COMUCompileCallToSelf
     ex   de,hl
     ld   hl,(Here)
     ret
 
 ; =========== hex! word ===========
 
-    call COMUCompileCallToSelf
 start_68_65_78_21:
+    call COMUCompileCallToSelf
     ; DE = word, HL = pos
     call  GFXWriteHexWord      ; write out the word
     ret
 
 ; =========== mod word ===========
 
-    call COMUCompileCallToSelf
 start_6d_6f_64:
+    call COMUCompileCallToSelf
     push  de
     call  DIVDivideMod16
     pop  de
@@ -434,8 +434,8 @@ start_6d_6f_64:
 
 ; =========== negate word ===========
 
-    call COMUCompileCallToSelf
 start_6e_65_67_61_74_65:
+    call COMUCompileCallToSelf
 __Negate:
     ld   a,h
     cpl
@@ -448,8 +448,8 @@ __Negate:
 
 ; =========== or word ===========
 
-    call COMUCompileCallToSelf
 start_6f_72:
+    call COMUCompileCallToSelf
     ld   a,h
     xor  d
     ld   h,a
@@ -460,8 +460,8 @@ start_6f_72:
 
 ; =========== or! word ===========
 
-    call COMUCompileCallToSelf
 start_6f_72_21:
+    call COMUCompileCallToSelf
     ld   a,(hl)
     or   e
     ld   (hl),a
@@ -476,7 +476,7 @@ start_6f_72_21:
 
 start_70_21:
     call COMUCopyCode
- db end_70_21-start_70_21-4
+ ld a,end_70_21-start_70_21-5
     ld   c,l
     ld   b,h
     out  (c),e
@@ -485,8 +485,8 @@ end_70_21:
 
 ; =========== p@ word ===========
 
-    call COMUCompileCallToSelf
 start_70_40:
+    call COMUCompileCallToSelf
     ld   c,l
     ld   b,h
     in   l,(c)
@@ -495,8 +495,8 @@ start_70_40:
 
 ; =========== param! word ===========
 
-    call COMUCompileCallToSelf
 start_70_61_72_61_6d_21:
+    call COMUCompileCallToSelf
     ld   (Parameter),hl
     ret
 
@@ -505,7 +505,7 @@ start_70_61_72_61_6d_21:
 start_70_6f_70:
     nop
     call COMUCopyCode
- db end_70_6f_70-start_70_6f_70-4
+ ld a,end_70_6f_70-start_70_6f_70-5
     ex   de,hl
     pop  hl
 end_70_6f_70:
@@ -516,7 +516,7 @@ end_70_6f_70:
 start_70_75_73_68:
     nop
     call COMUCopyCode
- db end_70_75_73_68-start_70_75_73_68-4
+ ld a,end_70_75_73_68-start_70_75_73_68-5
     push  hl
 end_70_75_73_68:
     ret
@@ -526,7 +526,7 @@ end_70_75_73_68:
 start_72_3e_61:
     nop
     call COMUCopyCode
- db end_72_3e_61-start_72_3e_61-4
+ ld a,end_72_3e_61-start_72_3e_61-5
     pop  hl
 end_72_3e_61:
     ret
@@ -536,7 +536,7 @@ end_72_3e_61:
 start_72_3e_61_62:
     nop
     call COMUCopyCode
- db end_72_3e_61_62-start_72_3e_61_62-4
+ ld a,end_72_3e_61_62-start_72_3e_61_62-5
     pop  de
     pop  hl
 end_72_3e_61_62:
@@ -547,7 +547,7 @@ end_72_3e_61_62:
 start_72_3e_62:
     nop
     call COMUCopyCode
- db end_72_3e_62-start_72_3e_62-4
+ ld a,end_72_3e_62-start_72_3e_62-5
     pop  de
 end_72_3e_62:
     ret
@@ -556,7 +556,7 @@ end_72_3e_62:
 
 start_73_77_61_70:
     call COMUCopyCode
- db end_73_77_61_70-start_73_77_61_70-4
+ ld a,end_73_77_61_70-start_73_77_61_70-5
     ex   de,hl         ; 2nd now TOS
 end_73_77_61_70:
     ret

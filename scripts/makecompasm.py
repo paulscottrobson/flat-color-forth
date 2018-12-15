@@ -69,15 +69,15 @@ for w in keys:
 		if words[w]["type"] == "macro":
 			hOut.write(format(" nop")+"\n")
 		hOut.write(format(" call COMUCopyCode")+"\n")
-		hOut.write(" db end_{0}-start_{0}-4\n".format(scrambled))
+		hOut.write(" ld a,end_{0}-start_{0}-5\n".format(scrambled))
 		hOut.write("\n".join(words[w]["code"])+"\n")
 		hOut.write("end_"+scrambled+":\n")
 		hOut.write(format(" ret")+"\n\n")
 		
 	if words[w]["type"] == "word":
 		count += 1
-		hOut.write(format(" call COMUCompileCallToSelf")+"\n")
 		hOut.write("start_"+scrambled+":\n")
+		hOut.write(format(" call COMUCompileCallToSelf")+"\n")
 		hOut.write("\n".join(words[w]["code"])+"\n")
 		hOut.write(format(" ret")+"\n\n")
 

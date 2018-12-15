@@ -83,10 +83,70 @@ COMCCompileGreenWord:
 ;
 ;						Execute the Yellow tagged word at BC
 ;
+
 ; ***************************************************************************************
 
 COMXExecuteYellowWord:		
-		db 		$DD,$01
+		push 	de 									; save A & B
+		push 	hl 
+		call 	DICTFindWord 						; try to find the word.
+		jr 		nc,__COMXYellowWord
+		call 	CONSTConvert 						; try as a constant ?
+		jp 		c,COMError 							; fail then error.
+
+		pop 	de 									; pop old HL into DE
+		inc 	sp 									; throw away the old DE
+		inc 	sp
+		ret
+
+__COMXYellowWord:
+		ld 		a,e 								; switch to page E
+		call 	PAGESwitch
+		push 	hl 									; save HL
+		call 	__COMXIsStandard 					; is it a standard / executable word
+		ld 		hl,__COMX_NoExec
+		jp		nz,ErrorHandler 					; if not, go to error handler.
+
+		pop 	hl 									; address
+		inc 	hl 									; skip over leading CALL
+		inc 	hl
+		inc 	hl
+
+		pop 	de 									; restore A/B, the wrong way round
+		ex 		(sp),hl 							; address now on TOS.
+		ex 		de,hl 								; right way round.
+		ex 		(sp),ix 							; now in IX, old IX on TOS.
+		call 	__CALLIX 							; call (IX)
+		pop 	ix 									; restore IX
+		call 	PAGERestore 						; restore page
+		ret
+__CALLIX:	
+		jp 		(ix)
+__COMX_NoExec:
+		db 		"can't exec",0
+;
+;		Check the call at HL is to either COMUCopyCode or COMUCompileCallToSelf.
+;
+__COMXIsStandard:
+		ld 		a,(hl) 								; check first is a CALL.
+		inc 	hl
+		cp 		$CD
+		ret 	nz		
+
+		ld 		a,(hl)
+		inc 	hl
+		cp 		COMUCompileCallToSelf&255
+		jr 		z,__COMXTest1
+		cp 		COMUCopyCode&255
+		ret 	nz
+
+		ld 		a,(hl)
+		cp 		COMUCopyCode/256
+		ret
+__COMXTest1:
+		ld 		a,(hl)
+		cp 		COMUCompileCallToSelf/256
+		ret
 		ret
 
 		
