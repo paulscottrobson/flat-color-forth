@@ -65,4 +65,3 @@ Boot:	ld 		sp,StackTop							; reset Z80 Stack
 AlternateFont:										; nicer font
 		include "font.inc" 							; can be $3D00 here to save memory
 		include "data.asm"		
-

@@ -62,7 +62,7 @@ __CLIPromptExit:
 		add 	hl,de
 		ld 		ix,__CLIBuffer 						; IX points to buffer
 __CLILoop:
-		ld 		de,$057F 							; display prompt
+		ld 		de,$077F 							; display prompt
 		call 	GFXWriteCharacter
 		call 	__CLIGetKey 						; get key
 		cp 		13 									; exec on CR

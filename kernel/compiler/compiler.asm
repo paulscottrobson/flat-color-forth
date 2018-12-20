@@ -66,7 +66,13 @@ COMError:
 ; ***************************************************************************************
 
 COMDCompileRedWord:
-		db 		$DD,$01
+		call 	DICTAddWord 						; add dictionary
+		push 	hl 									; compile standard prefix		
+		ld 		a,$CD 							
+		call 	FARCompileByte
+		ld 		hl,COMUCompileCallToSelf
+		call 	FARCompileWord
+		pop 	hl
 		ret
 	
 ; ***************************************************************************************
@@ -76,8 +82,58 @@ COMDCompileRedWord:
 ; ***************************************************************************************
 
 COMCCompileGreenWord:	
-		db 		$DD,$01
+		push 	de 									; save DE & HL
+		push	hl
+		call 	DICTFindWord 						; look in dictionary.
+		jr 		nc,__COMCGreenExecuteToCompile
+		inc 	bc 									; get first character
+		ld 		a,(bc)
+		dec 	bc
+		cp 		'"'									; string ?
+		jr 		z,__COMCString
+		call 	CONSTConvert 						; is it a number
+		jp 		c,COMError 							; no error.
+		call 	COMUCompileConstant 				; compile constant code
+		pop 	hl 									; restore A/B
+		pop 	de
 		ret
+
+__COMCString:
+		ld 		a,$18 								; JR <size>
+		call 	FARCompileByte
+		ld 		a,(bc)
+		and 	$1F
+		call 	FARCompileByte
+		ld 		hl,(Here) 							; save address start
+		push 	hl
+		dec 	a 									; empty string ?
+		jr 		z,__COMCStringOver
+		ld 		e,a
+		inc 	bc 									; skip tag
+__COMCOut: 											; output each character
+		inc 	bc
+		ld 		a,(bc)
+		cp 		'_'
+		jr 		nz,__COMCNotSpace
+		ld 		a,' '
+__COMCNotSpace:
+		call 	FARCompileByte
+		dec 	e
+		jr 		nz,__COMCOut
+__COMCStringOver:
+		xor 	a 									; null byte
+		call 	FARCompileByte
+		pop 	hl
+		call 	COMUCompileConstant 				; compile the constant.
+		pop 	hl 									; restore AB
+		pop 	de
+		ret
+
+
+__COMCGreenExecuteToCompile:
+		ld 		a,e 								; switch to page
+		call 	PAGESwitch
+		jr 		__COMXExecute 						; and use the 'yellow' execution code.
 
 ; ***************************************************************************************
 ;
@@ -112,6 +168,7 @@ __COMXYellowWord:
 		inc 	hl
 		inc 	hl
 
+__COMXExecute:
 		pop 	de 									; restore A/B, the wrong way round
 		ex 		(sp),hl 							; address now on TOS.
 		ex 		de,hl 								; right way round.

@@ -161,7 +161,7 @@ end_32_2f:
 start_3b:
     nop
     call COMUCopyCode
- ld a,end_3b-start_3b-5
+ ld a,end_3b-start_3b-6
     ret
 end_3b:
     ret
@@ -232,7 +232,7 @@ end_61_3e_62:
 start_61_3e_72:
     nop
     call COMUCopyCode
- ld a,end_61_3e_72-start_61_3e_72-5
+ ld a,end_61_3e_72-start_61_3e_72-6
     push  hl
 end_61_3e_72:
     ret
@@ -242,7 +242,7 @@ end_61_3e_72:
 start_61_62_3e_72:
     nop
     call COMUCopyCode
- ld a,end_61_62_3e_72-start_61_62_3e_72-5
+ ld a,end_61_62_3e_72-start_61_62_3e_72-6
     push  hl
     push  de
 end_61_62_3e_72:
@@ -292,7 +292,7 @@ end_62_3e_61:
 start_62_3e_72:
     nop
     call COMUCopyCode
- ld a,end_62_3e_72-start_62_3e_72-5
+ ld a,end_62_3e_72-start_62_3e_72-6
     push  de
 end_62_3e_72:
     ret
@@ -312,7 +312,7 @@ end_62_40:
 start_62_72_65_61_6b:
     nop
     call COMUCopyCode
- ld a,end_62_72_65_61_6b-start_62_72_65_61_6b-5
+ ld a,end_62_72_65_61_6b-start_62_72_65_61_6b-6
     db   $DD,$01
 end_62_72_65_61_6b:
     ret
@@ -505,7 +505,7 @@ start_70_61_72_61_6d_21:
 start_70_6f_70:
     nop
     call COMUCopyCode
- ld a,end_70_6f_70-start_70_6f_70-5
+ ld a,end_70_6f_70-start_70_6f_70-6
     ex   de,hl
     pop  hl
 end_70_6f_70:
@@ -516,7 +516,7 @@ end_70_6f_70:
 start_70_75_73_68:
     nop
     call COMUCopyCode
- ld a,end_70_75_73_68-start_70_75_73_68-5
+ ld a,end_70_75_73_68-start_70_75_73_68-6
     push  hl
 end_70_75_73_68:
     ret
@@ -526,7 +526,7 @@ end_70_75_73_68:
 start_72_3e_61:
     nop
     call COMUCopyCode
- ld a,end_72_3e_61-start_72_3e_61-5
+ ld a,end_72_3e_61-start_72_3e_61-6
     pop  hl
 end_72_3e_61:
     ret
@@ -536,7 +536,7 @@ end_72_3e_61:
 start_72_3e_61_62:
     nop
     call COMUCopyCode
- ld a,end_72_3e_61_62-start_72_3e_61_62-5
+ ld a,end_72_3e_61_62-start_72_3e_61_62-6
     pop  de
     pop  hl
 end_72_3e_61_62:
@@ -547,7 +547,7 @@ end_72_3e_61_62:
 start_72_3e_62:
     nop
     call COMUCopyCode
- ld a,end_72_3e_62-start_72_3e_62-5
+ ld a,end_72_3e_62-start_72_3e_62-6
     pop  de
 end_72_3e_62:
     ret

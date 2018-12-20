@@ -69,7 +69,8 @@ for w in keys:
 		if words[w]["type"] == "macro":
 			hOut.write(format(" nop")+"\n")
 		hOut.write(format(" call COMUCopyCode")+"\n")
-		hOut.write(" ld a,end_{0}-start_{0}-5\n".format(scrambled))
+		extraBytes = 5 if words[w]["type"] == "xmacro" else 6
+		hOut.write(" ld a,end_{0}-start_{0}-{1}\n".format(scrambled,extraBytes))
 		hOut.write("\n".join(words[w]["code"])+"\n")
 		hOut.write("end_"+scrambled+":\n")
 		hOut.write(format(" ret")+"\n\n")

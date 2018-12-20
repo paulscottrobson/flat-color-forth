@@ -27,7 +27,7 @@ DisplayInfo: 										; +8 	Display information
 		dw 		DisplayInformation,0		
 Parameter: 											; +12 	Third Parameter used in some functions.
 		dw 		0,0
-
+		
 ; ***************************************************************************************
 ;
 ;							 Display system information
