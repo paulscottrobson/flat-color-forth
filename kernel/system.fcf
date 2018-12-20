@@ -3,7 +3,7 @@
 //
 //		Name : 		system.fcf
 //		Author :	Paul Robson (paul@robsons.org.uk)
-//		Date : 		12th December 2018
+//		Date : 		20th December 2018
 //		Purpose :	Standard utility routines and structures
 //
 // ***************************************************************************************
@@ -11,14 +11,14 @@
  
 // ****************************************************************************************************
 //
-//		Compiles overrides the normal behaviour of a word, so you can make a word do something 
+//		does> overrides the normal behaviour of a word, so you can make a word do something 
 //		else when its compiled. Every red word has CALL <CompileCallToNextInstruction> compiled
 //		in by default ; this removes it. It's sort of like "IMMEDIATE".
 //
 // ****************************************************************************************************
 
-:compiles 
- 	ab>r here 3- + h ! r>ab 						// Which does compiles.
+:does> 
+ 	ab>r here 3- + h ! r>ab 						// Which does does>.
 ;
 
 // ****************************************************************************************************
@@ -42,9 +42,9 @@
 // ****************************************************************************************************
 
 :variable 
- 	[compiles] 										// It's a compiles word, it executes this on compile.
- 	compiles 										// Makes the word just defined compiles.
- 	__compile.variable.handler  					// Creates a call to __variable handler which COMPILES
+ 	[does>] 										// It's a does> word, it executes this on compile.
+ 	does> 											// Makes the word just defined does>.
+ 	__compile.variable.handler  					// Creates a call to __variable handler which does>
  													// a call to __variable_handler (Rule#1)
  													// which outputs ex de,hl ld hl,<tos>
  	0 2, 											// Compiling $0000
@@ -58,11 +58,11 @@
 //
 // ****************************************************************************************************
 
-:@@ [compiles]
+:@@ [does>]
 	here push 3- h +! 42 1, pop h !  				// Rewrites ex de,hl ; ld hl,x to ex de,hl;ld hl,(x)
 ;
 
-:!! [compiles]
+:!! [does>]
 	here push 4- h +! 0 1, 34 1, pop h ! 			// Rewrites ex de,hl ; ld hl,x to nop ; ld (x),hl
 ;
 
@@ -74,28 +74,28 @@
 
 :__if.branch.address variable 
 
-:if 	[compiles]
+:if 	[does>]
 	ab>r
 	124 1, 181 1, 									// LD A,H ; OR L
 	202 1, 											// JP Z,
 	here __if.branch.address !! 					// save branch location
-	__if.unclosed @@ 2,
+	32772 @ 16 + @ 2,
 	r>ab 											
 ;
 
-:-if 	[compiles]
+:-if 	[does>]
 	ab>r
 	203 1, 124 1, 									// BIT 7,H
 	202 1, 											// JP Z,
 	here __if.branch.address !!  					// save branch location
-	0 2,
+	32772 @ 16 + @ 2,
 	r>ab
 ;
 
-:then 	[compiles]
+:then 	[does>]
 	ab>r
 	here push   									// Save HERE on stack
-	0 @@ h ! 					 					// Back to branch address
+	__if.branch.address @@ h ! 						// Back to branch address
 	pop 2, h ! 										// Compile address and write back
 	r>ab
 ;
@@ -108,11 +108,11 @@
 
 :__begin.loop.address variable
 
-:begin 	[compiles]
+:begin 	[does>]
 	ab>r here __begin.loop.address !! r>ab  		// Save where we are
 ;
 
-:until 	[compiles]
+:until 	[does>]
 	ab>r
 	124 1, 181 1, 									// LD A,H ; OR L
 	202 1, 											// JP Z,
@@ -120,7 +120,7 @@
 	r>ab
 ;
 
-:-until [compiles]
+:-until [does>]
 	ab>r
 	203 1, 124 1, 									// BIT 7,H
 	202 1, 											// JP Z,
@@ -136,14 +136,14 @@
 
 :__for.loop.address variable 
 
-:for 	[compiles]
+:for 	[does>]
 	ab>r
 	here __for.loop.address !!						// Remember where we are.
 	43 1, 229 1, 									// DEC HL ; PUSH HL
 	r>ab
 ;
 
-:next 	[compiles]
+:next 	[does>]
 	ab>r
 	225 1, 											// POP HL
 	124 1, 181 1, 									// LD A,H ; OR L
@@ -151,7 +151,7 @@
 	r>ab
 ;
 
-:i 		[compiles]
+:i 		[does>]
 	ab>r
 	225 1, 229 1, 									// POP HL ; PUSH HL
 	r>ab
@@ -166,6 +166,3 @@
 :min ab>r < if r>ab b>a ; then r>ab ;
 :max ab>r < if r>ab ; then r>ab b>a ;
 
-:test break 0 if ;
-
-[test]

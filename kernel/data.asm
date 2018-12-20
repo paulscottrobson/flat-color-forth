@@ -27,7 +27,9 @@ DisplayInfo: 										; +8 	Display information
 		dw 		DisplayInformation,0		
 Parameter: 											; +12 	Third Parameter used in some functions.
 		dw 		0,0
-		
+WarmStartVector: 									; +16 	Warm Start vector.
+		dw 		WarmStart,0
+
 ; ***************************************************************************************
 ;
 ;							 Display system information
@@ -73,7 +75,6 @@ __CLICurrentKey: 									; current inkey state on CLI
 __CLIBuffer:
 		ds 		20
 
-		org 	$A000
 FreeMemory:		
 		org 	$C000
 		db 		0 									; start of dictionary, which is empty.

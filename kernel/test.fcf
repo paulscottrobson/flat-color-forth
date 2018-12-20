@@ -1,7 +1,3 @@
-"hi_there
-:double b>r a>b + r>b ;
-:add3 3 + ;
-[42] 
-
-
-
+[here] [0] [hex!]
+:test if ;
+[test]

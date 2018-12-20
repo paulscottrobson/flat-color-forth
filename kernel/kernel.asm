@@ -37,7 +37,7 @@ Boot:	ld 		sp,StackTop							; reset Z80 Stack
 		ld 		a,FirstCodePage 					; get the page to start
 		call 	PAGEInitialise
 
-		xor 	a 									; set Mode 0 (standard 48k Spectrum + Sprites)
+		ld 		a,0 								; set Mode 0 (standard 48k Spectrum + Sprites)
 		call 	GFXMode
 		jp 		BUFFScan 							; scan the buffers
 

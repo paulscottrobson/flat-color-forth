@@ -1,16 +1,11 @@
 System:
 
-- variable handler. remove, $C9,$00,$00
-- save last compiled word (afterwards, e.g. delay one !) or some mechanism ... 
-- !! && @@ operators.
-- basic structures
-- cross page call
-- define some i/o words.
+- save state (with exit in CSpect.exe)
 - port libraries.
+- define some i/o words.
+- purge underscore words.
+- cross page call
 - write editor
 - comment words and write document generation
 - test sprites.
-
-
-
-
+- improve if/warm start.
