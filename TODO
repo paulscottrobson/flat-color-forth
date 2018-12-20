@@ -6,6 +6,7 @@ System:
 		Green : call if in dictionary, numeric constant
 		Yellow : Exec in place (macro or std compilation) or do number switch.									
 
+- define some i/o words.
 - variable handler. remove, $C9,$00,$00
 - save last executed word (afterwards, e.g. delay one !)
 - !! && @@ operators.

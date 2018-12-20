@@ -3,7 +3,7 @@
 ;
 ;		File:		command.asm
 ;		Purpose:	Command line code
-;		Date : 		12th December 2018
+;		Date : 		20th December 2018
 ;		Author:		paul@robsons.org.uk
 ;
 ; *********************************************************************************

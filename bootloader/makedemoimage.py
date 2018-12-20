@@ -3,7 +3,7 @@
 #
 #		Name : 		makerandomimage.py
 #		Author :	Paul Robson (paul@robsons.org.uk)
-#		Date : 		7th December 2018
+#		Date : 		20th December 2018
 #		Purpose :	Creates a dummy boot.img which has BRK at $8000
 #
 # ***************************************************************************************

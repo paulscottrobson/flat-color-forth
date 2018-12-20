@@ -3,7 +3,7 @@
 ;
 ;		File:		screen_layer2.asm
 ;		Purpose:	Layer 2 console interface, sprites enabled, no shadow.
-;		Date : 		12th December 2018
+;		Date : 		20th December 2018
 ;		Author:		paul@robsons.org.uk
 ;
 ; *********************************************************************************

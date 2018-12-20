@@ -3,7 +3,7 @@
 #
 #		Name : 		showdictionary.py
 #		Author :	Paul Robson (paul@robsons.org.uk)
-#		Date : 		7th December 2018
+#		Date : 		20th December 2018
 #		Purpose :	List Dictionary contents
 #
 # ***************************************************************************************

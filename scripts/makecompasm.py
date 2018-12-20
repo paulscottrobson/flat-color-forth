@@ -3,7 +3,7 @@
 #
 #		Name : 		makecompasm.py
 #		Author :	Paul Robson (paul@robsons.org.uk)
-#		Date : 		9th December 2018
+#		Date : 		20th December 2018
 #		Purpose :	Make composite assembly file for assembler
 #
 # ***************************************************************************************

@@ -3,7 +3,7 @@
 #
 #		File:		labels.py
 #		Purpose:	Extract labels from assembler result
-#		Date : 		7th December 2018
+#		Date : 		20th December 2018
 #		Author:		paul@robsons.org.uk
 #
 # *********************************************************************************
