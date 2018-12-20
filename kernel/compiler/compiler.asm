@@ -125,7 +125,8 @@ __CALLIX:
 __COMX_NoExec:
 		db 		"can't exec",0
 ;
-;		Check the call at HL is to either COMUCopyCode or COMUCompileCallToSelf.
+;		Check the call at HL is to either COMUCopyCode or COMUCompileCallToSelf. We cannot execute
+; 		anything else.
 ;
 __COMXIsStandard:
 		ld 		a,(hl) 								; check first is a CALL.
