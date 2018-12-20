@@ -79,7 +79,7 @@
 	124 1, 181 1, 									// LD A,H ; OR L
 	202 1, 											// JP Z,
 	here __if.branch.address !! 					// save branch location
-	32772 @ 16 + @ 2,
+	sys.info 16 + @ 2,
 	r>ab 											
 ;
 
@@ -88,7 +88,7 @@
 	203 1, 124 1, 									// BIT 7,H
 	202 1, 											// JP Z,
 	here __if.branch.address !!  					// save branch location
-	32772 @ 16 + @ 2,
+	sys.info 16 + @ 2,
 	r>ab
 ;
 
@@ -166,3 +166,10 @@
 :min ab>r < if r>ab b>a ; then r>ab ;
 :max ab>r < if r>ab ; then r>ab b>a ;
 
+// ****************************************************************************************************
+//
+//										Access display information
+//
+// ****************************************************************************************************
+
+:display.info a>r sys.info 8 + @ r>b ;

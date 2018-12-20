@@ -1,8 +1,7 @@
 System:
 
-- save state (with exit in CSpect.exe)
 - port libraries.
-- define some i/o words.
+- save state (with exit in CSpect.exe)
 - purge underscore words.
 - cross page call
 - write editor

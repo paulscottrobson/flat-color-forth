@@ -10,6 +10,9 @@
 ; *********************************************************************************
 
 CommandLineStart:
+		ld 		hl,$0000 							; reset registers here.
+		ld 		(__ARegister),hl
+		ld 		(__BRegister),hl
 		ld 		hl,__CLIWelcome
 		ld 		c,5
 		jr 		WarmStartSetup

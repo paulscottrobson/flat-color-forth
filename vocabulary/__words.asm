@@ -552,6 +552,21 @@ start_72_3e_62:
 end_72_3e_62:
     ret
 
+; =========== screen! word ===========
+
+start_73_63_72_65_65_6e_21:
+    call COMUCompileCallToSelf
+    call  GFXWriteCharacter
+    ret
+
+; =========== screen.mode word ===========
+
+start_73_63_72_65_65_6e_2e_6d_6f_64_65:
+    call COMUCompileCallToSelf
+    ld   a,l         ; set the screen mode to A
+    call  GFXMode
+    ret
+
 ; =========== swap xmacro ===========
 
 start_73_77_61_70:
@@ -559,5 +574,13 @@ start_73_77_61_70:
  ld a,end_73_77_61_70-start_73_77_61_70-5
     ex   de,hl         ; 2nd now TOS
 end_73_77_61_70:
+    ret
+
+; =========== sys.info word ===========
+
+start_73_79_73_2e_69_6e_66_6f:
+    call COMUCompileCallToSelf
+    ex   de,hl
+    ld   hl,SystemInformation
     ret
 
