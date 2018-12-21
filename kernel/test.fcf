@@ -1,0 +1,5 @@
+:save.boot.save
+	ab>r "boot.save save.memory r>ab 
+;
+
+[crunch] [save.boot.save]

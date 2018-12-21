@@ -372,6 +372,13 @@ __copyExit:
     pop  de
     ret
 
+; =========== crunch word ===========
+
+start_63_72_75_6e_63_68:
+    call COMUCompileCallToSelf
+    call DICTCrunchDictionary
+    ret
+
 ; =========== debug word ===========
 
 start_64_65_62_75_67:
@@ -572,6 +579,13 @@ start_72_3e_62:
  ld a,end_72_3e_62-start_72_3e_62-6
     pop  de
 end_72_3e_62:
+    ret
+
+; =========== save.memory word ===========
+
+start_73_61_76_65_2e_6d_65_6d_6f_72_79:
+    call COMUCompileCallToSelf
+    call  SAVEMemory
     ret
 
 ; =========== screen! word ===========

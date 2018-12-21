@@ -1,8 +1,7 @@
 System:
 
-- save state (with exit in CSpect.exe)
-- purge underscore words.
 - cross page call
+- test exit and reload.
 - write editor
 - comment words and write document generation
 - test sprites.

@@ -49,16 +49,16 @@ Boot:	ld 		sp,StackTop							; reset Z80 Stack
 		include "support/graphics.asm" 				; common graphics
 		include "support/keyboard.asm"				; keyboard handler
 		include "support/paging.asm" 				; page switcher (not while executing)
+		include "support/save.asm"					; image saver.
 		include "support/screen48k.asm"				; screen "drivers"
 		include "support/screen_layer2.asm"
 		include "support/screen_lores.asm"
 
 		include "compiler/buffer.asm" 				; buffer code.
-		include "compiler/utility.asm"				; utility functions.
-
+		include "compiler/compiler.asm"				; compiler
 		include "compiler/constant.asm"				; ASCII -> Integer conversion
 		include "compiler/dictionary.asm" 			; Dictionary workers
-		include "compiler/compiler.asm"				; compiler
+		include "compiler/utility.asm"				; utility functions.
 
 		include "temp/__words.asm"					; vocabulary file.
 		

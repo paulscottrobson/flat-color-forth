@@ -9,10 +9,10 @@
 # ***************************************************************************************
 # ***************************************************************************************
 
-import re
+import re,sys
 from imagelib import *
 
-image = ColorForthImage()
+image = ColorForthImage("boot.img" if len(sys.argv) == 1 else sys.argv[1])
 p = 0xC000
 dictPage = image.dictionaryPage()
 

@@ -152,3 +152,55 @@ __DICTFindExit:
 		pop 	ix 								; pop registers and return.
 		pop 	bc
 		ret
+
+; ***********************************************************************************************
+;
+;						Remove underscore prefixed words from the dictionary.
+;
+; ***********************************************************************************************
+
+DICTCrunchDictionary:
+		push 	bc 							
+		push 	de
+		push	hl
+		push 	ix
+
+		ld 		a,DictionaryPage 				; switch to dictionary page
+		call 	PAGESwitch
+		ld 		ix,$C000 						; dictionary start			
+__DICTCrunchNext:
+		ld 		a,(ix+0)
+		or 		a
+		jr 		z,__DICTCrunchExit
+		ld 		a,(ix+5) 						; check first character
+		cp 		'_'								; if not _, try next
+		jr 		nz,__DICTCrunchAdvance.
+		db 		$DD,$01
+		push 	ix
+		pop  	de 								; DE = start position
+		ld 		l,(ix+0)						; HL = start + offset
+		ld 		h,0
+		add 	hl,de
+		ld	 	a,h 							; BC = count
+		cpl 	
+		ld 		b,a
+		ld 		a,l
+		cpl
+		ld 		c,a
+		ldir 									; copy it
+		jr 		__DICTCrunchNext 				; retry from the same position.
+
+
+__DICTCrunchAdvance:							; go to next slot.
+		ld 		e,(ix+0)						; DE = offset
+		ld 		d,0
+		add 	ix,de 							; go gorward
+		jr 		__DICTCrunchNext
+
+__DICTCrunchExit:
+		pop 	ix
+		pop 	hl
+		pop 	de
+		pop 	bc
+		ret
+

@@ -21,8 +21,8 @@ Here:												; +0 	Here
 		dw 		FreeMemory
 HerePage: 											; +2	Here.Page
 		db 		FirstCodePage,0
-NextFreePage: 										; +4 	Next available code page.
-		db 		FirstCodePage+1,0,0,0
+NextFreePage: 										; +4 	Next available code page (2 8k pages/page)
+		db 		FirstCodePage+2,0,0,0
 DisplayInfo: 										; +8 	Display information
 		dw 		DisplayInformation,0		
 Parameter: 											; +12 	Third Parameter used in some functions.
@@ -74,6 +74,11 @@ __CLICurrentKey: 									; current inkey state on CLI
 		db 		$86 								; buffer for executing, tags it yellow effectively.
 __CLIBuffer:
 		ds 		20
+
+SAVEFileHandle:
+		db 		0
+SAVEDefaultDrive:
+		db 		0
 
 FreeMemory:		
 		org 	$C000
