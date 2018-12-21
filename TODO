@@ -1,8 +1,20 @@
 System:
 
-- cross page call
-- test exit and reload.
+- cross page call code test.
+- test exit (on halt) and reload (without code ?)
 - write editor
 - comment words and write document generation
 - test sprites.
 - improve if/warm start.
+
+
+
+Cross Page Call
+===============
+
+		ld 		bc,xxxxx
+		call 	yyyy
+
+yyyy:	ld 		a,<newpage>
+		jp 		zzzz
+

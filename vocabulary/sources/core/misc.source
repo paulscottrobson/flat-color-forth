@@ -96,6 +96,7 @@ __copyExit:
 @word halt
 
 __haltz80:
+		db 		$DD,$00 							; in CSpect emulator exits.
 		di
 		halt
 		jr 		__haltz80

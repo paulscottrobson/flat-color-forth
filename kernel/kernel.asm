@@ -59,6 +59,7 @@ Boot:	ld 		sp,StackTop							; reset Z80 Stack
 		include "compiler/constant.asm"				; ASCII -> Integer conversion
 		include "compiler/dictionary.asm" 			; Dictionary workers
 		include "compiler/utility.asm"				; utility functions.
+		include "compiler/xpage.asm"				; cross page calling stuff.
 
 		include "temp/__words.asm"					; vocabulary file.
 		

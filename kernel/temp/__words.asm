@@ -421,6 +421,7 @@ start_68:
 start_68_61_6c_74:
     call COMUCompileCallToSelf
 __haltz80:
+    db   $DD,$00        ; in CSpect emulator exits.
     di
     halt
     jr   __haltz80

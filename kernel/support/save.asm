@@ -16,7 +16,6 @@ SAVEMemory:
 		push 	ix
 		push 	hl
 		pop 	ix
-		db 		$DD,$01
 		call 	WriteNextMemory
 		pop 	ix
 		pop 	de

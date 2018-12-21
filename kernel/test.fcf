@@ -2,4 +2,5 @@
 	ab>r "boot.save save.memory r>ab 
 ;
 
-[crunch] [save.boot.save]
+[49154] [h] [!]
+:test1  +++ ;

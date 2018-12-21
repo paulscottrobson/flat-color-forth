@@ -175,7 +175,7 @@ __DICTCrunchNext:
 		ld 		a,(ix+5) 						; check first character
 		cp 		'_'								; if not _, try next
 		jr 		nz,__DICTCrunchAdvance.
-		db 		$DD,$01
+
 		push 	ix
 		pop  	de 								; DE = start position
 		ld 		l,(ix+0)						; HL = start + offset
