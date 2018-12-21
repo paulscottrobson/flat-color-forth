@@ -122,6 +122,18 @@ start_2f_6d_6f_64:
     ex  de,hl
     ret
 
+; =========== 0= word ===========
+
+start_30_3d:
+    call COMUCompileCallToSelf
+    ld   a,h
+    or   l
+    ld   hl,$0000
+    jr   nz,__IsNotZero
+    dec  hl
+__IsNotZero:
+    ret
+
 ; =========== 1, word ===========
 
 start_31_2c:
@@ -268,15 +280,6 @@ start_61_6e_64:
     ld   l,a
     ret
 
-; =========== b! xmacro ===========
-
-start_62_21:
-    call COMUCopyCode
- ld a,end_62_21-start_62_21-5
-    ld   (hl),e
-end_62_21:
-    ret
-
 ; =========== b>a xmacro ===========
 
 start_62_3e_61:
@@ -295,16 +298,6 @@ start_62_3e_72:
  ld a,end_62_3e_72-start_62_3e_72-6
     push  de
 end_62_3e_72:
-    ret
-
-; =========== b@ xmacro ===========
-
-start_62_40:
-    call COMUCopyCode
- ld a,end_62_40-start_62_40-5
-    ld   l,(hl)
-    ld   h,$00
-end_62_40:
     ret
 
 ; =========== break macro ===========
@@ -326,6 +319,25 @@ start_62_73_77_61_70:
     ld   h,l
     ld   l,a
 end_62_73_77_61_70:
+    ret
+
+; =========== c! xmacro ===========
+
+start_63_21:
+    call COMUCopyCode
+ ld a,end_63_21-start_63_21-5
+    ld   (hl),e
+end_63_21:
+    ret
+
+; =========== c@ xmacro ===========
+
+start_63_40:
+    call COMUCopyCode
+ ld a,end_63_40-start_63_40-5
+    ld   l,(hl)
+    ld   h,$00
+end_63_40:
     ret
 
 ; =========== copy word ===========
@@ -421,6 +433,16 @@ start_68_65_78_21:
     call COMUCompileCallToSelf
     ; DE = word, HL = pos
     call  GFXWriteHexWord      ; write out the word
+    ret
+
+; =========== inkey word ===========
+
+start_69_6e_6b_65_79:
+    call COMUCompileCallToSelf
+    ex   de,hl
+    call  IOScanKeyboard
+    ld  l,a
+    ld   h,0
     ret
 
 ; =========== mod word ===========

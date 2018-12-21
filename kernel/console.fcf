@@ -35,7 +35,8 @@
 
 :con.clear 
 	ab>r
-		con.white 0 con.home screen.clear
+		con.white 0 con.home 
+		display.info 12 + @ screen.mode
 	r>ab
 ;
 

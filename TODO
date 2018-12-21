@@ -1,6 +1,5 @@
 System:
 
-- port libraries.
 - save state (with exit in CSpect.exe)
 - purge underscore words.
 - cross page call
