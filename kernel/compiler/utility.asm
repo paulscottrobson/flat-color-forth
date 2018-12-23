@@ -17,9 +17,56 @@
 
 COMUCompileCallToSelf:
 		ex 		(sp),hl 							; addr in HL, old HL on TOS
+		push 	bc
+
+		ld 		a,h 								; is it a call to $Cxxx ?
+		cp 		$C0
+		jr 		c,__COMUSimpleCallCompile
+
+		ex 		af,af'								; get the current page e.g. the one we are calling because
+		ld 		b,a 								; we compile by calling this routine
+		ex 		af,af' 
+		ld 		a,(HerePage)						; and this is the page where the call will be compiled
+		cp 		b 									; if they are the same, a simple call will do.
+		jr 		z,__COMUSimpleCallCompile
+
+;		ld 		a,$DD
+;		call 	FARCompileByte
+;		ld 		a,$01
+;		call 	FARCompileByte
+
+		ld 		a,$01 								; compile LD BC,<target address>
+		call 	FARCompileByte
+		call 	FARCompileWord
+		push 	de 									; save DE
+
+		ld 		a,b 								; BC = (target page - $20)/2
+		sub 	$20 								; page pair index.
+		srl 	a
+		ld 		c,a
+		ld 		b,0
+		ld 		h,b 								; multiply by 5 into HL
+		ld 		l,c
+		add 	hl,hl
+		add 	hl,hl
+		add 	hl,bc
+		ld 		bc,CrossPageTable 					; add the cross page table base
+		add 	hl,bc
+
+		ld 		a,$CD								; CALL xxxx
+		call 	FARCompileByte
+		call 	FARCompileWord						; compile address in cross page table.
+
+		pop 	de 									; restore DE + HL
+		pop 	bc
+		pop 	hl
+		ret		
+
+__COMUSimpleCallCompile:
 		ld 		a,$CD								; CALL xxxx
 		call 	FARCompileByte
 		call 	FARCompileWord						; compile address
+		pop 	bc
 		pop 	hl 									; restore HL.
 		ret
 

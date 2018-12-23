@@ -1,6 +1,5 @@
 System:
 
-- cross page call code test.
 - test exit (on halt) and reload (without code ?)
 - write editor
 - comment words and write document generation
@@ -8,13 +7,4 @@ System:
 - improve if/warm start.
 
 
-
-Cross Page Call
-===============
-
-		ld 		bc,xxxxx
-		call 	yyyy
-
-yyyy:	ld 		a,<newpage>
-		jp 		zzzz
 

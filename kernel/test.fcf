@@ -2,5 +2,14 @@
 	ab>r "boot.save save.memory r>ab 
 ;
 
+
 [49154] [h] [!]
-:test1  +++ ;
+
+:test2 a>r swap 3 + swap r>a ;
+
+[48] [h] [+++] [c!]
+
+:test "Start con.print.string con.cr
+	60000 for test2 next 
+	"End  con.print.string con.cr ;
+
